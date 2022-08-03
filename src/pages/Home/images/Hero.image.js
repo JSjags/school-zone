@@ -1,8 +1,35 @@
 import React from "react";
+import { motion } from "framer-motion";
 
 function Icon() {
+  const heroVariants = {
+    hidden: {
+      opacity: 0,
+    },
+    visible: {
+      opacity: 1,
+      transition: {
+        duration: 2,
+        ease: "easeInOut"
+      }
+    },
+    exit: {
+      x: '10vw',
+      opacity: 0,
+      transition: {
+        duration: 0.5,
+        ease: "easeInOut"
+      }
+    }
+  }
+
   return (
-    <svg
+    <motion.svg
+      variants={heroVariants}
+      initial="hidden"
+      animate="visible"
+      exit="exit"
+
       xmlns="http://www.w3.org/2000/svg"
       id="freepik_stories-shared-workspace"
       className="animated"
@@ -6933,7 +6960,7 @@ function Icon() {
           <feColorMatrix values="0 0 0 0 0 0 1 0 0 0 0 0 0 0 0 0 0 0 1 0"></feColorMatrix>
         </filter>
       </defs>
-    </svg>
+    </motion.svg>
   );
 }
 

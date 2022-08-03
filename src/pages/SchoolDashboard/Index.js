@@ -1,0 +1,132 @@
+import React, { useEffect } from "react";
+import { useSelector, useDispatch } from "react-redux";
+import { useNavigate } from "react-router";
+
+import { resetSchoolAuth } from "../../features/school/schoolAuthSlice";
+import {
+  fetchSchoolData,
+  resetSchoolData,
+} from "../../features/school/schoolDataSlice";
+import { setCurrentPage } from "../../features/config/configData";
+
+import {
+  Content,
+  ErrorContainer,
+  LoadingContainer,
+  Wrapper,
+} from "./SchoolDashboard.styles";
+import { FaSignOutAlt } from "react-icons/fa";
+import { MdMessage, MdNotifications, MdSettings } from "react-icons/md";
+import { BiError } from "react-icons/bi";
+
+import Spinner from "../../components/Spinner/Index";
+import noDataSvg from "../../assets/no-data.svg";
+
+const SchoolDashboard = () => {
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+
+  const authToken = useSelector((state) => state.schoolAuth.token);
+
+  const { data, isLoading, isSuccess, isError, message } = useSelector(
+    (state) => state.schoolData
+  );
+
+  useEffect(() => {
+    dispatch(fetchSchoolData(authToken));
+
+    if (message !== null && message.includes("jwt expired")) {
+      navigate("/login");
+      localStorage.removeItem("schoolCredentials");
+    }
+    if (message !== null && message.includes("User not authorized")) {
+      navigate("/login");
+      localStorage.removeItem("schoolCredentials");
+    }
+  }, [authToken, dispatch, message, navigate]);
+
+  useEffect(() => {
+    dispatch(setCurrentPage("schooldashboard"));
+  }, [dispatch]);
+
+  const redirect = (location) => {
+    if (location === "home") {
+      localStorage.removeItem("schoolCredentials");
+      return navigate("/");
+    } else {
+      localStorage.removeItem("schoolCredentials");
+      return navigate("/login");
+    }
+  };
+
+  const handleLogout = () => {
+    localStorage.removeItem("schoolCredentials");
+    dispatch(resetSchoolAuth());
+    dispatch(resetSchoolData());
+    navigate("/login");
+  };
+
+  return (
+    <Wrapper isSuccess={isSuccess ? true : false}>
+      {isLoading && (
+        <LoadingContainer>
+          <Spinner />
+        </LoadingContainer>
+      )}
+      {isSuccess && (
+        <Content>
+          <main>
+            <header>
+              <h1>Dashboard</h1>
+              <ul>
+                <li>
+                  <MdMessage style={{ fontSize: "1.4rem" }} />
+                  <span>Messages</span>
+                </li>
+                <li>
+                  <MdNotifications style={{ fontSize: "1.4rem" }} />
+                  <span>Notifications</span>
+                </li>
+                <li>
+                  <MdSettings style={{ fontSize: "1.4rem" }} />
+                  <span>Settings</span>
+                </li>
+              </ul>
+              <button id="sign-out" onClick={handleLogout}>
+                <FaSignOutAlt style={{ fontSize: "1.4rem" }} />
+                <span>Sign out</span>
+              </button>
+            </header>
+            {data.students.length < 1 && data.staffs.length < 1 && (
+              <div className="no-data">
+                <img alt="no-data" src={noDataSvg} />
+                <p>No data to display, try adding a student or a staff.</p>
+              </div>
+            )}
+          </main>
+        </Content>
+      )}
+      {isError && (
+        <ErrorContainer>
+          <BiError
+            style={{
+              color: "red",
+              fontSize: "5rem",
+            }}
+          />
+          <p>
+            {message.includes("jwt expired")
+              ? "Timeout"
+              : `${message}, try refreshing the page.`}
+          </p>
+          <div className="button-group">
+            <button onClick={() => redirect("home")}>Go to homepage</button>
+            <button onClick={() => redirect("login")}>Go to Sign in</button>
+          </div>
+        </ErrorContainer>
+      )}
+    </Wrapper>
+  );
+};
+
+export default SchoolDashboard;
