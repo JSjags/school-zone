@@ -113,8 +113,6 @@ const Header = () => {
       {isLoggedIn ? <SideBar /> : <InitialHeader />}
     </Wrapper>
   );
-
-  // return isLoggedIn && <InitialHeader />;
 };
 
 export default Header;

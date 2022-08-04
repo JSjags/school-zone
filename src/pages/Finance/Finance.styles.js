@@ -220,7 +220,7 @@ export const Content = styled.div`
         flex-direction: column;
         align-items: center;
         gap: 5px;
-        /* width: 20%; */
+        background: whitesmoke;
         border: none;
         height: 100%;
         border-radius: 10px;

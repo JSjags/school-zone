@@ -13,15 +13,30 @@ export const fetchSchoolData = createAsyncThunk(
   "schoolData/fetchSchoolData",
   async (authToken, thunkAPI) => {
     try {
-      const schoolData = await schoolService.fetchSchoolData(authToken);
+      const controller = thunkAPI.getState().schoolData.controller;
+      const schoolData = await schoolService.fetchSchoolData(
+        authToken,
+        controller
+      );
       return await thunkAPI.fulfillWithValue(schoolData);
     } catch (error) {
-      const message =
-        error.response.data.message || error.message || error.toString();
-      return thunkAPI.rejectWithValue(message);
+      if (!error.name === "CanceledError") {
+        const message =
+          error.name ||
+          error.response.data.message ||
+          error.message ||
+          error.toString();
+        return thunkAPI.rejectWithValue(message);
+      }
     }
   }
 );
+// export const cancelFetchSchoolData = createAsyncThunk(
+//   "schoolData/cancelFetchSchoolData",
+//   async () => {
+//     controller.abort();
+//   }
+// );
 
 export const schoolDataSlice = createSlice({
   name: "schoolData",
@@ -56,10 +71,10 @@ export const schoolDataSlice = createSlice({
         state.message = null;
       })
       .addCase(fetchSchoolData.rejected, (state, action) => {
-        state.message = action.payload;
         state.isLoading = false;
         state.isError = true;
         state.isSuccess = false;
+        state.message = action.payload;
       });
   },
 });

@@ -62,7 +62,7 @@ const SideBar = () => {
           <ul id="menu">
             <Link
               to={"/schooldashboard"}
-              className={currentPage === "schooldashboard" && "current"}
+              className={currentPage === "schooldashboard" ? "current" : ""}
               onClick={handleNavClick}
             >
               <li>
@@ -73,7 +73,7 @@ const SideBar = () => {
             <Link
               to={"/schooldashboard/students"}
               onClick={handleNavClick}
-              className={currentPage === "students" && "current"}
+              className={currentPage === "students" ? "current" : ""}
             >
               <li>
                 <MdPeopleAlt style={{ fontSize: "1.5rem" }} />
@@ -83,7 +83,7 @@ const SideBar = () => {
             <Link
               to={"/schooldashboard/staffs"}
               onClick={handleNavClick}
-              className={currentPage === "staffs" && "current"}
+              className={currentPage === "staffs" ? "current" : ""}
             >
               <li>
                 <FaIdCardAlt style={{ fontSize: "1.5rem" }} />
@@ -93,7 +93,7 @@ const SideBar = () => {
             <Link
               to={"/schooldashboard/finance"}
               onClick={handleNavClick}
-              className={currentPage === "finance" && "current"}
+              className={currentPage === "finance" ? "current" : ""}
             >
               <li>
                 <FaRegMoneyBillAlt style={{ fontSize: "1.5rem" }} />
@@ -103,7 +103,7 @@ const SideBar = () => {
             <Link
               to={"/schooldashboard/profile"}
               onClick={handleNavClick}
-              className={currentPage === "profile" && "current"}
+              className={currentPage === "profile" ? "current" : ""}
             >
               <li>
                 <RiProfileFill style={{ fontSize: "1.5rem" }} />
@@ -113,7 +113,7 @@ const SideBar = () => {
             <Link
               to={"/schooldashboard/settings"}
               onClick={handleNavClick}
-              className={currentPage === "settings" && "current"}
+              className={currentPage === "settings" ? "current" : ""}
             >
               <li>
                 <MdSettings style={{ fontSize: "1.5rem" }} />

@@ -33,17 +33,21 @@ const SchoolDashboard = () => {
   );
 
   useEffect(() => {
-    dispatch(fetchSchoolData(authToken));
-
     if (message !== null && message.includes("jwt expired")) {
-      navigate("/login");
       localStorage.removeItem("schoolCredentials");
+      dispatch(resetSchoolAuth());
+      dispatch(resetSchoolData());
+      navigate("/login");
     }
     if (message !== null && message.includes("User not authorized")) {
-      navigate("/login");
       localStorage.removeItem("schoolCredentials");
+      dispatch(resetSchoolAuth());
+      dispatch(resetSchoolData());
+      navigate("/login");
     }
-  }, [authToken, dispatch, message, navigate]);
+
+    dispatch(fetchSchoolData(authToken));
+  }, [authToken, dispatch, navigate, message]);
 
   useEffect(() => {
     dispatch(setCurrentPage("schooldashboard"));

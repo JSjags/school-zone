@@ -233,7 +233,7 @@ export const Content = styled.div`
       z-index: -10;
       top: 60%;
       left: 0;
-      transform: translate(-100%, -100%);
+      transform: translate(-93%, -97%);
       box-shadow: 5px 5px 0 var(--white);
     }
 
@@ -247,16 +247,24 @@ export const Content = styled.div`
       z-index: -10;
       top: 60%;
       left: 209px;
-      transform: translate(-100%, -100%);
+      transform: translate(-100%, -97%);
       box-shadow: -5px 5px 0 var(--white);
     }
 
-    img {
+    .profile-pic-img-cont {
       width: 200px;
       height: 200px;
       border-radius: 50%;
-      background: var(--mid-gray);
       border: 2px solid var(--white);
+      background: var(--white);
+    }
+    .profile-pic-img {
+      width: 100%;
+      height: 100%;
+      border-radius: 50%;
+      background: var(--white);
+      display: block;
+      object-fit: cover;
     }
   }
   .profile-name {

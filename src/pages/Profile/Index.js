@@ -37,6 +37,11 @@ const Profile = () => {
 
   const { isEditProfileModalOpen } = useSelector((state) => state.config);
 
+  const authToken = useSelector((state) => state.schoolAuth.token);
+
+  const { data, isLoading, isSuccess, isError, message } = useSelector(
+    (state) => state.schoolData
+  );
   const handleLogout = () => {
     localStorage.removeItem("schoolCredentials");
     dispatch(resetSchoolAuth());
@@ -77,12 +82,6 @@ const Profile = () => {
     dispatch(showForm("changePassword"));
   };
 
-  const authToken = useSelector((state) => state.schoolAuth.token);
-
-  const { data, isLoading, isSuccess, isError, message } = useSelector(
-    (state) => state.schoolData
-  );
-
   const redirect = (location) => {
     if (location === "home") {
       localStorage.removeItem("schoolCredentials");
@@ -94,17 +93,21 @@ const Profile = () => {
   };
 
   useEffect(() => {
-    dispatch(fetchSchoolData(authToken));
-
     if (message !== null && message.includes("jwt expired")) {
-      navigate("/login");
       localStorage.removeItem("schoolCredentials");
+      dispatch(resetSchoolAuth());
+      dispatch(resetSchoolData());
+      navigate("/login");
     }
     if (message !== null && message.includes("User not authorized")) {
-      navigate("/login");
       localStorage.removeItem("schoolCredentials");
+      dispatch(resetSchoolAuth());
+      dispatch(resetSchoolData());
+      navigate("/login");
     }
-  }, [authToken, dispatch, message, navigate]);
+
+    dispatch(fetchSchoolData(authToken));
+  }, []);
 
   useEffect(() => {
     dispatch(setCurrentPage("profile"));
@@ -154,10 +157,15 @@ const Profile = () => {
                 />
               </div>
               <div className="profile-pic">
-                <img
-                  alt="profile-pic"
-                  src={data.avatar_image ? data.avatar_image : defaultAvatarUrl}
-                />
+                <div className="profile-pic-img-cont">
+                  <img
+                    className="profile-pic-img"
+                    alt="profile-pic"
+                    src={
+                      data.avatar_image ? data.avatar_image : defaultAvatarUrl
+                    }
+                  />
+                </div>
                 <div className="profile-name">
                   <h2>{data.name}</h2>
                   <p>{data.email}</p>
