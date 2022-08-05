@@ -19,7 +19,7 @@ import {
   showForm,
 } from "../../features/config/configData";
 
-import EditProfile from "../../components/EditProfile/Index";
+import EditModal from "../../components/EditModal/Index";
 import { Wrapper, Content } from "./Profile.styles";
 import {
   defaultCoverPicUrl,
@@ -122,7 +122,7 @@ const Profile = () => {
       )}
       {isSuccess && (
         <Content>
-          {isEditProfileModalOpen && <EditProfile />}
+          {isEditProfileModalOpen && <EditModal />}
           <main>
             <header>
               <h1>Profile</h1>

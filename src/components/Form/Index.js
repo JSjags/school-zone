@@ -1,4 +1,4 @@
-import { useState, useRef } from "react";
+import { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { BiErrorCircle } from "react-icons/bi";
 import { RiLockPasswordLine } from "react-icons/ri";
@@ -12,13 +12,21 @@ import { isEmail, isMobilePhone } from "validator";
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import { storage } from "../../firebase/firebase.config";
 
-import { closeEditProfileModal } from "../../features/config/configData";
+import {
+  closeEditProfileModal,
+  showForm,
+} from "../../features/config/configData";
+import { fetchSchoolData } from "../../features/school/schoolDataSlice";
 
 import {
   ChangeAvatarContent,
   ChangeAvatarWrapper,
   ChangePasswordContent,
   ChangePasswordWrapper,
+  CreateStudentContent,
+  CreateStudentWrapper,
+  CreateTemplateContent,
+  CreateTemplateWrapper,
   EditProfileContent,
   EditProfileWrapper,
   SuccessMessageContent,
@@ -28,7 +36,8 @@ import InstitutionLevel from "../InstitutionLevel/Index";
 import PhoneNumber from "../PhoneNumber/Index";
 import Spinner from "../Spinner/Index";
 import axios from "axios";
-import { fetchSchoolData } from "../../features/school/schoolDataSlice";
+
+import noTemplateFoundSvg from "../../assets/no-template.svg";
 
 // Form types
 
@@ -847,14 +856,6 @@ const ChangePassword = () => {
       },
     });
 
-    console.log(response);
-
-    // if (!response.data.isSuccess) {
-    //   setIsLoading(false);
-    //   setIsError(true);
-    //   setCanChangePassword(false);
-    //   setChangePasswordErrorMessage(response.data.message);
-    // }
     if (response.data.passwordChange) {
       setIsLoading(false);
       setIsError(false);
@@ -1008,6 +1009,124 @@ const ChangePassword = () => {
   );
 };
 
+// Create Student
+const CreateStudent = () => {
+  const dispatch = useDispatch();
+  const { data: schoolData } = useSelector((state) => state.schoolData);
+
+  const handleCreateTemplate = () => {
+    dispatch(showForm("createTemplate"));
+  };
+  const handleCancel = () => {
+    dispatch(closeEditProfileModal());
+  };
+
+  return (
+    <CreateStudentWrapper>
+      <CreateStudentContent>
+        <h2>Create Student Profile</h2>
+        <hr style={{ visibility: "hidden", marginBottom: "10px" }} />
+        {!schoolData?.templates?.student && (
+          <>
+            <img
+              className="no-template-svg"
+              src={noTemplateFoundSvg}
+              alt="No Template Found"
+            />
+            <p>
+              Sorry, we could not find any template for student registration.
+              <br />
+              Would you like to create a template right now.
+            </p>
+            <div className="choice-buttons">
+              <button onClick={handleCancel}>No, maybe later</button>
+              <button onClick={handleCreateTemplate}>Yes, I would</button>
+            </div>
+          </>
+        )}
+      </CreateStudentContent>
+    </CreateStudentWrapper>
+  );
+};
+// Create Template
+const CreateTemplate = () => {
+  const [formFields, setFormFields] = useState({
+    firstName: {
+      name: "First Name",
+      type: "text",
+    },
+    lastName: {
+      name: "Last Name",
+      type: "text",
+    },
+    otherNames: {
+      name: "Other Names",
+      type: "text",
+    },
+    dateOfBirth: {
+      name: "Date of Birth",
+      type: "text",
+    },
+    nationality: {
+      name: "Nationality",
+      type: "text",
+    },
+    phoneNumber: {
+      name: "Phone Number",
+      type: "text",
+    },
+    Address: {
+      name: "Address",
+      type: "text",
+    },
+    email: {
+      name: "Email",
+      type: "text",
+    },
+  });
+
+  const dispatch = useDispatch();
+  const { data: schoolData } = useSelector((state) => state.schoolData);
+
+  const handleCreateTemplate = () => {
+    dispatch(showForm("createTemplate"));
+  };
+  const handleCancel = () => {
+    dispatch(closeEditProfileModal());
+  };
+
+  return (
+    <CreateTemplateWrapper>
+      <CreateTemplateContent>
+        <h2>Create Registration Template</h2>
+        <p>Set fields required for standard registration.</p>
+        <hr />
+        <div className="template-creator">
+          <div className="form-group">
+            <div className="field-values form-group">
+              <input type="text" value="" placeholder="Field name" readOnly />
+              <input type="text" value="" placeholder="Field type" readOnly />
+            </div>
+            <button>Add field</button>
+          </div>
+        </div>
+        <div className="template-creator">
+          <form className="templates">
+            {Object.entries(formFields).map((field, index) => (
+              <div className="form-group" key={index}>
+                <label>{field[1].name}:</label>
+                <div>
+                  <span>{field[1].type}</span>
+                </div>
+              </div>
+            ))}
+          </form>
+        </div>
+      </CreateTemplateContent>
+    </CreateTemplateWrapper>
+  );
+};
+
 const Form = () => {
   const { formToShow } = useSelector((state) => state.config);
 
@@ -1017,6 +1136,8 @@ const Form = () => {
       {formToShow === "changeAvatar" && <ChangeAvatar />}
       {formToShow === "changeCoverPhoto" && <ChangeCoverPhoto />}
       {formToShow === "changePassword" && <ChangePassword />}
+      {formToShow === "createStudent" && <CreateStudent />}
+      {formToShow === "createTemplate" && <CreateTemplate />}
     </>
   );
 };

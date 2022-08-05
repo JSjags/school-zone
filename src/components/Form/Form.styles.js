@@ -536,3 +536,311 @@ export const SuccessMessageContent = styled.div`
     }
   }
 `;
+
+export const CreateStudentWrapper = styled.div`
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+`;
+export const CreateStudentContent = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  justify-content: center;
+  background: var(--white);
+  padding: 20px;
+  border-radius: 10px;
+
+  h2 {
+    color: var(--primary-color);
+    font-family: var(--garamond);
+    position: relative;
+
+    :after {
+      content: "";
+      display: block;
+      position: absolute;
+      bottom: 0;
+      width: 100%;
+      height: 4px;
+      width: 15%;
+      background: var(--primary-color);
+      border-radius: 2px;
+    }
+  }
+  p {
+    color: var(--deep-gray);
+    font-family: var(--hind);
+  }
+  hr {
+    border: none;
+    border-bottom: 2px solid var(--deep-gray);
+    margin-top: -10px;
+    border-radius: 1px;
+  }
+  form {
+    display: flex;
+    flex-direction: column;
+    margin-top: 20px;
+    gap: 20px;
+    justify-content: center;
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+
+      label {
+        color: var(--primary-color);
+        font-family: var(--garamond);
+        font-size: 1.2rem;
+      }
+      input {
+        width: 100%;
+        font-size: 1rem;
+        padding: 10px;
+        border: none;
+        border-radius: 5px;
+        font-family: var(--hind);
+        background: whitesmoke;
+        outline-color: var(--primary-color);
+        outline-width: 2px;
+        outline-offset: 2px;
+        transition: all 300ms ease;
+
+        :hover {
+          box-shadow: 0 5px 7px var(--light-gray);
+        }
+
+        :focus {
+          background: var(--white);
+        }
+      }
+      .error {
+        display: flex;
+        align-items: center;
+        line-height: 0.8em;
+        color: red;
+        gap: 2px;
+        font-size: 0.8em;
+        margin-bottom: 25px;
+      }
+    }
+    button {
+      font-size: 1rem;
+      border: none;
+      border-radius: 5px;
+      padding: 10px 20px;
+      width: 100%;
+      background: var(--primary-color);
+      font-family: var(--hind);
+      color: white;
+      transition: all 200ms ease;
+      cursor: pointer;
+
+      :hover {
+        box-shadow: -5px -5px var(--light-tint), 5px 5px var(--dark-tint);
+        background: var(--primary-color);
+        color: white;
+      }
+    }
+  }
+  .no-template-svg {
+    height: 200px;
+    margin: 20px 0;
+  }
+  .choice-buttons {
+    display: flex;
+    justify-content: space-between;
+
+    button {
+      border: none;
+      padding: 10px;
+      font-weight: 500;
+      border-radius: 5px;
+      font-family: var(--hind);
+      font-size: 1rem;
+      cursor: pointer;
+      margin-top: 30px;
+
+      :nth-child(1) {
+        background-color: whitesmoke;
+        transition: all 200ms ease;
+
+        :hover {
+          background: var(--white);
+          box-shadow: 0 5px 7px var(--light-gray);
+        }
+      }
+      :nth-child(2) {
+        background-color: var(--primary-color);
+        color: var(--white);
+        transition: all 200ms ease;
+
+        :hover {
+          background: var(--secondary-color);
+          box-shadow: -3px -3px var(--light-tint), 3px 3px var(--dark-tint);
+        }
+      }
+    }
+  }
+`;
+
+export const CreateTemplateWrapper = styled.div`
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+`;
+export const CreateTemplateContent = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+  flex-direction: column;
+  gap: 10px;
+  justify-content: center;
+  background: var(--white);
+  padding: 20px;
+  border-radius: 10px;
+  margin: 10px;
+  width: 80vw;
+
+  h2 {
+    color: var(--primary-color);
+    font-family: var(--garamond);
+    position: relative;
+
+    :after {
+      content: "";
+      display: block;
+      position: absolute;
+      bottom: 0;
+      width: 100%;
+      height: 4px;
+      width: 15%;
+      background: var(--primary-color);
+      border-radius: 2px;
+    }
+  }
+  p {
+    color: var(--deep-gray);
+    font-family: var(--hind);
+  }
+  hr {
+    border: none;
+    border-bottom: 2px solid var(--deep-gray);
+    margin-top: -10px;
+    border-radius: 1px;
+  }
+  .template-creator {
+    display: flex;
+    align-items: flex-start;
+    gap: 20px;
+  }
+  form.templates {
+    width: 50vw;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+    margin-top: 20px;
+    gap: 20px;
+
+    button {
+      font-size: 1rem;
+      border: none;
+      border-radius: 5px;
+      padding: 10px 20px;
+      width: 100%;
+      background: var(--primary-color);
+      font-family: var(--hind);
+      color: white;
+      transition: all 200ms ease;
+      cursor: pointer;
+
+      :hover {
+        box-shadow: -5px -5px var(--light-tint), 5px 5px var(--dark-tint);
+        background: var(--primary-color);
+        color: white;
+      }
+    }
+  }
+  .form-group {
+    display: flex;
+    gap: 10px;
+
+    label {
+      color: var(--primary-color);
+      font-family: var(--garamond);
+      font-size: 1.2rem;
+    }
+    div {
+      width: fit-content;
+      font-size: 1rem;
+      padding: 10px;
+      border: none;
+      border-radius: 5px;
+      font-family: var(--hind);
+      background: whitesmoke;
+      outline-color: var(--primary-color);
+      outline-width: 2px;
+      outline-offset: 2px;
+      transition: all 300ms ease;
+
+      :hover {
+        box-shadow: 0 5px 7px var(--light-gray);
+      }
+
+      :focus {
+        background: var(--white);
+      }
+    }
+    .error {
+      display: flex;
+      align-items: center;
+      line-height: 0.8em;
+      color: red;
+      gap: 2px;
+      font-size: 0.8em;
+      margin-bottom: 25px;
+    }
+  }
+  .form-group-fill {
+    display: flex;
+    gap: 10px;
+
+    label {
+      color: var(--primary-color);
+      font-family: var(--garamond);
+      font-size: 1.2rem;
+    }
+    input {
+      width: 6ch;
+      font-size: 1rem;
+      padding: 10px;
+      border: none;
+      border-radius: 5px;
+      font-family: var(--hind);
+      background: whitesmoke;
+      outline-color: var(--primary-color);
+      outline-width: 2px;
+      outline-offset: 2px;
+      transition: all 300ms ease;
+
+      :hover {
+        box-shadow: 0 5px 7px var(--light-gray);
+      }
+
+      :focus {
+        background: var(--white);
+      }
+    }
+    .error {
+      display: flex;
+      align-items: center;
+      line-height: 0.8em;
+      color: red;
+      gap: 2px;
+      font-size: 0.8em;
+      margin-bottom: 25px;
+    }
+  }
+`;

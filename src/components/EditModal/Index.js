@@ -1,11 +1,11 @@
 import { useSelector, useDispatch } from "react-redux";
 import { AiFillCloseCircle } from "react-icons/ai";
-import { Wrapper, Content } from "./EditProfile.styles";
+import { Wrapper, Content } from "./EditModal.styles";
 
 import { closeEditProfileModal } from "../../features/config/configData";
 import Form from "../Form/Index";
 
-const EditProfile = () => {
+const EditModal = () => {
   const dispatch = useDispatch();
   const { formToShow } = useSelector((state) => state.config);
 
@@ -35,4 +35,4 @@ const EditProfile = () => {
   );
 };
 
-export default EditProfile;
+export default EditModal;

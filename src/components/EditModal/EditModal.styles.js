@@ -15,6 +15,8 @@ export const Wrapper = styled.div`
 export const Content = styled.div`
   width: 100%;
   height: 100%;
+  overflow: scroll;
+  scroll-behavior: smooth;
 
   .close-btn {
     display: flex;

@@ -160,6 +160,11 @@ export const Content = styled.div`
       display: flex;
       align-items: center;
       padding-left: 5px;
+      background: transparent;
+      border-radius: 0;
+      transition: all 200ms ease;
+      box-shadow: inset 0 0 rgba(255, 255, 255, 0.3),
+        inset 0 0 var(--light-gray);
 
       :hover {
         cursor: pointer;
@@ -188,6 +193,10 @@ export const Content = styled.div`
     }
     a.current {
       transition: all 200ms ease;
+      background: var(--light-gray);
+      border-radius: 5px;
+      box-shadow: inset -1px -1px rgba(255, 255, 255, 0.3),
+        inset 1px 1px var(--light-gray);
     }
     a::before {
       content: "";

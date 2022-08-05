@@ -3,7 +3,7 @@ import { createSlice } from "@reduxjs/toolkit";
 const initialState = {
   isEditProfileModalOpen: false,
   formToShow: null,
-  cuurentPage: null,
+  curentPage: null,
 };
 
 export const configSlice = createSlice({
