@@ -1,7 +1,8 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { BiErrorCircle } from "react-icons/bi";
 import { RiLockPasswordLine } from "react-icons/ri";
+import { MdPlaylistAdd } from "react-icons/md";
 import { BsImage, BsCloudUpload } from "react-icons/bs";
 import { isStrongPassword } from "validator";
 import { MdChangeCircle, MdPreview } from "react-icons/md";
@@ -38,6 +39,7 @@ import Spinner from "../Spinner/Index";
 import axios from "axios";
 
 import noTemplateFoundSvg from "../../assets/no-template.svg";
+import TemplateOptions from "../TemplateOptions/Index";
 
 // Form types
 
@@ -1084,6 +1086,7 @@ const CreateTemplate = () => {
       type: "text",
     },
   });
+  const [templateOption, setTemplateOption] = useState("Select field type");
 
   const dispatch = useDispatch();
   const { data: schoolData } = useSelector((state) => state.schoolData);
@@ -1101,26 +1104,41 @@ const CreateTemplate = () => {
         <h2>Create Registration Template</h2>
         <p>Set fields required for standard registration.</p>
         <hr />
-        <div className="template-creator">
-          <div className="form-group">
-            <div className="field-values form-group">
+        <div className="add-template-field-cont">
+          <div className="add-template-group">
+            <h3>Add template form</h3>
+            <div className="field-values">
               <input type="text" value="" placeholder="Field name" readOnly />
-              <input type="text" value="" placeholder="Field type" readOnly />
+              <TemplateOptions
+                institutionLevel={templateOption}
+                // setFormData={setTemplateOption}
+                //   formData={formData}
+                //   errors={errors}
+                //   setErrors={setErrors}
+                //   institutionLevelRef={institutionLevelRef}
+                //   setFormValidity={setFormValidity}
+              />
             </div>
-            <button>Add field</button>
+            <button>
+              <MdPlaylistAdd style={{ fontSize: "1.4rem", color: "white" }} />
+              <span>Add field</span>
+            </button>
           </div>
-        </div>
-        <div className="template-creator">
-          <form className="templates">
-            {Object.entries(formFields).map((field, index) => (
-              <div className="form-group" key={index}>
-                <label>{field[1].name}:</label>
-                <div>
-                  <span>{field[1].type}</span>
+          <div className="template-creator">
+            <form className="templates">
+              <h3>Required fields</h3>
+              {Object.entries(formFields).map((field, index) => (
+                <div className="form-group" key={index}>
+                  <label>{field[1].name}:</label>
+                  <div>
+                    <span>
+                      {field[1].type[0].toUpperCase() + field[1].type.slice(1)}
+                    </span>
+                  </div>
                 </div>
-              </div>
-            ))}
-          </form>
+              ))}
+            </form>
+          </div>
         </div>
       </CreateTemplateContent>
     </CreateTemplateWrapper>

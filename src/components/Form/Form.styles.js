@@ -694,11 +694,9 @@ export const CreateTemplateWrapper = styled.div`
   justify-content: center;
 `;
 export const CreateTemplateContent = styled.div`
-  display: flex;
-  flex-wrap: wrap;
-  flex-direction: column;
+  display: grid;
+  grid-template-columns: 1fr;
   gap: 10px;
-  justify-content: center;
   background: var(--white);
   padding: 20px;
   border-radius: 10px;
@@ -732,18 +730,102 @@ export const CreateTemplateContent = styled.div`
     margin-top: -10px;
     border-radius: 1px;
   }
+  .add-template-field-cont {
+    display: grid;
+    height: fit-content;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    grid-template-rows: max-content;
+    gap: 40px;
+
+    .add-template-group {
+      position: relative;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      grid-template-rows: max-content;
+      padding-top: 40px;
+      gap: 20px;
+
+      h3 {
+        color: var(--primary-color);
+        font-family: var(--garamond);
+        position: absolute;
+        top: 0;
+
+        :after {
+          content: "";
+          display: block;
+          position: absolute;
+          bottom: 0;
+          width: 100%;
+          height: 4px;
+          width: 15%;
+          background: var(--primary-color);
+          border-radius: 2px;
+        }
+      }
+    }
+  }
+  .field-values {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    grid-template-rows: 42px;
+    gap: 20px;
+
+    input {
+      width: 100%;
+      height: fit-content;
+      border-radius: 5px;
+      border: none;
+      background: whitesmoke;
+      padding: 10px;
+      font-size: 1rem;
+      font-family: var(--hind);
+      outline-color: var(--primary-color);
+      outline-width: 2px;
+      outline-offset: 2px;
+      transition: all 300ms ease;
+
+      :hover {
+        box-shadow: 0 5px 7px var(--light-gray);
+      }
+
+      :focus {
+        background: var(--white);
+      }
+    }
+  }
   .template-creator {
+    width: 100%;
     display: flex;
-    align-items: flex-start;
     gap: 20px;
   }
   form.templates {
-    width: 50vw;
+    width: 100%;
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
-    margin-top: 20px;
+    height: fit-content;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    padding-top: 40px;
     gap: 20px;
+    position: relative;
 
+    h3 {
+      color: var(--primary-color);
+      font-family: var(--garamond);
+      position: absolute;
+      top: 0;
+
+      :after {
+        content: "";
+        display: block;
+        position: absolute;
+        bottom: 0;
+        width: 100%;
+        height: 4px;
+        width: 15%;
+        background: var(--primary-color);
+        border-radius: 2px;
+      }
+    }
     button {
       font-size: 1rem;
       border: none;
@@ -765,17 +847,26 @@ export const CreateTemplateContent = styled.div`
   }
   .form-group {
     display: flex;
-    gap: 10px;
+    align-items: flex-end;
+    width: 100%;
+    height: fit-content;
+    padding: 10px 5px;
+    background: whitesmoke;
+    gap: 5px;
+    border-radius: 5px;
 
     label {
       color: var(--primary-color);
       font-family: var(--garamond);
-      font-size: 1.2rem;
+      font-weight: 500;
+      font-size: 1.1rem;
+      letter-spacing: -1px;
     }
     div {
       width: fit-content;
+      display: flex;
+      align-items: center;
       font-size: 1rem;
-      padding: 10px;
       border: none;
       border-radius: 5px;
       font-family: var(--hind);
@@ -791,6 +882,11 @@ export const CreateTemplateContent = styled.div`
 
       :focus {
         background: var(--white);
+      }
+
+      span {
+        display: block;
+        font-size: 1.1rem;
       }
     }
     .error {
@@ -841,6 +937,31 @@ export const CreateTemplateContent = styled.div`
       gap: 2px;
       font-size: 0.8em;
       margin-bottom: 25px;
+    }
+  }
+
+  button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    gap: 5px;
+    font-size: 1rem;
+    border: none;
+    border-radius: 5px;
+    padding: 10px 20px;
+    width: 100%;
+    height: fit-content;
+    background: var(--primary-color);
+    font-family: var(--hind);
+    color: white;
+    transition: all 200ms ease;
+    cursor: pointer;
+
+    :hover {
+      box-shadow: -5px -5px var(--light-tint), 5px 5px var(--dark-tint);
+      background: var(--primary-color);
+      color: white;
     }
   }
 `;
