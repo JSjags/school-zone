@@ -4,14 +4,14 @@ import { motion, AnimatePresence } from "framer-motion";
 import { FaChevronLeft } from "react-icons/fa";
 
 const TemplateOptions = ({
-  institutionLevel,
-  setFormData,
-  //   errors,
-  //   setErrors,
+  templateOption,
+  setTemplateOption,
+  errors,
+  setErrors,
   //   institutionLevelRef,
   //   setFormValidity,
 }) => {
-  const levelInputRef = useRef();
+  const templateInputRef = useRef();
   const [isOpen, setIsOpen] = useState(false);
 
   //   useEffect(() => {
@@ -29,12 +29,12 @@ const TemplateOptions = ({
   const toggleMenu = () => {
     setIsOpen(!isOpen);
   };
-  const updateLevel = (e) => {
-    setFormData((prevState) => ({
+  const updateTemplateOption = (e) => {
+    setTemplateOption((prevState) => ({
       ...prevState,
-      institutionLevel: e.target.textContent,
+      type: e.target.textContent,
     }));
-    levelInputRef.current.blur();
+    templateInputRef.current.blur();
   };
 
   const optionsVariants = {
@@ -83,24 +83,18 @@ const TemplateOptions = ({
           }
         />
         <input
-          ref={levelInputRef}
+          ref={templateInputRef}
           id="level"
-          value={institutionLevel}
+          value={templateOption.type}
           readOnly
-          name="institutionLevel"
+          name="templateOption"
           type={"text"}
           onClick={toggleMenu}
           onChange={(e) => {
-            // if (institutionLevel === "Select your institution") {
-            //   setErrors((prevState) => ({
-            //     ...prevState,
-            //     institutionLevel: "Please select your institution",
-            //   }));
-            //   setFormValidity((prevState) => ({
-            //     ...prevState,
-            //     institutionLevel: false,
-            //   }));
-            // }
+            setTemplateOption((prevState) => ({
+              ...prevState,
+              type: e.target.value,
+            }));
           }}
         />
       </Content>
@@ -118,9 +112,9 @@ const TemplateOptions = ({
               data-name="institutionLevel"
               onClick={(e) => {
                 toggleMenu();
-                updateLevel(e);
-                levelInputRef.current.focus();
-                levelInputRef.current.blur();
+                updateTemplateOption(e);
+                templateInputRef.current.focus();
+                templateInputRef.current.blur();
               }}
             >
               Text
@@ -129,9 +123,9 @@ const TemplateOptions = ({
               data-name="institutionLevel"
               onClick={(e) => {
                 toggleMenu();
-                updateLevel(e);
-                levelInputRef.current.focus();
-                levelInputRef.current.blur();
+                updateTemplateOption(e);
+                templateInputRef.current.focus();
+                templateInputRef.current.blur();
               }}
             >
               Number
@@ -140,9 +134,9 @@ const TemplateOptions = ({
               data-name="institutionLevel"
               onClick={(e) => {
                 toggleMenu();
-                updateLevel(e);
-                levelInputRef.current.focus();
-                levelInputRef.current.blur();
+                updateTemplateOption(e);
+                templateInputRef.current.focus();
+                templateInputRef.current.blur();
               }}
             >
               Options

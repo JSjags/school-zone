@@ -1,4 +1,4 @@
-import styled from "styled-components";
+import styled, { css } from "styled-components";
 
 export const EditProfileWrapper = styled.div`
   width: 100%;
@@ -743,6 +743,11 @@ export const CreateTemplateContent = styled.div`
       grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
       grid-template-rows: max-content;
       padding-top: 40px;
+      ${(props) =>
+        props.errors !== null &&
+        css`
+          padding-top: 70px;
+        `};
       gap: 20px;
 
       h3 {
@@ -762,6 +767,22 @@ export const CreateTemplateContent = styled.div`
           background: var(--primary-color);
           border-radius: 2px;
         }
+      }
+      p {
+        color: red;
+        display: inline-block;
+        display: flex;
+        align-items: center;
+        gap: 5px;
+        font-family: var(--garamond);
+        position: absolute;
+        top: 30px;
+        background: rgba(255, 0, 0, 0.3);
+        padding: 5px;
+        border-radius: 5px;
+        border: 1px solid red;
+        font-family: var(--hind);
+        margin-bottom: 10px;
       }
     }
   }
@@ -805,6 +826,7 @@ export const CreateTemplateContent = styled.div`
     height: fit-content;
     grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
     padding-top: 40px;
+    padding-bottom: 70px;
     gap: 20px;
     position: relative;
 
@@ -830,6 +852,9 @@ export const CreateTemplateContent = styled.div`
       font-size: 1rem;
       border: none;
       border-radius: 5px;
+      position: absolute;
+      right: 0;
+      bottom: 0;
       padding: 10px 20px;
       width: 100%;
       background: var(--primary-color);
@@ -854,6 +879,9 @@ export const CreateTemplateContent = styled.div`
     background: whitesmoke;
     gap: 5px;
     border-radius: 5px;
+    position: relative;
+    overflow: hidden;
+    transition: all 300ms ease;
 
     label {
       color: var(--primary-color);
@@ -861,10 +889,11 @@ export const CreateTemplateContent = styled.div`
       font-weight: 500;
       font-size: 1.1rem;
       letter-spacing: -1px;
+      text-transform: capitalize;
     }
     div {
       width: fit-content;
-      display: flex;
+      display: inline-flex;
       align-items: center;
       font-size: 1rem;
       border: none;
@@ -874,29 +903,29 @@ export const CreateTemplateContent = styled.div`
       outline-color: var(--primary-color);
       outline-width: 2px;
       outline-offset: 2px;
+      transform: translateY(6%);
+      letter-spacing: -1px;
       transition: all 300ms ease;
 
-      :hover {
-        box-shadow: 0 5px 7px var(--light-gray);
-      }
-
-      :focus {
-        background: var(--white);
-      }
-
       span {
-        display: block;
         font-size: 1.1rem;
+        font-weight: 500;
       }
     }
-    .error {
-      display: flex;
-      align-items: center;
-      line-height: 0.8em;
-      color: red;
-      gap: 2px;
-      font-size: 0.8em;
-      margin-bottom: 25px;
+    .delete-field {
+      position: absolute;
+      background: red;
+      color: white;
+      top: 0;
+      padding: 10px;
+      right: 0;
+      transform: translateX(90%);
+      border-radius: 5px;
+      height: 100%;
+      cursor: pointer;
+    }
+    :hover .delete-field {
+      transform: translateX(0);
     }
   }
   .form-group-fill {

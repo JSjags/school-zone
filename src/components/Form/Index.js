@@ -2,7 +2,8 @@ import { useState, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { BiErrorCircle } from "react-icons/bi";
 import { RiLockPasswordLine } from "react-icons/ri";
-import { MdPlaylistAdd } from "react-icons/md";
+import { TbTemplate } from "react-icons/tb";
+import { MdPlaylistAdd, MdDeleteForever } from "react-icons/md";
 import { BsImage, BsCloudUpload } from "react-icons/bs";
 import { isStrongPassword } from "validator";
 import { MdChangeCircle, MdPreview } from "react-icons/md";
@@ -202,7 +203,6 @@ const EditProfileForm = () => {
     }));
   };
   const handleSubmit = async (e) => {
-    alert(JSON.stringify(formData));
     e.preventDefault();
     setIsLoading(true);
 
@@ -1086,10 +1086,17 @@ const CreateTemplate = () => {
       type: "text",
     },
   });
-  const [templateOption, setTemplateOption] = useState("Select field type");
+  const [templateOption, setTemplateOption] = useState({
+    name: "",
+    type: "Select field type",
+  });
+  const [errors, setErrors] = useState(null);
 
   const dispatch = useDispatch();
   const { data: schoolData } = useSelector((state) => state.schoolData);
+  const { id: schoolId, token: schoolToken } = useSelector(
+    (state) => state.schoolAuth
+  );
 
   const handleCreateTemplate = () => {
     dispatch(showForm("createTemplate"));
@@ -1097,35 +1104,107 @@ const CreateTemplate = () => {
   const handleCancel = () => {
     dispatch(closeEditProfileModal());
   };
+  const handleChange = (e) => {
+    setTemplateOption((prev) => ({ ...prev, name: e.target.value }));
+  };
+
+  const handleAddTemplate = (e) => {
+    if (
+      templateOption.name.trim() === "" &&
+      templateOption.type === "Select field type"
+    ) {
+      return setErrors("Please enter valid field name and field type");
+    }
+    if (templateOption.name.trim() === "") {
+      return setErrors("Please enter valid field name");
+    }
+    if (templateOption.name.trim().length < 3) {
+      return setErrors("Field name cannot be less than 3 characters");
+    }
+    if (templateOption.type === "Select field type") {
+      return setErrors("Please select field type");
+    }
+    setErrors(null);
+    setFormFields((prev) => ({
+      ...prev,
+      [templateOption.name
+        .split(" ")
+        .map((str, i) =>
+          i < 1 ? str.toLowerCase() : str[0].toUpperCase() + str.slice(1)
+        )
+        .join("")]: {
+        name: templateOption.name
+          .split(" ")
+          .map((str, i) => str[0].toUpperCase() + str.slice(1))
+          .join(" "),
+        type: templateOption.type,
+      },
+    }));
+    setTemplateOption({
+      name: "",
+      type: "Select field type",
+    });
+  };
+
+  const handleTemplateDelete = (field) => {
+    let newFormFields = { ...formFields };
+    delete newFormFields[field[0]];
+    console.log(newFormFields);
+    setFormFields(newFormFields);
+  };
+
+  const handleTemplateSubmit = async (e) => {
+    e.preventDefault();
+    const response = await axios({
+      url: `/api/schools/${schoolId}/update`,
+      method: "put",
+      data: formFields,
+      headers: {
+        Authorization: `Bearer ${schoolToken}`,
+      },
+    });
+    console.log(response);
+  };
 
   return (
     <CreateTemplateWrapper>
-      <CreateTemplateContent>
+      <CreateTemplateContent errors={errors}>
         <h2>Create Registration Template</h2>
         <p>Set fields required for standard registration.</p>
         <hr />
         <div className="add-template-field-cont">
           <div className="add-template-group">
             <h3>Add template form</h3>
+            {errors && (
+              <p className="errors">
+                <BiErrorCircle style={{ fontSize: "1.2rem" }} />
+                <span>{errors}</span>
+              </p>
+            )}
             <div className="field-values">
-              <input type="text" value="" placeholder="Field name" readOnly />
+              <input
+                onChange={handleChange}
+                type="text"
+                value={templateOption.name}
+                placeholder="Field name"
+              />
               <TemplateOptions
-                institutionLevel={templateOption}
-                // setFormData={setTemplateOption}
+                templateOption={templateOption}
+                setTemplateOption={setTemplateOption}
                 //   formData={formData}
-                //   errors={errors}
-                //   setErrors={setErrors}
+                errors={errors}
+                setErrors={setErrors}
                 //   institutionLevelRef={institutionLevelRef}
                 //   setFormValidity={setFormValidity}
               />
             </div>
-            <button>
+            <button onClick={handleAddTemplate}>
               <MdPlaylistAdd style={{ fontSize: "1.4rem", color: "white" }} />
               <span>Add field</span>
             </button>
           </div>
           <div className="template-creator">
-            <form className="templates">
+            <form onSubmit={handleTemplateSubmit} className="templates">
               <h3>Required fields</h3>
               {Object.entries(formFields).map((field, index) => (
                 <div className="form-group" key={index}>
@@ -1135,8 +1214,18 @@ const CreateTemplate = () => {
                       {field[1].type[0].toUpperCase() + field[1].type.slice(1)}
                     </span>
                   </div>
+                  <div
+                    className="delete-field"
+                    onClick={() => handleTemplateDelete(field)}
+                  >
+                    <MdDeleteForever style={{ fontSize: "1.4rem" }} />
+                  </div>
                 </div>
               ))}
+              <button className="submit">
+                <TbTemplate style={{ fontSize: "1.4rem", color: "white" }} />
+                <span>Submit Template</span>
+              </button>
             </form>
           </div>
         </div>
