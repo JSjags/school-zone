@@ -4,7 +4,7 @@ import { BiErrorCircle } from "react-icons/bi";
 import { RiLockPasswordLine } from "react-icons/ri";
 import { TbTemplate } from "react-icons/tb";
 import { MdPlaylistAdd, MdDeleteForever } from "react-icons/md";
-import { BsImage, BsCloudUpload } from "react-icons/bs";
+import { BsImage, BsCloudUpload, BsInfoCircleFill } from "react-icons/bs";
 import { isStrongPassword } from "validator";
 import { MdChangeCircle, MdPreview } from "react-icons/md";
 import { FiInfo } from "react-icons/fi";
@@ -1089,8 +1089,13 @@ const CreateTemplate = () => {
   const [templateOption, setTemplateOption] = useState({
     name: "",
     type: "Select field type",
+    options: "",
   });
   const [errors, setErrors] = useState(null);
+  const [isLoading, setIsLoading] = useState(false);
+  const [isSuccess, setIsSuccess] = useState(false);
+  const [isError, setIsError] = useState(false);
+  const [templateMessage, setTemplateMessage] = useState(null);
 
   const dispatch = useDispatch();
   const { data: schoolData } = useSelector((state) => state.schoolData);
@@ -1105,7 +1110,7 @@ const CreateTemplate = () => {
     dispatch(closeEditProfileModal());
   };
   const handleChange = (e) => {
-    setTemplateOption((prev) => ({ ...prev, name: e.target.value }));
+    setTemplateOption((prev) => ({ ...prev, [e.target.name]: e.target.value }));
   };
 
   const handleAddTemplate = (e) => {
@@ -1123,6 +1128,12 @@ const CreateTemplate = () => {
     }
     if (templateOption.type === "Select field type") {
       return setErrors("Please select field type");
+    }
+    if (templateOption.options.length < 1) {
+      return setErrors("Options field cannot be empty");
+    }
+    if (templateOption.options.trim().split(" ").length < 2) {
+      return setErrors("Options values must be more than 1.");
     }
     setErrors(null);
     setFormFields((prev) => ({
@@ -1155,20 +1166,53 @@ const CreateTemplate = () => {
 
   const handleTemplateSubmit = async (e) => {
     e.preventDefault();
+    setErrors(null);
+    setTemplateOption({
+      name: "",
+      type: "Select field type",
+    });
+    setIsLoading(true);
+    setIsSuccess(false);
+    setIsError(false);
+    setTemplateMessage(null);
     const response = await axios({
       url: `/api/schools/${schoolId}/update`,
       method: "put",
-      data: formFields,
+      data: {
+        templateName: "students",
+        templateData: formFields,
+      },
       headers: {
         Authorization: `Bearer ${schoolToken}`,
       },
     });
-    console.log(response);
+    if (response.status !== 200 && response.statusText !== "OK") {
+      setIsLoading(false);
+      setIsError(true);
+      return setTemplateMessage("Sorry, cannot save template at the moment.");
+    }
+    setIsLoading(false);
+    setIsError(false);
+    setIsSuccess(true);
+    return setTemplateMessage("Template saved successfully.");
+  };
+  const handleOptionsFormat = (e) => {
+    setTemplateOption((prev) => ({
+      ...prev,
+      options: e.target.value
+        .split(",")
+        .map((str) => str.trim())
+        .join(" "),
+    }));
   };
 
   return (
     <CreateTemplateWrapper>
-      <CreateTemplateContent errors={errors}>
+      <CreateTemplateContent
+        errors={errors}
+        isSuccess={isSuccess}
+        isError={isError}
+      >
         <h2>Create Registration Template</h2>
         <p>Set fields required for standard registration.</p>
         <hr />
@@ -1184,6 +1228,7 @@ const CreateTemplate = () => {
             <div className="field-values">
               <input
                 onChange={handleChange}
+                name="name"
                 type="text"
                 value={templateOption.name}
                 placeholder="Field name"
@@ -1194,9 +1239,23 @@ const CreateTemplate = () => {
                 //   formData={formData}
                 errors={errors}
                 setErrors={setErrors}
-                //   institutionLevelRef={institutionLevelRef}
-                //   setFormValidity={setFormValidity}
               />
+              {templateOption.type === "Options" && (
+                <div>
+                  <span className="nb">
+                    <BsInfoCircleFill />
+                    <span>Input must be a comma(,) seperated list.</span>
+                  </span>
+                  <input
+                    onChange={handleChange}
+                    onBlur={handleOptionsFormat}
+                    name="options"
+                    type="text"
+                    value={templateOption.options}
+                    placeholder="Field options"
+                  />
+                </div>
+              )}
             </div>
             <button onClick={handleAddTemplate}>
               <MdPlaylistAdd style={{ fontSize: "1.4rem", color: "white" }} />
@@ -1206,6 +1265,12 @@ const CreateTemplate = () => {
           <div className="template-creator">
             <form onSubmit={handleTemplateSubmit} className="templates">
               <h3>Required fields</h3>
+              {templateMessage && (
+                <p className={isError ? "errors" : "success"}>
+                  <BiErrorCircle style={{ fontSize: "1.2rem" }} />
+                  <span>{templateMessage}</span>
+                </p>
+              )}
               {Object.entries(formFields).map((field, index) => (
                 <div className="form-group" key={index}>
                   <label>{field[1].name}:</label>
@@ -1222,10 +1287,17 @@ const CreateTemplate = () => {
                   </div>
                 </div>
               ))}
-              <button className="submit">
-                <TbTemplate style={{ fontSize: "1.4rem", color: "white" }} />
-                <span>Submit Template</span>
-              </button>
+              {!isLoading && (
+                <button className="submit">
+                  <TbTemplate style={{ fontSize: "1.4rem", color: "white" }} />
+                  <span>Submit Template</span>
+                </button>
+              )}
+              {isLoading && (
+                <div className="loading">
+                  <Spinner />
+                </div>
+              )}
             </form>
           </div>
         </div>

@@ -768,22 +768,6 @@ export const CreateTemplateContent = styled.div`
           border-radius: 2px;
         }
       }
-      p {
-        color: red;
-        display: inline-block;
-        display: flex;
-        align-items: center;
-        gap: 5px;
-        font-family: var(--garamond);
-        position: absolute;
-        top: 30px;
-        background: rgba(255, 0, 0, 0.3);
-        padding: 5px;
-        border-radius: 5px;
-        border: 1px solid red;
-        font-family: var(--hind);
-        margin-bottom: 10px;
-      }
     }
   }
   .field-values {
@@ -825,8 +809,16 @@ export const CreateTemplateContent = styled.div`
     display: grid;
     height: fit-content;
     grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-    padding-top: 40px;
     padding-bottom: 70px;
+    padding-top: 40px;
+    ${(props) =>
+      props.isSuccess === true || props.isError === true
+        ? css`
+            padding-top: 70px;
+          `
+        : css`
+            padding-top: 40px;
+          `}
     gap: 20px;
     position: relative;
 
@@ -868,6 +860,21 @@ export const CreateTemplateContent = styled.div`
         background: var(--primary-color);
         color: white;
       }
+    }
+    .loading {
+      font-size: 1rem;
+      border: none;
+      border-radius: 5px;
+      height: 42px;
+      position: absolute;
+      right: 0;
+      bottom: 0;
+      padding: 10px 20px;
+      width: 100%;
+      background: none;
+      font-family: var(--hind);
+      color: white;
+      transition: all 200ms ease;
     }
   }
   .form-group {
@@ -928,45 +935,38 @@ export const CreateTemplateContent = styled.div`
       transform: translateX(0);
     }
   }
-  .form-group-fill {
+
+  .success {
+    color: green;
+    display: inline-block;
     display: flex;
-    gap: 10px;
-
-    label {
-      color: var(--primary-color);
-      font-family: var(--garamond);
-      font-size: 1.2rem;
-    }
-    input {
-      width: 6ch;
-      font-size: 1rem;
-      padding: 10px;
-      border: none;
-      border-radius: 5px;
-      font-family: var(--hind);
-      background: whitesmoke;
-      outline-color: var(--primary-color);
-      outline-width: 2px;
-      outline-offset: 2px;
-      transition: all 300ms ease;
-
-      :hover {
-        box-shadow: 0 5px 7px var(--light-gray);
-      }
-
-      :focus {
-        background: var(--white);
-      }
-    }
-    .error {
-      display: flex;
-      align-items: center;
-      line-height: 0.8em;
-      color: red;
-      gap: 2px;
-      font-size: 0.8em;
-      margin-bottom: 25px;
-    }
+    align-items: center;
+    gap: 5px;
+    font-family: var(--garamond);
+    position: absolute;
+    top: 30px;
+    background: rgba(0, 255, 0, 0.3);
+    padding: 5px;
+    border-radius: 5px;
+    border: 1px solid green;
+    font-family: var(--hind);
+    margin-bottom: 10px;
+  }
+  .errors {
+    color: red;
+    display: inline-block;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    font-family: var(--garamond);
+    position: absolute;
+    top: 30px;
+    background: rgba(255, 0, 0, 0.3);
+    padding: 5px;
+    border-radius: 5px;
+    border: 1px solid red;
+    font-family: var(--hind);
+    margin-bottom: 10px;
   }
 
   button {
@@ -992,5 +992,15 @@ export const CreateTemplateContent = styled.div`
       background: var(--primary-color);
       color: white;
     }
+  }
+  .nb {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    padding: 0 0 5px 0;
+    font-weight: 500;
+    font-family: var(--garamond);
+    font-size: 0.9em;
+    color: var(--primary-color);
   }
 `;
