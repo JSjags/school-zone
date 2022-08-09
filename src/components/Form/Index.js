@@ -3,6 +3,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { BiErrorCircle } from "react-icons/bi";
 import { RiLockPasswordLine } from "react-icons/ri";
 import { TbTemplate } from "react-icons/tb";
+import { IoIosCloudDone } from "react-icons/io";
 import { MdPlaylistAdd, MdDeleteForever } from "react-icons/md";
 import { BsImage, BsCloudUpload, BsInfoCircleFill } from "react-icons/bs";
 import { isStrongPassword } from "validator";
@@ -1129,10 +1130,16 @@ const CreateTemplate = () => {
     if (templateOption.type === "Select field type") {
       return setErrors("Please select field type");
     }
-    if (templateOption.options.length < 1) {
+    if (
+      templateOption.type === "Options" &&
+      templateOption.options.length < 1
+    ) {
       return setErrors("Options field cannot be empty");
     }
-    if (templateOption.options.trim().split(" ").length < 2) {
+    if (
+      templateOption.type === "Options" &&
+      templateOption.options.trim().split(" ").length < 2
+    ) {
       return setErrors("Options values must be more than 1.");
     }
     setErrors(null);
@@ -1149,11 +1156,14 @@ const CreateTemplate = () => {
           .map((str, i) => str[0].toUpperCase() + str.slice(1))
           .join(" "),
         type: templateOption.type,
+        [templateOption.options && "options"]:
+          templateOption.options && templateOption.options,
       },
     }));
     setTemplateOption({
       name: "",
       type: "Select field type",
+      options: "",
     });
   };
 
@@ -1194,14 +1204,18 @@ const CreateTemplate = () => {
     setIsLoading(false);
     setIsError(false);
     setIsSuccess(true);
-    return setTemplateMessage("Template saved successfully.");
+    setTemplateMessage("Template saved successfully.");
+
+    return setTimeout(() => {
+      dispatch(closeEditProfileModal());
+    }, 3000);
   };
   const handleOptionsFormat = (e) => {
     setTemplateOption((prev) => ({
       ...prev,
       options: e.target.value
         .split(",")
-        .map((str) => str.trim())
+        .map((str) => str.trim().split(" ").join("-"))
         .join(" "),
     }));
   };
@@ -1267,7 +1281,11 @@ const CreateTemplate = () => {
               <h3>Required fields</h3>
               {templateMessage && (
                 <p className={isError ? "errors" : "success"}>
-                  <BiErrorCircle style={{ fontSize: "1.2rem" }} />
+                  {isError ? (
+                    <BiErrorCircle style={{ fontSize: "1.2rem" }} />
+                  ) : (
+                    <IoIosCloudDone style={{ fontSize: "1.2rem" }} />
+                  )}
                   <span>{templateMessage}</span>
                 </p>
               )}
