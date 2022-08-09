@@ -1,8 +1,10 @@
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
+import axios from "axios";
 import { motion, AnimatePresence } from "framer-motion";
 import { BiErrorCircle } from "react-icons/bi";
 import { RiLockPasswordLine } from "react-icons/ri";
 import { TbTemplate } from "react-icons/tb";
+import { FaCameraRetro } from "react-icons/fa";
 import { IoIosCloudDone } from "react-icons/io";
 import { MdPlaylistAdd, MdDeleteForever } from "react-icons/md";
 import { BsImage, BsCloudUpload, BsInfoCircleFill } from "react-icons/bs";
@@ -13,13 +15,15 @@ import { IoCloudDone } from "react-icons/io5";
 import { useSelector, useDispatch } from "react-redux";
 import { isEmail, isMobilePhone } from "validator";
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
-import { storage } from "../../firebase/firebase.config";
 
+import { storage } from "../../firebase/firebase.config";
 import {
   closeEditProfileModal,
   showForm,
 } from "../../features/config/configData";
-import { fetchSchoolData } from "../../features/school/schoolDataSlice";
+import schoolDataSlice, {
+  fetchSchoolData,
+} from "../../features/school/schoolDataSlice";
 
 import {
   ChangeAvatarContent,
@@ -32,13 +36,18 @@ import {
   CreateTemplateWrapper,
   EditProfileContent,
   EditProfileWrapper,
+  StudentRegistrationContent,
+  StudentRegistrationWrapper,
   SuccessMessageContent,
   SuccessMessageWrapper,
 } from "./Form.styles";
 import InstitutionLevel from "../InstitutionLevel/Index";
 import PhoneNumber from "../PhoneNumber/Index";
 import Spinner from "../Spinner/Index";
-import axios from "axios";
+import Text from "../Text/Index";
+import Number from "../Number/Index";
+import Options from "../Options/Index";
+import DatePicker from "../DatePicker/Index";
 
 import noTemplateFoundSvg from "../../assets/no-template.svg";
 import TemplateOptions from "../TemplateOptions/Index";
@@ -1052,39 +1061,39 @@ const CreateStudent = () => {
   );
 };
 // Create Template
-const CreateTemplate = () => {
+const CreateStudentTemplate = () => {
   const [formFields, setFormFields] = useState({
     firstName: {
       name: "First Name",
-      type: "text",
+      type: "Text",
     },
     lastName: {
       name: "Last Name",
-      type: "text",
+      type: "Text",
     },
     otherNames: {
       name: "Other Names",
-      type: "text",
+      type: "Text",
     },
     dateOfBirth: {
       name: "Date of Birth",
-      type: "text",
+      type: "Text",
     },
     nationality: {
       name: "Nationality",
-      type: "text",
+      type: "Text",
     },
     phoneNumber: {
       name: "Phone Number",
-      type: "text",
+      type: "Text",
     },
     Address: {
       name: "Address",
-      type: "text",
+      type: "Text",
     },
     email: {
       name: "Email",
-      type: "text",
+      type: "Text",
     },
   });
   const [templateOption, setTemplateOption] = useState({
@@ -1324,6 +1333,150 @@ const CreateTemplate = () => {
   );
 };
 
+// Student Registration
+const StudentRegistration = () => {
+  const [image, setImage] = useState("");
+  const [showCamera, setShowCamera] = useState(false);
+  const [showCanvas, setShowCanvas] = useState(false);
+
+  const canvas = useRef(null);
+  const context = useRef(null);
+
+  const canvasRef = useRef();
+  const videoRef = useRef();
+
+  const avatarURL = useSelector((state) => state.schoolData.data.avatar_image);
+  const { data: schoolData } = useSelector((state) => state.schoolData);
+
+  const handleVideo = () => {
+    setShowCamera(true);
+    if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+      navigator.mediaDevices.getUserMedia({ video: true }).then((stream) => {
+        videoRef.current.srcObject = stream;
+        videoRef.current.play();
+      });
+    }
+  };
+
+  const handleSnapshot = () => {
+    setShowCamera(false);
+    setShowCanvas(true);
+
+    context.current.drawImage(
+      videoRef.current,
+      0,
+      0,
+      context.current.canvas.clientWidth,
+      context.current.canvas.clientHeight
+    );
+
+    setImage(canvas.current.toDataURL("image/png"));
+  };
+
+  const handleSnapAgain = () => {
+    setShowCamera(true);
+
+    context.current.clearRect(
+      0,
+      0,
+      context.current.canvas.clientWidth,
+      context.current.canvas.clientHeight
+    );
+    if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+      navigator.mediaDevices.getUserMedia({ video: true }).then((stream) => {
+        videoRef.current.srcObject = stream;
+        videoRef.current.play();
+      });
+    }
+
+    setImage("");
+  };
+
+  useEffect(() => {
+    canvas.current = canvasRef.current;
+    context.current = canvas.current.getContext("2d");
+  }, []);
+
+  return (
+    <StudentRegistrationWrapper>
+      <StudentRegistrationContent image={image} showCamera={showCamera}>
+        <div className="reg-header">
+          <img src={avatarURL} />
+          <div>
+            <h2>{schoolData.name}</h2>
+            <p>{schoolData.address}</p>
+            <p>{schoolData.country}</p>
+          </div>
+        </div>
+        <hr />
+        <h2 className="reg-title">Student Registration Form</h2>
+        <div className="reg-form">
+          <div className="passport-cont">
+            <div className="passport">
+              <img alt="" />
+              <canvas ref={canvasRef} id="canvas"></canvas>
+              {showCamera && <video ref={videoRef} autoPlay id="video" />}
+            </div>
+            <div className="button-group">
+              {!showCamera && !image && (
+                <label className="white-btn" onClick={handleVideo}>
+                  <FaCameraRetro style={{ fontSize: "1.4rem" }} />
+                  <span>Use Camera</span>
+                </label>
+              )}
+              {showCamera && (
+                <label className="secondary-btn" onClick={handleSnapshot}>
+                  <FaCameraRetro style={{ fontSize: "1.4rem" }} />
+                  <span>Take Photo</span>
+                </label>
+              )}
+              {/* <input type="file" accept="image/*" capture="camera" /> */}
+              {image && showCanvas && !showCamera && (
+                <label className="secondary-btn" onClick={handleSnapAgain}>
+                  <FaCameraRetro style={{ fontSize: "1.4rem" }} />
+                  <span>Snap Again</span>
+                </label>
+              )}
+              {image && (
+                <label className="primary-btn">
+                  <BsCloudUpload style={{ fontSize: "1.4rem" }} />
+                  <span>Upload photo</span>
+                </label>
+              )}
+            </div>
+          </div>
+          <form>
+            {Object.entries(schoolData.templates.students).map((val, i) => (
+              <div key={i} className="field-container">
+                <label>{val[1].name}:</label>
+                {(() => {
+                  switch (val[1].type) {
+                    case "Text":
+                      return <Text />;
+                    case "number":
+                      return <Number />;
+                    case "Options":
+                      return <Options options={val[1].options} />;
+                    case "Date picker":
+                      return <DatePicker />;
+                    default:
+                      return null;
+                  }
+                })()}
+              </div>
+            ))}
+          </form>
+        </div>
+        <img
+          src={avatarURL}
+          alt="school-logo-watermark"
+          className="watermark"
+        />
+      </StudentRegistrationContent>
+    </StudentRegistrationWrapper>
+  );
+};
+
 const Form = () => {
   const { formToShow } = useSelector((state) => state.config);
 
@@ -1334,7 +1487,8 @@ const Form = () => {
       {formToShow === "changeCoverPhoto" && <ChangeCoverPhoto />}
       {formToShow === "changePassword" && <ChangePassword />}
       {formToShow === "createStudent" && <CreateStudent />}
-      {formToShow === "createTemplate" && <CreateTemplate />}
+      {formToShow === "createStudentTemplate" && <CreateStudentTemplate />}
+      {formToShow === "studentRegistration" && <StudentRegistration />}
     </>
   );
 };

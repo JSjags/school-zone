@@ -36,9 +36,13 @@ const Students = () => {
   const { token: authToken } = useSelector((state) => state.schoolAuth);
   const { isEditProfileModalOpen } = useSelector((state) => state.config);
   const { students } = useSelector((state) => state.schoolData.data);
-  const { data, isLoading, isSuccess, isError, message } = useSelector(
-    (state) => state.schoolData
-  );
+  const {
+    data: schoolData,
+    isLoading,
+    isSuccess,
+    isError,
+    message,
+  } = useSelector((state) => state.schoolData);
 
   const redirect = (location) => {
     if (location === "home") {
@@ -62,8 +66,13 @@ const Students = () => {
       top: "0",
       behavior: "smooth",
     });
+    if (schoolData.templates?.students === undefined) {
+      dispatch(openEditProfileModal());
+      return dispatch(showForm("createStudentTemplate"));
+    }
+
     dispatch(openEditProfileModal());
-    dispatch(showForm("createStudent"));
+    return dispatch(showForm("studentRegistration"));
   };
 
   const handleCreateTemplate = () => {
@@ -72,7 +81,7 @@ const Students = () => {
       behavior: "smooth",
     });
     dispatch(openEditProfileModal());
-    dispatch(showForm("createTemplate"));
+    dispatch(showForm("createStudentTemplate"));
   };
 
   useEffect(() => {

@@ -17,7 +17,7 @@ export const defaultCoverPicUrl =
   "https://th.bing.com/th/id/R.e78ca3715939fafa65a540c511c4fe93?rik=gbsd5JA%2faidV5A&pid=ImgRaw&r=0";
 
 export const defaultAvatarUrl =
-  "https://th.bing.com/th/id/R.53a301afee1474e79270cc20a55d7a5d?rik=E68If5yot0bTaQ&riu=http%3a%2f%2fcdn.onlinewebfonts.com%2fsvg%2fimg_293778.png&ehk=j7lMN11rJ6X3nQHz15FaUFCGvXpe4o%2f52IDWLrE7gGU%3d&risl=&pid=ImgRaw&r=0";
+  "https://th.bing.com/th/id/R.49a6854a63de1e699261f3aa0b98a471?rik=xgE%2b4OUEV%2fPu8Q&riu=http%3a%2f%2fcdn.onlinewebfonts.com%2fsvg%2fimg_285684.png&ehk=cxsRbD9Z36xapVJvQBCO2RTp2HQ46Uvp%2bush1b6%2bThI%3d&risl=&pid=ImgRaw&r=0";
 
 const SideBar = () => {
   const { data } = useSelector((state) => state.schoolData);

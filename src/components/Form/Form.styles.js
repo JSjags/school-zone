@@ -1,4 +1,5 @@
 import styled, { css } from "styled-components";
+import { defaultAvatarUrl } from "../SideBar/Index";
 
 export const EditProfileWrapper = styled.div`
   width: 100%;
@@ -1002,5 +1003,201 @@ export const CreateTemplateContent = styled.div`
     font-family: var(--garamond);
     font-size: 0.9em;
     color: var(--primary-color);
+  }
+`;
+
+export const StudentRegistrationWrapper = styled.div`
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  margin-bottom: 30px;
+`;
+export const StudentRegistrationContent = styled.div`
+  width: calc(100% - 20px);
+  max-width: 1080px;
+  min-height: 50vh;
+  background: var(--white);
+  border-radius: 10px;
+  position: relative;
+  font-family: var(--hind);
+
+  .reg-header {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    img {
+      width: 20%;
+    }
+    div {
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+
+      h2 {
+        font-size: clamp(2rem, 3vw, 3rem);
+        font-family: var(--garamond);
+        color: var(--primary-color);
+        text-transform: uppercase;
+        text-align: center;
+      }
+      p {
+        font-size: clamp(1rem, 2vw, 1.2rem);
+        text-align: center;
+      }
+    }
+  }
+
+  hr {
+    margin: clamp(5px, 1vh, 20px) clamp(20px, 5%, 50px);
+    border: none;
+    border-bottom: 4px solid var(--primary-color);
+    border-radius: 4px;
+    border-width: clamp(2px, 0.5vh, 4px);
+  }
+  .reg-title {
+    position: relative;
+    text-align: center;
+    margin: clamp(20px, 5vh, 30px) 0;
+    padding-bottom: clamp(20px, 5vh, 30px);
+    text-transform: uppercase;
+    color: var(--secondary-color);
+    font-family: var(--system-font);
+    font-weight: 500;
+    text-shadow: 0 3px 3px var(--lightest-gray);
+    letter-spacing: -1px;
+
+    :after {
+      content: "";
+      display: block;
+      position: absolute;
+      left: 50%;
+      bottom: 10px;
+      width: 100%;
+      height: 4px;
+      width: 15%;
+      background: var(--secondary-color);
+      border-radius: 4px;
+      transform: translateX(-50%);
+    }
+  }
+
+  .reg-form {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+    justify-content: space-between;
+    grid-auto-flow: dense;
+    direction: rtl;
+    gap: 20px;
+    margin: clamp(20px, 5vh, 40px) clamp(20px, 5%, 50px);
+
+    form {
+      direction: ltr;
+    }
+
+    label {
+      font-size: clamp(1.2rem, 2vw, 1.4rem);
+      font-weight: 500;
+    }
+    .field-container {
+      margin-bottom: clamp(10px, 5vh, 30px);
+    }
+    .passport-cont {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start;
+      gap: 20px;
+
+      .passport {
+        width: 90%;
+        min-height: 300px;
+        border-radius: 10px;
+        position: relative;
+        z-index: 10;
+        backdrop-filter: blur(10px);
+        gap: clamp(10px, 2vh, 30px);
+        ${(props) =>
+          props.image === ""
+            ? css`
+                background: url(${defaultAvatarUrl});
+              `
+            : css`
+                background: var(--whitesmoke);
+              `};
+        ${(props) =>
+          props.showCamera === true
+            ? css`
+                border: none;
+                background: white;
+              `
+            : css`
+                border: 2px solid var(--lightest-gray);
+              `};
+        background-origin: border-box;
+        background-size: cover;
+        background-repeat: no-repeat;
+        overflow: hidden;
+        border: 3px solid var(--white);
+        background-blend-mode: lighten;
+      }
+      img {
+        background: var(--whitesmoke);
+        position: absolute;
+        width: 100%;
+      }
+      .button-group {
+        width: 90%;
+        margin: 0 auto;
+        display: flex;
+        min-height: 100px;
+        flex-direction: column;
+        gap: 20px;
+        direction: ltr;
+        position: relative;
+        z-index: 10;
+      }
+    }
+  }
+  #video {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 10;
+  }
+  #canvas {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    position: absolute;
+    border-image: stretch;
+    top: 0;
+    left: 0;
+  }
+  input {
+    position: relative;
+    z-index: 10;
+    background: var(--whitesmoke);
+  }
+
+  img.watermark {
+    filter: opacity(0.1);
+    width: 50%;
+    position: absolute;
+    size: 1/2;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) scale(0.8);
+  }
+
+  @supports (aspect-ratio: 2/3) {
+    .passport {
+      aspect-ratio: 2/2;
+    }
   }
 `;

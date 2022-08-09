@@ -8,27 +8,14 @@ const TemplateOptions = ({
   setTemplateOption,
   errors,
   setErrors,
-  //   institutionLevelRef,
-  //   setFormValidity,
 }) => {
   const templateInputRef = useRef();
   const [isOpen, setIsOpen] = useState(false);
 
-  //   useEffect(() => {
-  //     const data = { ...errors };
-  //     delete data.institutionLevel;
-  //     setErrors((prevState) => ({ ...data }));
-  //     if (institutionLevel !== "Select your institution") {
-  //       setFormValidity((prevState) => ({
-  //         ...prevState,
-  //         institutionLevel: true,
-  //       }));
-  //     }
-  //   }, [institutionLevel]);
-
   const toggleMenu = () => {
     setIsOpen(!isOpen);
   };
+
   const updateTemplateOption = (e) => {
     setTemplateOption((prevState) => ({
       ...prevState,
@@ -141,16 +128,19 @@ const TemplateOptions = ({
             >
               Options
             </li>
+            <li
+              data-name="institutionLevel"
+              onClick={(e) => {
+                toggleMenu();
+                updateTemplateOption(e);
+                templateInputRef.current.focus();
+                templateInputRef.current.blur();
+              }}
+            >
+              Date picker
+            </li>
           </motion.ul>
         )}
-        {/* <p ref={institutionLevelRef} className="error">
-          {errors.institutionLevel && (
-            <span>
-              <BiErrorCircle />
-            </span>
-          )}
-          <span>{errors.institutionLevel}</span>
-        </p> */}
       </AnimatePresence>
     </Wrapper>
   );

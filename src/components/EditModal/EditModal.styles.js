@@ -10,6 +10,7 @@ export const Wrapper = styled.div`
   height: 100%;
   background: var(--dark-gray);
   backdrop-filter: blur(5px);
+  padding-bottom: 20px;
 `;
 
 export const Content = styled.div`
@@ -17,6 +18,8 @@ export const Content = styled.div`
   height: 100%;
   overflow: scroll;
   scroll-behavior: smooth;
+  overflow-x: hidden;
+  margin-bottom: 20px;
 
   .close-btn {
     display: flex;
