@@ -84,6 +84,30 @@ export const GlobalStyles = createGlobalStyle`
         color: white;
       }
     }
+    .primary-white-btn {
+      font-size: 1rem;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 10px;
+      border: none;
+      border-radius: 5px;
+      padding: 10px 20px;
+      width: 100%;
+      background: var(--white);
+      font-family: var(--hind);
+      border: 2px solid var(--primary-color);
+      color: var(--primary-color);
+      transition: all 200ms ease;
+      cursor: pointer;
+
+      :hover {
+        transform: scale(1.1);
+        box-shadow: 0 5px 10px var(--primary-dark-mid-gray);
+        background: var(--primary-color);
+        color: white;
+      }
+    }
     .white-btn {
       display: flex;
       align-items: center;

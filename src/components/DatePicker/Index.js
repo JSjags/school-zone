@@ -1,8 +1,25 @@
 import React from "react";
 import { DatePickerWrapper } from "./DatePicker.styles";
 
-const DatePicker = () => {
-  return <DatePickerWrapper as="input" type="date" />;
+const DatePicker = ({ value, formData, setFormData, name }) => {
+  const handleChange = (e) => {
+    setFormData((prev) => ({ ...prev, [e.target.name]: e.target.value }));
+    console.log(formData);
+  };
+
+  return (
+    <>
+      <DatePickerWrapper
+        as="input"
+        name={name}
+        type="date"
+        value={value}
+        onChange={(e) => {
+          handleChange(e);
+        }}
+      />
+    </>
+  );
 };
 
 export default DatePicker;

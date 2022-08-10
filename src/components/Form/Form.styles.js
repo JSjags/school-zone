@@ -1120,14 +1120,6 @@ export const StudentRegistrationContent = styled.div`
         backdrop-filter: blur(10px);
         gap: clamp(10px, 2vh, 30px);
         ${(props) =>
-          props.image === ""
-            ? css`
-                background: url(${defaultAvatarUrl});
-              `
-            : css`
-                background: var(--whitesmoke);
-              `};
-        ${(props) =>
           props.showCamera === true
             ? css`
                 border: none;
@@ -1171,11 +1163,20 @@ export const StudentRegistrationContent = styled.div`
     z-index: 10;
   }
   #canvas {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
+    width: 426px;
+    height: 426px;
+    ${(props) =>
+      props.image === null
+        ? css`
+            background: url(${defaultAvatarUrl});
+          `
+        : css`
+            background: var(--whitesmoke);
+          `};
+    background-origin: border-box;
+    background-size: cover;
+    background-repeat: no-repeat;
     position: absolute;
-    border-image: stretch;
     top: 0;
     left: 0;
   }
@@ -1195,7 +1196,11 @@ export const StudentRegistrationContent = styled.div`
     transform: translate(-50%, -50%) scale(0.8);
   }
 
-  @supports (aspect-ratio: 2/3) {
+  .hidden {
+    display: none;
+  }
+
+  @supports (aspect-ratio: 2/2) {
     .passport {
       aspect-ratio: 2/2;
     }

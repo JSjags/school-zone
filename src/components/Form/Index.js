@@ -6,6 +6,7 @@ import { RiLockPasswordLine } from "react-icons/ri";
 import { TbTemplate } from "react-icons/tb";
 import { FaCameraRetro } from "react-icons/fa";
 import { IoIosCloudDone } from "react-icons/io";
+import { RiGalleryFill } from "react-icons/ri";
 import { MdPlaylistAdd, MdDeleteForever } from "react-icons/md";
 import { BsImage, BsCloudUpload, BsInfoCircleFill } from "react-icons/bs";
 import { isStrongPassword } from "validator";
@@ -1335,15 +1336,21 @@ const CreateStudentTemplate = () => {
 
 // Student Registration
 const StudentRegistration = () => {
-  const [image, setImage] = useState("");
+  const [hasCamera, setHasCamera] = useState("");
+
+  const [image, setImage] = useState(null);
   const [showCamera, setShowCamera] = useState(false);
   const [showCanvas, setShowCanvas] = useState(false);
+
+  const [formData, setFormData] = useState({});
 
   const canvas = useRef(null);
   const context = useRef(null);
 
   const canvasRef = useRef();
   const videoRef = useRef();
+  const imageRef = useRef();
+  const imagePickerRef = useRef();
 
   const avatarURL = useSelector((state) => state.schoolData.data.avatar_image);
   const { data: schoolData } = useSelector((state) => state.schoolData);
@@ -1360,7 +1367,7 @@ const StudentRegistration = () => {
 
   const handleSnapshot = () => {
     setShowCamera(false);
-    setShowCanvas(true);
+    setShowCanvas(false);
 
     context.current.drawImage(
       videoRef.current,
@@ -1373,30 +1380,54 @@ const StudentRegistration = () => {
     setImage(canvas.current.toDataURL("image/png"));
   };
 
-  const handleSnapAgain = () => {
-    setShowCamera(true);
+  const handleImgSelection = (e) => {
+    const fileReader = new FileReader();
 
-    context.current.clearRect(
-      0,
-      0,
-      context.current.canvas.clientWidth,
-      context.current.canvas.clientHeight
-    );
-    if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
-      navigator.mediaDevices.getUserMedia({ video: true }).then((stream) => {
-        videoRef.current.srcObject = stream;
-        videoRef.current.play();
-      });
-    }
+    setShowCamera(false);
+    setShowCanvas(false);
 
-    setImage("");
+    fileReader.readAsDataURL(e.target.files[0]);
+
+    fileReader.onloadend = (e) => {
+      const url = e.target.result;
+      imageRef.current.src = url;
+
+      imageRef.current.onload = () => {
+        context.current.clearRect(
+          0,
+          0,
+          context.current.canvas.clientWidth,
+          context.current.canvas.clientHeight
+        );
+        context.current.drawImage(
+          imageRef.current,
+          0,
+          0,
+          context.current.canvas.clientWidth,
+          context.current.canvas.clientHeight
+        );
+        setImage(canvas.current.toDataURL("image/jpeg", 0.75));
+      };
+    };
   };
 
   useEffect(() => {
     canvas.current = canvasRef.current;
     context.current = canvas.current.getContext("2d");
+
+    (async () => {
+      const devices = await navigator.mediaDevices.enumerateDevices();
+      setHasCamera(devices.some((d) => d.kind === "videoinput"));
+
+      const test = Object.entries(schoolData.templates.students).forEach(
+        (arr) => {
+          setFormData((prevState) => ({ ...prevState, [arr[0]]: "" }));
+        }
+      );
+    })();
   }, []);
 
+  //TODO Finish student registration and handle submission.
   return (
     <StudentRegistrationWrapper>
       <StudentRegistrationContent image={image} showCamera={showCamera}>
@@ -1413,13 +1444,18 @@ const StudentRegistration = () => {
         <div className="reg-form">
           <div className="passport-cont">
             <div className="passport">
-              <img alt="" />
-              <canvas ref={canvasRef} id="canvas"></canvas>
+              <img alt="" ref={imageRef} className="hidden" />
+              <canvas
+                width="426px"
+                height="426px"
+                ref={canvasRef}
+                id="canvas"
+              ></canvas>
               {showCamera && <video ref={videoRef} autoPlay id="video" />}
             </div>
             <div className="button-group">
-              {!showCamera && !image && (
-                <label className="white-btn" onClick={handleVideo}>
+              {hasCamera && (
+                <label className="primary-white-btn" onClick={handleVideo}>
                   <FaCameraRetro style={{ fontSize: "1.4rem" }} />
                   <span>Use Camera</span>
                 </label>
@@ -1430,19 +1466,25 @@ const StudentRegistration = () => {
                   <span>Take Photo</span>
                 </label>
               )}
-              {/* <input type="file" accept="image/*" capture="camera" /> */}
-              {image && showCanvas && !showCamera && (
-                <label className="secondary-btn" onClick={handleSnapAgain}>
-                  <FaCameraRetro style={{ fontSize: "1.4rem" }} />
-                  <span>Snap Again</span>
+              <input
+                id="image-picker"
+                type="file"
+                ref={imagePickerRef}
+                accept="image/*"
+                capture="camera"
+                onChange={(e) => handleImgSelection(e)}
+                className="hidden"
+              />
+              {
+                <label
+                  htmlFor="image-picker"
+                  className="secondary-btn"
+                  onClick={handleImgSelection}
+                >
+                  <RiGalleryFill style={{ fontSize: "1.5rem" }} />
+                  <span>Choose from gallery</span>
                 </label>
-              )}
-              {image && (
-                <label className="primary-btn">
-                  <BsCloudUpload style={{ fontSize: "1.4rem" }} />
-                  <span>Upload photo</span>
-                </label>
-              )}
+              }
             </div>
           </div>
           <form>
@@ -1452,13 +1494,39 @@ const StudentRegistration = () => {
                 {(() => {
                   switch (val[1].type) {
                     case "Text":
-                      return <Text />;
+                      return (
+                        <Text
+                          value={formData[val[0]]}
+                          setFormData={setFormData}
+                          name={val[0]}
+                        />
+                      );
                     case "number":
-                      return <Number />;
+                      return (
+                        <Number
+                          value={formData[val[0]]}
+                          setFormData={setFormData}
+                          name={val[0]}
+                        />
+                      );
                     case "Options":
-                      return <Options options={val[1].options} />;
+                      return (
+                        <Options
+                          options={val[1].options}
+                          value={formData[val[0]]}
+                          setFormData={setFormData}
+                          name={val[0]}
+                        />
+                      );
                     case "Date picker":
-                      return <DatePicker />;
+                      return (
+                        <DatePicker
+                          value={formData[val[0]]}
+                          setFormData={setFormData}
+                          formData={formData}
+                          name={val[0]}
+                        />
+                      );
                     default:
                       return null;
                   }
