@@ -1,15 +1,19 @@
-import React from "react";
 import { TextWrapper } from "./Text.styles";
 
 const Text = ({ value, setFormData, name }) => {
   const handleChange = (e) => {
-    setFormData((prev) => ({ ...prev, [e.target.name]: e.target.value }));
+    setFormData((prev) => ({
+      ...prev,
+      [e.target.name]: {
+        value: e.target.value,
+        type: prev[e.target.name].type,
+      },
+    }));
   };
 
   return (
     <>
       <TextWrapper
-        as="input"
         placeholder="Input text"
         name={name}
         value={value}

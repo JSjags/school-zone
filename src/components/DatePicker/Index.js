@@ -3,8 +3,13 @@ import { DatePickerWrapper } from "./DatePicker.styles";
 
 const DatePicker = ({ value, formData, setFormData, name }) => {
   const handleChange = (e) => {
-    setFormData((prev) => ({ ...prev, [e.target.name]: e.target.value }));
-    console.log(formData);
+    setFormData((prev) => ({
+      ...prev,
+      [e.target.name]: {
+        value: e.target.value,
+        type: prev[e.target.name].type,
+      },
+    }));
   };
 
   return (

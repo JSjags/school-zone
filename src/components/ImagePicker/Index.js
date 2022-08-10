@@ -1,4 +1,4 @@
-import React, { useRef } from "react";
+import { useRef } from "react";
 import { BsImage } from "react-icons/bs";
 import { ImagePickerWrapper, ImagePickerContent } from "./ImagePicker.styles";
 
@@ -13,7 +13,13 @@ const ImagePicker = ({ value, formData, setFormData, name }) => {
     reader.onload = () => {
       const imgURL = reader.result;
       imageRef.current.src = imgURL;
-      setFormData((prev) => ({ ...prev, [e.target.name]: imgURL }));
+      setFormData((prev) => ({
+        ...prev,
+        [e.target.name]: {
+          value: imgURL,
+          type: prev[e.target.name].type,
+        },
+      }));
     };
 
     reader.readAsDataURL(file);
@@ -34,7 +40,7 @@ const ImagePicker = ({ value, formData, setFormData, name }) => {
           className="file-picker"
           onChange={handleChange}
         />
-        {formData[name] && <p className="preview-text">Image Preview</p>}
+        {formData[name]?.value && <p className="preview-text">Image Preview</p>}
         <img ref={imageRef} alt="" />
       </ImagePickerContent>
     </ImagePickerWrapper>

@@ -1134,8 +1134,7 @@ export const StudentRegistrationContent = styled.div`
         background-size: cover;
         background-repeat: no-repeat;
         overflow: hidden;
-        border: 3px solid var(--white);
-        background-blend-mode: lighten;
+        border: 1px solid var(--lightest-gray);
       }
       img {
         background: var(--whitesmoke);

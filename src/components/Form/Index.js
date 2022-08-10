@@ -1385,7 +1385,10 @@ const StudentRegistration = () => {
 
     setFormData((prevState) => ({
       ...prevState,
-      image: canvas.current.toDataURL("image/jpeg", 0.75),
+      image: {
+        value: canvas.current.toDataURL("image/jpeg", 0.75),
+        type: prevState.image.type,
+      },
     }));
   };
 
@@ -1417,7 +1420,10 @@ const StudentRegistration = () => {
         );
         setFormData((prevState) => ({
           ...prevState,
-          image: canvas.current.toDataURL("image/jpeg", 0.75),
+          image: {
+            value: canvas.current.toDataURL("image/jpeg", 0.75),
+            type: prevState.image.type,
+          },
         }));
       };
     };
@@ -1435,19 +1441,25 @@ const StudentRegistration = () => {
         (arr) => {
           setFormData((prevState) => ({
             ...prevState,
-            image: null,
-            [arr[0]]: "",
+            image: {
+              value: null,
+              type: "Image Picker",
+            },
+            [arr[0]]: {
+              value: "",
+              type: arr[1].type,
+            },
           }));
         }
       );
     })();
   }, []);
 
-  //TODO Finish student registration and handle submission.
+  //TODO  handle submission and create student profile.
   return (
     <StudentRegistrationWrapper>
       <StudentRegistrationContent
-        image={formData.image}
+        image={formData.image?.value}
         showCamera={showCamera}
       >
         <div className="reg-header">
@@ -1462,6 +1474,7 @@ const StudentRegistration = () => {
         <h2 className="reg-title">Student Registration Form</h2>
         <div className="reg-form">
           <div className="passport-cont">
+            <label>Passport</label>
             <div className="passport">
               <img alt="" ref={imageRef} className="hidden" />
               <canvas
@@ -1515,15 +1528,15 @@ const StudentRegistration = () => {
                     case "Text":
                       return (
                         <Text
-                          value={formData[val[0]]}
+                          value={formData[val[0]]?.value}
                           setFormData={setFormData}
                           name={val[0]}
                         />
                       );
-                    case "number":
+                    case "Number":
                       return (
                         <Number
-                          value={formData[val[0]]}
+                          value={formData[val[0]]?.value}
                           setFormData={setFormData}
                           name={val[0]}
                         />
@@ -1532,7 +1545,7 @@ const StudentRegistration = () => {
                       return (
                         <Options
                           options={val[1].options}
-                          value={formData[val[0]]}
+                          value={formData[val[0]]?.value}
                           setFormData={setFormData}
                           name={val[0]}
                         />
@@ -1540,7 +1553,7 @@ const StudentRegistration = () => {
                     case "Date Picker":
                       return (
                         <DatePicker
-                          value={formData[val[0]]}
+                          value={formData[val[0]]?.value}
                           setFormData={setFormData}
                           formData={formData}
                           name={val[0]}
@@ -1549,7 +1562,7 @@ const StudentRegistration = () => {
                     case "Image Picker":
                       return (
                         <ImagePicker
-                          value={formData[val[0]]}
+                          value={formData[val[0]]?.value}
                           setFormData={setFormData}
                           formData={formData}
                           name={val[0]}

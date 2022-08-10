@@ -8,18 +8,6 @@ const Options = ({ options, value, setFormData, name }) => {
   const OptionsRef = useRef();
   const [isOpen, setIsOpen] = useState(false);
 
-  // useEffect(() => {
-  //   const data = { ...errors };
-  //   delete data.institutionLevel;
-  //   setErrors((prevState) => ({ ...data }));
-  //   if (institutionLevel !== "Select your institution") {
-  //     setFormValidity((prevState) => ({
-  //       ...prevState,
-  //       institutionLevel: true,
-  //     }));
-  //   }
-  // }, [institutionLevel]);
-
   const toggleMenu = () => {
     setIsOpen(!isOpen);
   };
@@ -27,9 +15,10 @@ const Options = ({ options, value, setFormData, name }) => {
   const handleChange = (e) => {
     setFormData((prev) => ({
       ...prev,
-      [OptionsRef.current.name]: !e.target.value
-        ? e.target.textContent
-        : e.target.value,
+      [OptionsRef.current.name]: {
+        value: !e.target.value ? e.target.textContent : e.target.value,
+        type: prev[OptionsRef.current.name].type,
+      },
     }));
     console.log(e.target.textContent);
   };
@@ -108,6 +97,7 @@ const Options = ({ options, value, setFormData, name }) => {
             {options.split(" ").map((val, i) => {
               return (
                 <li
+                  key={i}
                   onClick={(e) => {
                     toggleMenu();
                     handleChange(e);
