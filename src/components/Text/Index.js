@@ -10,8 +10,8 @@ const Text = ({ value, setFormData, name }) => {
     <>
       <TextWrapper
         as="input"
-        name={name}
         placeholder="Input text"
+        name={name}
         value={value}
         onChange={(e) => {
           handleChange(e);

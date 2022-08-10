@@ -1092,6 +1092,8 @@ export const StudentRegistrationContent = styled.div`
     direction: rtl;
     gap: 20px;
     margin: clamp(20px, 5vh, 40px) clamp(20px, 5%, 50px);
+    position: relative;
+    padding-bottom: 40px;
 
     form {
       direction: ltr;
@@ -1184,6 +1186,22 @@ export const StudentRegistrationContent = styled.div`
     position: relative;
     z-index: 10;
     background: var(--whitesmoke);
+  }
+  #submit-btn {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+  }
+  .info {
+    display: flex;
+    gap: 5px;
+    align-items: flex-start;
+    font-size: 0.8rem;
+    padding: 0 0 10px 0;
+
+    span {
+      line-height: 0.8rem;
+    }
   }
 
   img.watermark {

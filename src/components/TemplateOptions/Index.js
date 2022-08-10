@@ -9,6 +9,14 @@ const TemplateOptions = ({
   errors,
   setErrors,
 }) => {
+  const templateOptions = [
+    "Text",
+    "Number",
+    "Options",
+    "Date Picker",
+    "Image Picker",
+  ];
+
   const templateInputRef = useRef();
   const [isOpen, setIsOpen] = useState(false);
 
@@ -95,50 +103,19 @@ const TemplateOptions = ({
             exit="exit"
             id="institution-list"
           >
-            <li
-              data-name="institutionLevel"
-              onClick={(e) => {
-                toggleMenu();
-                updateTemplateOption(e);
-                templateInputRef.current.focus();
-                templateInputRef.current.blur();
-              }}
-            >
-              Text
-            </li>
-            <li
-              data-name="institutionLevel"
-              onClick={(e) => {
-                toggleMenu();
-                updateTemplateOption(e);
-                templateInputRef.current.focus();
-                templateInputRef.current.blur();
-              }}
-            >
-              Number
-            </li>
-            <li
-              data-name="institutionLevel"
-              onClick={(e) => {
-                toggleMenu();
-                updateTemplateOption(e);
-                templateInputRef.current.focus();
-                templateInputRef.current.blur();
-              }}
-            >
-              Options
-            </li>
-            <li
-              data-name="institutionLevel"
-              onClick={(e) => {
-                toggleMenu();
-                updateTemplateOption(e);
-                templateInputRef.current.focus();
-                templateInputRef.current.blur();
-              }}
-            >
-              Date picker
-            </li>
+            {templateOptions.map((option, i) => (
+              <li
+                data-name="institutionLevel"
+                onClick={(e) => {
+                  toggleMenu();
+                  updateTemplateOption(e);
+                  templateInputRef.current.focus();
+                  templateInputRef.current.blur();
+                }}
+              >
+                {option}
+              </li>
+            ))}
           </motion.ul>
         )}
       </AnimatePresence>

@@ -49,6 +49,7 @@ import Text from "../Text/Index";
 import Number from "../Number/Index";
 import Options from "../Options/Index";
 import DatePicker from "../DatePicker/Index";
+import ImagePicker from "../ImagePicker/Index";
 
 import noTemplateFoundSvg from "../../assets/no-template.svg";
 import TemplateOptions from "../TemplateOptions/Index";
@@ -1063,7 +1064,7 @@ const CreateStudent = () => {
 };
 // Create Template
 const CreateStudentTemplate = () => {
-  const [formFields, setFormFields] = useState({
+  const initialFormFields = {
     firstName: {
       name: "First Name",
       type: "Text",
@@ -1096,7 +1097,19 @@ const CreateStudentTemplate = () => {
       name: "Email",
       type: "Text",
     },
-  });
+  };
+
+  const dispatch = useDispatch();
+  const { data: schoolData } = useSelector((state) => state.schoolData);
+  const { id: schoolId, token: schoolToken } = useSelector(
+    (state) => state.schoolAuth
+  );
+
+  const [formFields, setFormFields] = useState(
+    schoolData.templates?.students
+      ? { ...schoolData.templates.students }
+      : initialFormFields
+  );
   const [templateOption, setTemplateOption] = useState({
     name: "",
     type: "Select field type",
@@ -1107,12 +1120,6 @@ const CreateStudentTemplate = () => {
   const [isSuccess, setIsSuccess] = useState(false);
   const [isError, setIsError] = useState(false);
   const [templateMessage, setTemplateMessage] = useState(null);
-
-  const dispatch = useDispatch();
-  const { data: schoolData } = useSelector((state) => state.schoolData);
-  const { id: schoolId, token: schoolToken } = useSelector(
-    (state) => state.schoolAuth
-  );
 
   const handleCreateTemplate = () => {
     dispatch(showForm("createTemplate"));
@@ -1338,7 +1345,6 @@ const CreateStudentTemplate = () => {
 const StudentRegistration = () => {
   const [hasCamera, setHasCamera] = useState("");
 
-  const [image, setImage] = useState(null);
   const [showCamera, setShowCamera] = useState(false);
   const [showCanvas, setShowCanvas] = useState(false);
 
@@ -1377,7 +1383,10 @@ const StudentRegistration = () => {
       context.current.canvas.clientHeight
     );
 
-    setImage(canvas.current.toDataURL("image/png"));
+    setFormData((prevState) => ({
+      ...prevState,
+      image: canvas.current.toDataURL("image/jpeg", 0.75),
+    }));
   };
 
   const handleImgSelection = (e) => {
@@ -1406,7 +1415,10 @@ const StudentRegistration = () => {
           context.current.canvas.clientWidth,
           context.current.canvas.clientHeight
         );
-        setImage(canvas.current.toDataURL("image/jpeg", 0.75));
+        setFormData((prevState) => ({
+          ...prevState,
+          image: canvas.current.toDataURL("image/jpeg", 0.75),
+        }));
       };
     };
   };
@@ -1421,7 +1433,11 @@ const StudentRegistration = () => {
 
       const test = Object.entries(schoolData.templates.students).forEach(
         (arr) => {
-          setFormData((prevState) => ({ ...prevState, [arr[0]]: "" }));
+          setFormData((prevState) => ({
+            ...prevState,
+            image: null,
+            [arr[0]]: "",
+          }));
         }
       );
     })();
@@ -1430,7 +1446,10 @@ const StudentRegistration = () => {
   //TODO Finish student registration and handle submission.
   return (
     <StudentRegistrationWrapper>
-      <StudentRegistrationContent image={image} showCamera={showCamera}>
+      <StudentRegistrationContent
+        image={formData.image}
+        showCamera={showCamera}
+      >
         <div className="reg-header">
           <img src={avatarURL} />
           <div>
@@ -1454,13 +1473,13 @@ const StudentRegistration = () => {
               {showCamera && <video ref={videoRef} autoPlay id="video" />}
             </div>
             <div className="button-group">
-              {hasCamera && (
+              {hasCamera && !showCamera && (
                 <label className="primary-white-btn" onClick={handleVideo}>
                   <FaCameraRetro style={{ fontSize: "1.4rem" }} />
                   <span>Use Camera</span>
                 </label>
               )}
-              {showCamera && (
+              {hasCamera && showCamera && (
                 <label className="secondary-btn" onClick={handleSnapshot}>
                   <FaCameraRetro style={{ fontSize: "1.4rem" }} />
                   <span>Take Photo</span>
@@ -1518,9 +1537,18 @@ const StudentRegistration = () => {
                           name={val[0]}
                         />
                       );
-                    case "Date picker":
+                    case "Date Picker":
                       return (
                         <DatePicker
+                          value={formData[val[0]]}
+                          setFormData={setFormData}
+                          formData={formData}
+                          name={val[0]}
+                        />
+                      );
+                    case "Image Picker":
+                      return (
+                        <ImagePicker
                           value={formData[val[0]]}
                           setFormData={setFormData}
                           formData={formData}
@@ -1533,6 +1561,16 @@ const StudentRegistration = () => {
                 })()}
               </div>
             ))}
+            <p className="info">
+              <BsInfoCircleFill style={{ fontSize: "1rem" }} />
+              <span>
+                No field should be left empty, unwanted fields can filled with
+                "null" or hyphen(s) or any character of your choice.
+              </span>
+            </p>
+            <button className="primary-btn" id="submit-btn">
+              Submit
+            </button>
           </form>
         </div>
         <img

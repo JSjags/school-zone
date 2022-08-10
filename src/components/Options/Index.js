@@ -4,140 +4,124 @@ import { motion, AnimatePresence } from "framer-motion";
 import { FaChevronLeft } from "react-icons/fa";
 import { BiErrorCircle } from "react-icons/bi";
 
-const Options = ({ options }) =>
-  //   {
-  //   institutionLevel,
-  //   setFormData,
-  //   formData,
-  //   checkInstitution,
-  //   errors,
-  //   setErrors,
-  //   institutionLevelRef,
-  //   setFormValidity,
-  // }
-  {
-    const levelInputRef = useRef();
-    const [isOpen, setIsOpen] = useState(false);
+const Options = ({ options, value, setFormData, name }) => {
+  const OptionsRef = useRef();
+  const [isOpen, setIsOpen] = useState(false);
 
-    // useEffect(() => {
-    //   const data = { ...errors };
-    //   delete data.institutionLevel;
-    //   setErrors((prevState) => ({ ...data }));
-    //   if (institutionLevel !== "Select your institution") {
-    //     setFormValidity((prevState) => ({
-    //       ...prevState,
-    //       institutionLevel: true,
-    //     }));
-    //   }
-    // }, [institutionLevel]);
+  // useEffect(() => {
+  //   const data = { ...errors };
+  //   delete data.institutionLevel;
+  //   setErrors((prevState) => ({ ...data }));
+  //   if (institutionLevel !== "Select your institution") {
+  //     setFormValidity((prevState) => ({
+  //       ...prevState,
+  //       institutionLevel: true,
+  //     }));
+  //   }
+  // }, [institutionLevel]);
 
-    const toggleMenu = () => {
-      setIsOpen(!isOpen);
-    };
-    // const updateLevel = (e) => {
-    //   setFormData((prevState) => ({
-    //     ...prevState,
-    //     institutionLevel: e.target.textContent,
-    //   }));
-    //   levelInputRef.current.blur();
-    // };
+  const toggleMenu = () => {
+    setIsOpen(!isOpen);
+  };
 
-    const optionsVariants = {
-      hidden: {
-        y: "-50px",
-        opacity: 0,
+  const handleChange = (e) => {
+    setFormData((prev) => ({
+      ...prev,
+      [OptionsRef.current.name]: !e.target.value
+        ? e.target.textContent
+        : e.target.value,
+    }));
+    console.log(e.target.textContent);
+  };
+
+  const optionsVariants = {
+    hidden: {
+      y: "-50px",
+      opacity: 0,
+    },
+    visible: {
+      y: 0,
+      opacity: 1,
+      transition: {
+        duration: 0.3,
       },
-      visible: {
-        y: 0,
-        opacity: 1,
-        transition: {
-          duration: 0.3,
-        },
+    },
+    exit: {
+      y: "-50px",
+      opacity: 0,
+      transition: {
+        ease: "easeInOut",
+        duration: 0.3,
       },
-      exit: {
-        y: "-50px",
-        opacity: 0,
-        transition: {
-          ease: "easeInOut",
-          duration: 0.3,
-        },
-      },
-    };
+    },
+  };
 
-    return (
-      <Wrapper>
-        <Content>
-          <FaChevronLeft
-            onClick={toggleMenu}
-            style={
-              isOpen
-                ? {
-                    position: "absolute",
-                    top: "50%",
-                    right: 10,
-                    transition: "all 200ms ease-in-out",
-                    transform: "translateY(-50%) rotate(-90deg)",
-                  }
-                : {
-                    position: "absolute",
-                    top: "50%",
-                    right: 10,
-                    transition: "all 200ms ease-in-out",
-                    transform: "translateY(-50%)",
-                  }
-            }
-          />
-          <input
-            ref={levelInputRef}
-            id="level"
-            // value={institutionLevel}
-            readOnly
-            name="institutionLevel"
-            type={"text"}
-            onClick={toggleMenu}
-            placeholder="Select Option"
-            // onChange={(e) => {
-            //   if (institutionLevel === "Select your institution") {
-            //     setErrors((prevState) => ({
-            //       ...prevState,
-            //       institutionLevel: "Please select your institution",
-            //     }));
-            //     setFormValidity((prevState) => ({
-            //       ...prevState,
-            //       institutionLevel: false,
-            //     }));
-            //   }
-            // }}
-          />
-        </Content>
-        <AnimatePresence>
-          {isOpen && (
-            <motion.ul
-              key={"options"}
-              variants={optionsVariants}
-              initial="hidden"
-              animate="visible"
-              exit="exit"
-              id="institution-list"
-            >
-              {options.split(" ").map((val, i) => {
-                return (
-                  <li
-                    data-name="institutionLevel"
-                    onClick={(e) => {
-                      toggleMenu();
-                      // updateLevel(e);
-                      levelInputRef.current.focus();
-                      levelInputRef.current.blur();
-                    }}
-                  >
-                    {val}
-                  </li>
-                );
-              })}
-            </motion.ul>
-          )}
-          {/* <p ref={institutionLevelRef} className="error">
+  return (
+    <Wrapper>
+      <Content>
+        <FaChevronLeft
+          onClick={toggleMenu}
+          style={
+            isOpen
+              ? {
+                  position: "absolute",
+                  top: "50%",
+                  right: 10,
+                  transition: "all 200ms ease-in-out",
+                  transform: "translateY(-50%) rotate(-90deg)",
+                  zIndex: 100,
+                }
+              : {
+                  position: "absolute",
+                  top: "50%",
+                  right: 10,
+                  transition: "all 200ms ease-in-out",
+                  transform: "translateY(-50%)",
+                  zIndex: 100,
+                }
+          }
+        />
+        <input
+          ref={OptionsRef}
+          id="level"
+          readOnly
+          name={name}
+          value={value}
+          onChange={(e) => {
+            handleChange(e);
+          }}
+          type={"text"}
+          onClick={toggleMenu}
+          placeholder="Select Option"
+        />
+      </Content>
+      <AnimatePresence>
+        {isOpen && (
+          <motion.ul
+            key={"options"}
+            variants={optionsVariants}
+            initial="hidden"
+            animate="visible"
+            exit="exit"
+            id="institution-list"
+          >
+            {options.split(" ").map((val, i) => {
+              return (
+                <li
+                  onClick={(e) => {
+                    toggleMenu();
+                    handleChange(e);
+                    OptionsRef.current.focus();
+                    OptionsRef.current.blur();
+                  }}
+                >
+                  {val}
+                </li>
+              );
+            })}
+          </motion.ul>
+        )}
+        {/* <p ref={institutionLevelRef} className="error">
           {errors.institutionLevel && (
             <span>
               <BiErrorCircle />
@@ -145,9 +129,9 @@ const Options = ({ options }) =>
           )}
           <span>{errors.institutionLevel}</span>
         </p> */}
-        </AnimatePresence>
-      </Wrapper>
-    );
-  };
+      </AnimatePresence>
+    </Wrapper>
+  );
+};
 
 export default Options;

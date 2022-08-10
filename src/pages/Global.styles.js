@@ -102,7 +102,7 @@ export const GlobalStyles = createGlobalStyle`
       cursor: pointer;
 
       :hover {
-        transform: scale(1.1);
+        transform: scale(1.05);
         box-shadow: 0 5px 10px var(--primary-dark-mid-gray);
         background: var(--primary-color);
         color: white;

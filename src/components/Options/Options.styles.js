@@ -37,6 +37,7 @@ export const Wrapper = styled.div`
     margin-top: 15px;
     margin-bottom: 5px;
     transition: all 200ms ease-in-out;
+    text-transform: capitalize;
   }
   ul {
     background-color: whitesmoke;
