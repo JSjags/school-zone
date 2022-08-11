@@ -9,6 +9,7 @@ export const NumberWrapper = styled.input`
   caret-color: var(--primary-color);
   outline-color: var(--primary-color);
   font-family: var(--hind);
+  backdrop-filter: blur(5px);
   height: 40px;
   outline-offset: 2px;
   outline-width: 3px;

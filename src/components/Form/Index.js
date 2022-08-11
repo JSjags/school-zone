@@ -15,7 +15,13 @@ import { FiInfo } from "react-icons/fi";
 import { IoCloudDone } from "react-icons/io5";
 import { useSelector, useDispatch } from "react-redux";
 import { isEmail, isMobilePhone } from "validator";
-import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
+import {
+  ref,
+  uploadBytes,
+  getDownloadURL,
+  uploadString,
+} from "firebase/storage";
+import { v4 as uuidv4 } from "uuid";
 
 import { storage } from "../../firebase/firebase.config";
 import {
@@ -1360,6 +1366,9 @@ const StudentRegistration = () => {
 
   const avatarURL = useSelector((state) => state.schoolData.data.avatar_image);
   const { data: schoolData } = useSelector((state) => state.schoolData);
+  const { id: schoolId, token: schoolToken } = useSelector(
+    (state) => state.schoolAuth
+  );
 
   const handleVideo = () => {
     setShowCamera(true);
@@ -1429,6 +1438,64 @@ const StudentRegistration = () => {
     };
   };
 
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    console.log(formData);
+
+    const studentId = uuidv4();
+
+    const dataToFirebase = {};
+    const dataToMongoDB = {};
+
+    Object.entries(formData).forEach((entry) => {
+      if (entry[1].type === "Image Picker") {
+        return (dataToFirebase[entry[0]] = entry[1].value);
+      }
+      return (dataToMongoDB[entry[0]] = entry[1].value);
+    });
+
+    try {
+      // get downloadURL(s) from firebase storage for uploaded images
+      const storageRefArr = Object.entries(dataToFirebase).map((data, i) =>
+        ref(
+          storage,
+          `${schoolData.name.split(" ").join("-")}-${
+            schoolData._id
+          }/students/${studentId}/images/${Object.keys(dataToFirebase)[i]}`
+        )
+      );
+      const uploadResultArr = await Promise.all(
+        Object.entries(dataToFirebase).map((data, i) => {
+          if (Object.values(dataToFirebase)[i].startsWith("data:")) {
+            return uploadString(storageRefArr[i], data[1], "data_url");
+          }
+          return uploadBytes(storageRefArr[i], data[1]);
+        })
+      );
+      const downloadUrlArr = await Promise.all(
+        uploadResultArr.map((result) => getDownloadURL(result.ref))
+      );
+
+      // Update data to be sent to mongo db
+      downloadUrlArr.forEach(
+        (url, i) => (dataToMongoDB[Object.keys(dataToFirebase)[i]] = url)
+      );
+      console.log(dataToMongoDB);
+    } catch (error) {
+      console.log(error);
+    }
+
+    // const data = await axios({
+    //   url: `/${schoolId}/students`,
+    //   method: "post",
+    //   data: formData,
+    //   headers: {
+    //     Authorization: `Bearer ${schoolToken}`,
+    //   },
+    // });
+    // console.log(data);
+  };
+
   useEffect(() => {
     canvas.current = canvasRef.current;
     context.current = canvas.current.getContext("2d");
@@ -1452,6 +1519,12 @@ const StudentRegistration = () => {
           }));
         }
       );
+      context.current.clearRect(
+        0,
+        0,
+        context.current.canvas.clientWidth,
+        context.current.canvas.clientHeight
+      );
     })();
   }, []);
 
@@ -1474,7 +1547,7 @@ const StudentRegistration = () => {
         <h2 className="reg-title">Student Registration Form</h2>
         <div className="reg-form">
           <div className="passport-cont">
-            <label>Passport</label>
+            <label id="passport-title">Passport</label>
             <div className="passport">
               <img alt="" ref={imageRef} className="hidden" />
               <canvas
@@ -1519,7 +1592,7 @@ const StudentRegistration = () => {
               }
             </div>
           </div>
-          <form>
+          <form onSubmit={(e) => handleSubmit(e)}>
             {Object.entries(schoolData.templates.students).map((val, i) => (
               <div key={i} className="field-container">
                 <label>{val[1].name}:</label>
@@ -1581,9 +1654,13 @@ const StudentRegistration = () => {
                 "null" or hyphen(s) or any character of your choice.
               </span>
             </p>
-            <button className="primary-btn" id="submit-btn">
-              Submit
-            </button>
+            {Object.entries(formData).every(
+              (value) => value[1].value !== "" || null || undefined
+            ) && (
+              <button className="primary-btn" id="submit-btn">
+                Submit
+              </button>
+            )}
           </form>
         </div>
         <img

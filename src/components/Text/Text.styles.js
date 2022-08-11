@@ -24,6 +24,6 @@ export const TextWrapper = styled.input`
   }
 
   :focus {
-    background: transparent;
+    background: var(--white);
   }
 `;

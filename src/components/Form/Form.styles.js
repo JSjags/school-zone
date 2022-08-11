@@ -1026,6 +1026,8 @@ export const StudentRegistrationContent = styled.div`
     display: flex;
     flex-direction: column;
     align-items: center;
+    position: relative;
+    z-index: 100;
 
     img {
       width: 20%;
@@ -1056,6 +1058,8 @@ export const StudentRegistrationContent = styled.div`
     border-bottom: 4px solid var(--primary-color);
     border-radius: 4px;
     border-width: clamp(2px, 0.5vh, 4px);
+    position: relative;
+    z-index: 100;
   }
   .reg-title {
     position: relative;
@@ -1068,6 +1072,8 @@ export const StudentRegistrationContent = styled.div`
     font-weight: 500;
     text-shadow: 0 3px 3px var(--lightest-gray);
     letter-spacing: -1px;
+    position: relative;
+    z-index: 100;
 
     :after {
       content: "";
@@ -1094,6 +1100,7 @@ export const StudentRegistrationContent = styled.div`
     margin: clamp(20px, 5vh, 40px) clamp(20px, 5%, 50px);
     position: relative;
     padding-bottom: 40px;
+    z-index: 100;
 
     form {
       direction: ltr;
@@ -1111,12 +1118,21 @@ export const StudentRegistrationContent = styled.div`
       flex-direction: column;
       align-items: center;
       justify-content: flex-start;
-      gap: 20px;
+
+      #passport-title {
+        background: var(--primary-color);
+        width: 90%;
+        color: white;
+        text-align: center;
+        margin-bottom: 0;
+        border-radius: 5px 5px 0 0;
+        padding: 5px 0;
+      }
 
       .passport {
         width: 90%;
         min-height: 300px;
-        border-radius: 10px;
+        border-radius: 0 0 10px 10px;
         position: relative;
         z-index: 10;
         backdrop-filter: blur(10px);
@@ -1143,7 +1159,7 @@ export const StudentRegistrationContent = styled.div`
       }
       .button-group {
         width: 90%;
-        margin: 0 auto;
+        margin: 1rem auto 0;
         display: flex;
         min-height: 100px;
         flex-direction: column;
@@ -1205,6 +1221,7 @@ export const StudentRegistrationContent = styled.div`
 
   img.watermark {
     filter: opacity(0.1);
+    z-index: 10;
     width: 50%;
     position: absolute;
     size: 1/2;

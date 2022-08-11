@@ -49,14 +49,17 @@ export const ImagePickerContent = styled.div`
     width: 100%;
     border-radius: 5px;
     background: var(--whitesmoke);
-    border: 1px solid var(--whitesmoke);
+    border-top: 20px solid var(--primary-color);
   }
   .preview-text {
     color: var(--dark-gray);
     font-family: var(--garamond);
     color: var(--primary-color);
     font-weight: 500;
-    margin: 5px 0;
+    margin: 10px 0 5px;
+    display: flex;
+    align-items: center;
+    gap: 3px;
   }
   .file-picker {
     display: none;

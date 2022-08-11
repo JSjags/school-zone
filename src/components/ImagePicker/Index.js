@@ -1,5 +1,6 @@
 import { useRef } from "react";
 import { BsImage } from "react-icons/bs";
+import { MdPreview } from "react-icons/md";
 import { ImagePickerWrapper, ImagePickerContent } from "./ImagePicker.styles";
 
 const ImagePicker = ({ value, formData, setFormData, name }) => {
@@ -40,8 +41,13 @@ const ImagePicker = ({ value, formData, setFormData, name }) => {
           className="file-picker"
           onChange={handleChange}
         />
-        {formData[name]?.value && <p className="preview-text">Image Preview</p>}
-        <img ref={imageRef} alt="" />
+        {formData[name]?.value && (
+          <p className="preview-text">
+            <MdPreview fontSize={"1.2rem"} />
+            <span>Image Preview</span>
+          </p>
+        )}
+        <img ref={imageRef} alt="" src={value} />
       </ImagePickerContent>
     </ImagePickerWrapper>
   );

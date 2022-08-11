@@ -1,8 +1,7 @@
-import { useState, useEffect, useRef } from "react";
-import { Wrapper, Content } from "./Options.styles";
+import { useState, useRef } from "react";
+import { OptionsWrapper, OptionsContent } from "./Options.styles";
 import { motion, AnimatePresence } from "framer-motion";
 import { FaChevronLeft } from "react-icons/fa";
-import { BiErrorCircle } from "react-icons/bi";
 
 const Options = ({ options, value, setFormData, name }) => {
   const OptionsRef = useRef();
@@ -46,8 +45,8 @@ const Options = ({ options, value, setFormData, name }) => {
   };
 
   return (
-    <Wrapper>
-      <Content>
+    <OptionsWrapper>
+      <OptionsContent>
         <FaChevronLeft
           onClick={toggleMenu}
           style={
@@ -83,7 +82,7 @@ const Options = ({ options, value, setFormData, name }) => {
           onClick={toggleMenu}
           placeholder="Select Option"
         />
-      </Content>
+      </OptionsContent>
       <AnimatePresence>
         {isOpen && (
           <motion.ul
@@ -92,7 +91,7 @@ const Options = ({ options, value, setFormData, name }) => {
             initial="hidden"
             animate="visible"
             exit="exit"
-            id="institution-list"
+            id="options-list"
           >
             {options.split(" ").map((val, i) => {
               return (
@@ -111,16 +110,8 @@ const Options = ({ options, value, setFormData, name }) => {
             })}
           </motion.ul>
         )}
-        {/* <p ref={institutionLevelRef} className="error">
-          {errors.institutionLevel && (
-            <span>
-              <BiErrorCircle />
-            </span>
-          )}
-          <span>{errors.institutionLevel}</span>
-        </p> */}
       </AnimatePresence>
-    </Wrapper>
+    </OptionsWrapper>
   );
 };
 
