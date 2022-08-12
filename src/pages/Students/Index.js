@@ -1,6 +1,11 @@
 import { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { useNavigate } from "react-router";
+import {
+  ColumnDirective,
+  ColumnsDirective,
+  GridComponent,
+} from "@syncfusion/ej2-react-grids";
 
 import { resetSchoolAuth } from "../../features/school/schoolAuthSlice";
 import {
@@ -68,7 +73,7 @@ const Students = () => {
     });
     if (schoolData.templates?.students === undefined) {
       dispatch(openEditProfileModal());
-      return dispatch(showForm("createStudentTemplate"));
+      return dispatch(showForm("createStudent"));
     }
 
     dispatch(openEditProfileModal());
@@ -154,6 +159,41 @@ const Students = () => {
                 </div>
               </div>
             )}
+
+            <div id="grid">
+              <GridComponent
+                dataSource={students}
+                style={{ color: "red !important" }}
+                width="fit-content"
+              >
+                <ColumnsDirective>
+                  <ColumnDirective
+                    field="firstName"
+                    width="100"
+                    textAlign="left"
+                  />
+                  <ColumnDirective field="lastName" width="100" />
+                  <ColumnDirective
+                    field="otherNames"
+                    width="100"
+                    textAlign="left"
+                  />
+                  <ColumnDirective
+                    field="student_id"
+                    width="100"
+                    format="C2"
+                    textAlign="left"
+                    style={{ color: "red !important" }}
+                  />
+                  <ColumnDirective field="height(ft)" width="100" />
+                  <ColumnDirective field="weight(kg)" width="100" />
+                  <ColumnDirective field="dateOfBirth" width="100" />
+                  <ColumnDirective field="nationality" width="100" />
+                  <ColumnDirective field="phoneNumber" width="100" />
+                  <ColumnDirective field="email" width="100" />
+                </ColumnsDirective>
+              </GridComponent>
+            </div>
           </main>
         </Content>
       )}

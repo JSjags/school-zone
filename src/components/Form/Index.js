@@ -418,7 +418,7 @@ const ChangeAvatar = () => {
     setIsSuccess(false);
     setIsLoading(true);
     try {
-      // get downloadURL foem firebase storage
+      // get downloadURL from firebase storage
       const storageRef = ref(
         storage,
         `${schoolData.name.split(" ").join("-")}-${
@@ -1035,7 +1035,7 @@ const CreateStudent = () => {
   const { data: schoolData } = useSelector((state) => state.schoolData);
 
   const handleCreateTemplate = () => {
-    dispatch(showForm("createTemplate"));
+    dispatch(showForm("createStudentTemplate"));
   };
   const handleCancel = () => {
     dispatch(closeEditProfileModal());
@@ -1046,7 +1046,7 @@ const CreateStudent = () => {
       <CreateStudentContent>
         <h2>Create Student Profile</h2>
         <hr style={{ visibility: "hidden", marginBottom: "10px" }} />
-        {!schoolData?.templates?.student && (
+        {schoolData.templates?.students === undefined && (
           <>
             <img
               className="no-template-svg"
@@ -1445,7 +1445,7 @@ const StudentRegistration = () => {
     const studentId = uuidv4();
 
     const dataToFirebase = {};
-    const dataToMongoDB = {};
+    const dataToMongoDB = { student_id: studentId };
 
     Object.entries(formData).forEach((entry) => {
       if (entry[1].type === "Image Picker") {
@@ -1480,20 +1480,21 @@ const StudentRegistration = () => {
       downloadUrlArr.forEach(
         (url, i) => (dataToMongoDB[Object.keys(dataToFirebase)[i]] = url)
       );
+
       console.log(dataToMongoDB);
+
+      const data = await axios({
+        url: `/api/schools/${schoolId}/students`,
+        method: "post",
+        data: [...schoolData.students, dataToMongoDB],
+        headers: {
+          Authorization: `Bearer ${schoolToken}`,
+        },
+      });
+      console.log(data);
     } catch (error) {
       console.log(error);
     }
-
-    // const data = await axios({
-    //   url: `/${schoolId}/students`,
-    //   method: "post",
-    //   data: formData,
-    //   headers: {
-    //     Authorization: `Bearer ${schoolToken}`,
-    //   },
-    // });
-    // console.log(data);
   };
 
   useEffect(() => {
@@ -1528,7 +1529,7 @@ const StudentRegistration = () => {
     })();
   }, []);
 
-  //TODO  handle submission and create student profile.
+  //TODO  Create student profile in mongodb database.
   return (
     <StudentRegistrationWrapper>
       <StudentRegistrationContent

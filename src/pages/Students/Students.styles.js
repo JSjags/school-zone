@@ -20,6 +20,10 @@ export const Content = styled.div`
   padding: 10px 10px 10px 0;
   width: 100%;
 
+  #grid {
+    padding: 50px 20px;
+  }
+
   main {
     flex: 1;
     background: blue;

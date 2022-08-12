@@ -19,6 +19,8 @@ import Finance from "./pages/Finance/Index";
 import Profile from "./pages/Profile/Index";
 import Settings from "./pages/Settings/Index";
 
+import "./App.css";
+
 const queryClient = new QueryClient();
 
 function App() {
