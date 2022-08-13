@@ -25,6 +25,7 @@ export const Content = styled.div`
     background-color: white;
     border-radius: 10px;
     background: white;
+    width: 0;
   }
   header {
     display: flex;

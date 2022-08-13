@@ -18,10 +18,64 @@ export const Content = styled.div`
   align-items: flex-start;
   gap: 10px;
   padding: 10px 10px 10px 0;
-  width: 100%;
 
-  #grid {
-    padding: 50px 20px;
+  #grid-container {
+    width: calc(100% - 20px);
+    min-height: 600px;
+    border-radius: 10px;
+    margin: 0 auto;
+    position: relative;
+    border-radius: 10px;
+  }
+
+  #grid-component {
+    font-family: var(--garamond);
+    font-size: 1.4rem;
+    width: 100%;
+    position: absolute;
+    box-shadow: 0 10px 20px var(--lightest-gray);
+  }
+
+  #columns-directive {
+    color: red !important;
+    background: blue;
+  }
+
+  /* Grid Header */
+  .e-grid [class^="e-"] {
+    color: var(--primary-color);
+    font-size: 0.8rem;
+    text-transform: capitalize;
+    font-weight: 600;
+  }
+  .e-grid .e-gridheader tr:first-child th {
+    border: none;
+    border-right: 0.5px solid var(--mid-gray);
+    padding: 0 0 0 5px;
+  }
+
+  /* Columns */
+  .e-grid:not(.e-row-responsive)
+    .e-gridcontent
+    tr.e-row:first-child
+    .e-rowcell {
+    border: none;
+    border-right: 0.5px solid var(--mid-gray);
+    padding: 10px 5px;
+    color: black;
+    font-family: var(--hind);
+    font-weight: normal;
+    text-transform: none;
+  }
+  ul#grid-component_cmenu,
+  .e-contextmenu-wrapper ul.e-contextmenu,
+  .e-contextmenu-container ul.e-contextmenu,
+  .e-contextmenu-wrapper ul,
+  .e-contextmenu-container ul,
+  .e-contextmenu-wrapper ul,
+  .e-contextmenu-container ul {
+    background-color: #fff;
+    color: red !important;
   }
 
   main {
@@ -243,6 +297,51 @@ export const Content = styled.div`
           background: white;
           box-shadow: 0 5px 10px var(--dark-mid-gray);
         }
+      }
+    }
+  }
+  .student-avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: red;
+    margin: 0 auto;
+    overflow: hidden;
+
+    img {
+      width: 100%;
+      object-fit: cover;
+    }
+  }
+  .available-students {
+    display: flex;
+    gap: 30px;
+    flex-wrap: wrap;
+    padding: 20px 10px;
+
+    button {
+      display: flex;
+      gap: 5px;
+      width: fit-content;
+      padding: 10px;
+      border-radius: 5px;
+      border: none;
+      align-items: center;
+      background: white;
+      border: 1px solid var(--mid-gray);
+      cursor: pointer;
+      transition: all 300ms ease;
+
+      :hover {
+        background-color: white;
+        color: var(--primary-color);
+        box-shadow: 0 5px 7px var(--primary-color);
+      }
+
+      span {
+        font-size: clamp(1rem, 1vw, 1.2rem);
+        font-weight: 500;
+        font-family: var(--hind);
       }
     }
   }

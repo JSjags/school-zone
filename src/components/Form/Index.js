@@ -1394,7 +1394,7 @@ const StudentRegistration = () => {
 
     setFormData((prevState) => ({
       ...prevState,
-      image: {
+      studentPassport: {
         value: canvas.current.toDataURL("image/jpeg", 0.75),
         type: prevState.image.type,
       },
@@ -1429,7 +1429,7 @@ const StudentRegistration = () => {
         );
         setFormData((prevState) => ({
           ...prevState,
-          image: {
+          studentPassport: {
             value: canvas.current.toDataURL("image/jpeg", 0.75),
             type: prevState.image.type,
           },
@@ -1445,7 +1445,7 @@ const StudentRegistration = () => {
     const studentId = uuidv4();
 
     const dataToFirebase = {};
-    const dataToMongoDB = { student_id: studentId };
+    const dataToMongoDB = {};
 
     Object.entries(formData).forEach((entry) => {
       if (entry[1].type === "Image Picker") {
@@ -1453,6 +1453,8 @@ const StudentRegistration = () => {
       }
       return (dataToMongoDB[entry[0]] = entry[1].value);
     });
+
+    dataToMongoDB.student_id = studentId;
 
     try {
       // get downloadURL(s) from firebase storage for uploaded images
@@ -1509,7 +1511,7 @@ const StudentRegistration = () => {
         (arr) => {
           setFormData((prevState) => ({
             ...prevState,
-            image: {
+            studentPassport: {
               value: null,
               type: "Image Picker",
             },
