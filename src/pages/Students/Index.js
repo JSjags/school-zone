@@ -15,6 +15,9 @@ import {
   ContextMenu,
   ExcelExport,
   PdfExport,
+  Toolbar,
+  Search,
+  Page,
 } from "@syncfusion/ej2-react-grids";
 
 import { resetSchoolAuth } from "../../features/school/schoolAuthSlice";
@@ -196,70 +199,78 @@ const Students = () => {
                 </div>
               </div>
             )}
-            <div className="available-students">
-              <button onClick={handleCreateStudent}>
-                <BsPersonPlus style={{ fontSize: "2rem" }} />
-                <span>Register Student</span>
-              </button>
-            </div>
-            <div id="grid-container">
-              <GridComponent
-                dataSource={students}
-                id="grid-component"
-                width="fit-content"
-                allowSorting={true}
-                allowExcelExport={true}
-                allowPdfExport={true}
-                contextMenuItems={contextMenuItems}
-                enableVirtualization={true}
-                height="600"
-              >
-                <ColumnsDirective id="columns-directive">
-                  <ColumnDirective
-                    type="checkbox"
-                    allowSorting={false}
-                    allowFiltering={false}
-                    width="30"
-                    textAlign="center"
-                  ></ColumnDirective>
-                  <ColumnDirective
-                    field={"image"}
-                    headerText={""}
-                    template={AvatarTemplate}
-                    width="60"
-                    textAlign="center"
-                    id="column-directive"
-                  />
-                  {Object.entries(students[0]).map(
-                    (entry, i) =>
-                      entry[0] !== "image" && (
-                        <ColumnDirective
-                          key={i}
-                          field={entry[0]}
-                          headerText={entry[0]
-                            .replace(/([A-Z])/g, " $1")
-                            .replace(/^./, function (str) {
-                              return str.toUpperCase();
-                            })}
-                          width="100"
-                          textAlign="left"
-                          id="column-directive"
-                        />
-                      )
-                  )}
-                </ColumnsDirective>
-                <Inject
-                  services={[
-                    Filter,
-                    VirtualScroll,
-                    Sort,
-                    ContextMenu,
-                    ExcelExport,
-                    PdfExport,
-                  ]}
-                />
-              </GridComponent>
-            </div>
+            {students.length > 0 && (
+              <>
+                <div className="available-students">
+                  <button onClick={handleCreateStudent}>
+                    <BsPersonPlus style={{ fontSize: "2rem" }} />
+                    <span>Register Student</span>
+                  </button>
+                </div>
+                <div id="grid-container">
+                  <GridComponent
+                    dataSource={students}
+                    id="grid-component"
+                    width="fit-content"
+                    allowSorting={true}
+                    allowExcelExport={true}
+                    allowPdfExport={true}
+                    contextMenuItems={contextMenuItems}
+                    toolbar={["Search", "Delete"]}
+                    allowSelection={true}
+                    allowPaging={true}
+                  >
+                    <ColumnsDirective id="columns-directive">
+                      <ColumnDirective
+                        type="checkbox"
+                        allowSorting={false}
+                        allowFiltering={false}
+                        width="40"
+                        textAlign="center"
+                      ></ColumnDirective>
+                      <ColumnDirective
+                        field={"image"}
+                        headerText={""}
+                        template={AvatarTemplate}
+                        width="60"
+                        textAlign="center"
+                        id="column-directive"
+                      />
+                      {Object.entries(students[0]).map(
+                        (entry, i) =>
+                          entry[0] !== "image" && (
+                            <ColumnDirective
+                              key={i}
+                              field={entry[0]}
+                              headerText={entry[0]
+                                .replace(/([A-Z])/g, " $1")
+                                .replace(/^./, function (str) {
+                                  return str.toUpperCase();
+                                })}
+                              width="150"
+                              textAlign="left"
+                              id="column-directive"
+                            />
+                          )
+                      )}
+                    </ColumnsDirective>
+                    <Inject
+                      services={[
+                        Filter,
+                        VirtualScroll,
+                        Sort,
+                        ContextMenu,
+                        ExcelExport,
+                        PdfExport,
+                        Toolbar,
+                        Search,
+                        Page,
+                      ]}
+                    />
+                  </GridComponent>
+                </div>
+              </>
+            )}
           </main>
         </Content>
       )}

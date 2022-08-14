@@ -1394,7 +1394,7 @@ const StudentRegistration = () => {
 
     setFormData((prevState) => ({
       ...prevState,
-      studentPassport: {
+      image: {
         value: canvas.current.toDataURL("image/jpeg", 0.75),
         type: prevState.image.type,
       },
@@ -1429,7 +1429,7 @@ const StudentRegistration = () => {
         );
         setFormData((prevState) => ({
           ...prevState,
-          studentPassport: {
+          image: {
             value: canvas.current.toDataURL("image/jpeg", 0.75),
             type: prevState.image.type,
           },
@@ -1511,7 +1511,7 @@ const StudentRegistration = () => {
         (arr) => {
           setFormData((prevState) => ({
             ...prevState,
-            studentPassport: {
+            image: {
               value: null,
               type: "Image Picker",
             },

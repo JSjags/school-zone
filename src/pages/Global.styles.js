@@ -5,6 +5,8 @@ export const GlobalStyles = createGlobalStyle`
         --garamond: 'EB Garamond', serif;
         --hind: 'Hind Madurai', sans-serif;
         --primary-color: #f46e16;
+        --primary-color-hover: #fef2eb;
+        --primary-color-active: #fbd0b5;
         --secondary-color: #63b231;
         --light-tint: #54f6f6;
         --dark-tint: #fb413f;
@@ -20,7 +22,7 @@ export const GlobalStyles = createGlobalStyle`
         --system-font: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen,
       Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
         --dark-gray: rgba(0, 0, 0, 0.7);
-        --translucent-white: rgba(255, 255, 255, 0.9);
+        --translucent-white: rgba(255, 255, 255, 0.5);
         --text-shadow: 
         -1px -1px var(--light-tint),
         1px 1px var(--dark-tint);

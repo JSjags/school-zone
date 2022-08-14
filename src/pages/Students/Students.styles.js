@@ -30,52 +30,92 @@ export const Content = styled.div`
 
   #grid-component {
     font-family: var(--garamond);
-    font-size: 1.4rem;
     width: 100%;
+    min-height: 100%;
     position: absolute;
+    bottom: 0;
+    top: 0;
     box-shadow: 0 10px 20px var(--lightest-gray);
-  }
+    border-radius: 10px;
+    scrollbar-color: var(--primary-color);
+    overflow-y: scroll;
+    border: 1px solid var(--light-gray);
 
-  #columns-directive {
-    color: red !important;
-    background: blue;
-  }
+    ::-webkit-scrollbar {
+      width: 1.4vw;
+      height: 20px;
+      border-radius: 10px;
+      background-color: var(--whitesmoke);
+    }
+    ::-webkit-scrollbar-track {
+      background-color: transparent;
+      border-radius: 5px;
+    }
+    ::-webkit-scrollbar-thumb {
+      border-radius: 10px;
+      height: 5px;
+      background: var(--primary-color);
+    }
+    ::-webkit-scrollbar-corner {
+      width: 40px;
+      height: 40px;
+    }
 
-  /* Grid Header */
-  .e-grid [class^="e-"] {
-    color: var(--primary-color);
-    font-size: 0.8rem;
-    text-transform: capitalize;
-    font-weight: 600;
-  }
-  .e-grid .e-gridheader tr:first-child th {
-    border: none;
-    border-right: 0.5px solid var(--mid-gray);
-    padding: 0 0 0 5px;
-  }
-
-  /* Columns */
-  .e-grid:not(.e-row-responsive)
-    .e-gridcontent
-    tr.e-row:first-child
-    .e-rowcell {
-    border: none;
-    border-right: 0.5px solid var(--mid-gray);
-    padding: 10px 5px;
-    color: black;
-    font-family: var(--hind);
-    font-weight: normal;
-    text-transform: none;
-  }
-  ul#grid-component_cmenu,
-  .e-contextmenu-wrapper ul.e-contextmenu,
-  .e-contextmenu-container ul.e-contextmenu,
-  .e-contextmenu-wrapper ul,
-  .e-contextmenu-container ul,
-  .e-contextmenu-wrapper ul,
-  .e-contextmenu-container ul {
-    background-color: #fff;
-    color: red !important;
+    /* Vertical Scrollbar */
+    ::-webkit-scrollbar-button:single-button:vertical:decrement {
+      background: url("https://th.bing.com/th/id/R.d88a26f4961929012f52d92dedff3512?rik=9lXgpy6CP5uufw&pid=ImgRaw&r=0"),
+        rgba(0, 0, 0, 0.2);
+      border-radius: 50%;
+      padding: 1px;
+      background-size: 7px;
+      background-repeat: no-repeat;
+      background-position: center;
+    }
+    ::-webkit-scrollbar-button:single-button:vertical:decrement:hover {
+      background: url("https://th.bing.com/th/id/R.d88a26f4961929012f52d92dedff3512?rik=9lXgpy6CP5uufw&pid=ImgRaw&r=0"),
+        var(--primary-color-active);
+      border-radius: 50%;
+      padding: 1px;
+      background-size: 7px;
+      background-repeat: no-repeat;
+      background-position: center;
+    }
+    ::-webkit-scrollbar-button:single-button:vertical:decrement:active {
+      background: url("https://th.bing.com/th/id/R.d88a26f4961929012f52d92dedff3512?rik=9lXgpy6CP5uufw&pid=ImgRaw&r=0"),
+        var(--primary-color);
+      border-radius: 50%;
+      padding: 1px;
+      background-size: 7px;
+      background-repeat: no-repeat;
+      background-position: center;
+    }
+    ::-webkit-scrollbar-button:single-button:vertical:increment {
+      background: url("https://cdn.onlinewebfonts.com/svg/img_68483.png"),
+        rgba(0, 0, 0, 0.2);
+      border-radius: 50%;
+      padding: 1px;
+      background-size: 7px;
+      background-repeat: no-repeat;
+      background-position: center;
+    }
+    ::-webkit-scrollbar-button:single-button:vertical:increment:hover {
+      background: url("https://cdn.onlinewebfonts.com/svg/img_68483.png"),
+        var(--primary-color-active);
+      border-radius: 50%;
+      padding: 1px;
+      background-size: 7px;
+      background-repeat: no-repeat;
+      background-position: center;
+    }
+    ::-webkit-scrollbar-button:single-button:vertical:increment:active {
+      background: url("https://cdn.onlinewebfonts.com/svg/img_68483.png"),
+        var(--primary-color);
+      border-radius: 50%;
+      padding: 1px;
+      background-size: 7px;
+      background-repeat: no-repeat;
+      background-position: center;
+    }
   }
 
   main {
@@ -91,6 +131,12 @@ export const Content = styled.div`
     padding: 1rem;
     font-family: var(--garamond);
     gap: 20px;
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    background: var(--translucent-white);
+    backdrop-filter: blur(5px);
+    border-radius: 5px;
 
     h1 {
       color: var(--primary-color);
@@ -304,7 +350,7 @@ export const Content = styled.div`
     width: 40px;
     height: 40px;
     border-radius: 50%;
-    background: red;
+    background: var(--mid-gray);
     margin: 0 auto;
     overflow: hidden;
 
