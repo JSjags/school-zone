@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { useNavigate } from "react-router";
 import {
@@ -9,13 +9,14 @@ import {
   Filter,
   IFilter,
   Inject,
-  Grid,
-  VirtualScroll,
+  Resize,
   Sort,
+  Edit,
   ContextMenu,
   ExcelExport,
   PdfExport,
   Toolbar,
+  Selection,
   Search,
   Page,
 } from "@syncfusion/ej2-react-grids";
@@ -69,6 +70,8 @@ const Students = () => {
     isError,
     message,
   } = useSelector((state) => state.schoolData);
+
+  const [studentsGrid, setStudentsGrid] = useState([]);
 
   const redirect = (location) => {
     if (location === "home") {
@@ -147,6 +150,11 @@ const Students = () => {
   }, []);
 
   useEffect(() => {
+    students !== undefined && setStudentsGrid([...students]);
+    console.log(studentsGrid);
+  }, [students]);
+
+  useEffect(() => {
     dispatch(setCurrentPage("students"));
   }, [dispatch]);
 
@@ -209,7 +217,7 @@ const Students = () => {
                 </div>
                 <div id="grid-container">
                   <GridComponent
-                    dataSource={students}
+                    dataSource={studentsGrid}
                     id="grid-component"
                     width="fit-content"
                     allowSorting={true}
@@ -219,6 +227,9 @@ const Students = () => {
                     toolbar={["Search", "Delete"]}
                     allowSelection={true}
                     allowPaging={true}
+                    allowResizing={true}
+                    editSettings={{ allowEditing: true, allowDeleting: true }}
+                    pageSettings={{ pageCount: 10 }}
                   >
                     <ColumnsDirective id="columns-directive">
                       <ColumnDirective
@@ -230,9 +241,9 @@ const Students = () => {
                       ></ColumnDirective>
                       <ColumnDirective
                         field={"image"}
-                        headerText={""}
+                        headerText={"Avatar"}
                         template={AvatarTemplate}
-                        width="60"
+                        width="100"
                         textAlign="center"
                         id="column-directive"
                       />
@@ -250,6 +261,9 @@ const Students = () => {
                               width="150"
                               textAlign="left"
                               id="column-directive"
+                              isPrimaryKey={
+                                entry[0] === "student_id" ? true : false
+                              }
                             />
                           )
                       )}
@@ -257,13 +271,15 @@ const Students = () => {
                     <Inject
                       services={[
                         Filter,
-                        VirtualScroll,
                         Sort,
                         ContextMenu,
                         ExcelExport,
+                        Edit,
                         PdfExport,
                         Toolbar,
                         Search,
+                        Selection,
+                        Resize,
                         Page,
                       ]}
                     />

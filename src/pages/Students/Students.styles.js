@@ -23,7 +23,7 @@ export const Content = styled.div`
     width: calc(100% - 20px);
     min-height: 600px;
     border-radius: 10px;
-    margin: 0 auto;
+    margin: 0 auto 30px;
     position: relative;
     border-radius: 10px;
   }
@@ -42,7 +42,7 @@ export const Content = styled.div`
     border: 1px solid var(--light-gray);
 
     ::-webkit-scrollbar {
-      width: 1.4vw;
+      width: 20px;
       height: 20px;
       border-radius: 10px;
       background-color: var(--whitesmoke);
@@ -347,12 +347,18 @@ export const Content = styled.div`
     }
   }
   .student-avatar {
-    width: 40px;
-    height: 40px;
+    width: 70px;
+    height: 70px;
     border-radius: 50%;
     background: var(--mid-gray);
     margin: 0 auto;
     overflow: hidden;
+    box-shadow: 0 0 0 0.5px var(--light-gray);
+    transition: all 200ms ease;
+
+    :hover {
+      transform: scale(1.2);
+    }
 
     img {
       width: 100%;
@@ -381,7 +387,9 @@ export const Content = styled.div`
       :hover {
         background-color: white;
         color: var(--primary-color);
-        box-shadow: 0 5px 7px var(--primary-color);
+        box-shadow: 0 4px 10px var(--primary-color);
+        border: 1px solid transparent;
+        transform: scale(1.05);
       }
 
       span {
