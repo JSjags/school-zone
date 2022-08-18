@@ -1011,6 +1011,7 @@ export const StudentRegistrationWrapper = styled.div`
   justify-content: center;
   width: 100%;
   margin-bottom: 30px;
+  scroll-behavior: smooth;
 `;
 export const StudentRegistrationContent = styled.div`
   width: calc(100% - 20px);
@@ -1087,6 +1088,25 @@ export const StudentRegistrationContent = styled.div`
       background: var(--secondary-color);
       border-radius: 4px;
       transform: translateX(-50%);
+    }
+  }
+
+  #registration-error-message {
+    color: red;
+    gap: 5px;
+    font-family: var(--garamond);
+    background: rgba(255, 0, 0, 0.3);
+    padding: 5px;
+    border-radius: 5px;
+    border: 1px solid red;
+    font-family: var(--hind);
+    margin: 0 5% 10px;
+
+    p {
+      display: flex;
+      align-items: center;
+      padding: 5px;
+      gap: 5px;
     }
   }
 
@@ -1233,10 +1253,37 @@ export const StudentRegistrationContent = styled.div`
   .hidden {
     display: none;
   }
-
   @supports (aspect-ratio: 2/2) {
     .passport {
       aspect-ratio: 2/2;
     }
+  }
+`;
+
+export const SavingWrapper = styled.div`
+  position: absolute;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background: transparent;
+`;
+export const SavingContent = styled.div`
+  width: 100%;
+  height: 100%;
+  background: transparent;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  gap: 30px;
+
+  div {
+    transform: scale(1.5);
+  }
+  p {
+    color: var(--white);
+    font-weight: 600;
+    font-size: clamp(1.4rem, 1vw, 2rem);
+    font-family: var(--hind);
   }
 `;

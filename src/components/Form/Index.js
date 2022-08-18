@@ -12,6 +12,7 @@ import { BsImage, BsCloudUpload, BsInfoCircleFill } from "react-icons/bs";
 import { isStrongPassword } from "validator";
 import { MdChangeCircle, MdPreview } from "react-icons/md";
 import { FiInfo } from "react-icons/fi";
+import { FcApproval } from "react-icons/fc";
 import { IoCloudDone } from "react-icons/io5";
 import { useSelector, useDispatch } from "react-redux";
 import { isEmail, isMobilePhone } from "validator";
@@ -43,6 +44,8 @@ import {
   CreateTemplateWrapper,
   EditProfileContent,
   EditProfileWrapper,
+  SavingContent,
+  SavingWrapper,
   StudentRegistrationContent,
   StudentRegistrationWrapper,
   SuccessMessageContent,
@@ -1349,13 +1352,18 @@ const CreateStudentTemplate = () => {
 
 // Student Registration
 const StudentRegistration = () => {
+  const dispatch = useDispatch();
   const [hasCamera, setHasCamera] = useState("");
 
   const [showCamera, setShowCamera] = useState(false);
-  const [showCanvas, setShowCanvas] = useState(false);
+  const [, setShowCanvas] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const [isError, setIsError] = useState(false);
+  const [isSuccess, setIsSuccess] = useState(false);
 
   const [formData, setFormData] = useState({});
 
+  const studentRegPageRef = useRef();
   const canvas = useRef(null);
   const context = useRef(null);
 
@@ -1369,6 +1377,8 @@ const StudentRegistration = () => {
   const { id: schoolId, token: schoolToken } = useSelector(
     (state) => state.schoolAuth
   );
+
+  const invalidValues = ["", null, undefined];
 
   const handleVideo = () => {
     setShowCamera(true);
@@ -1442,6 +1452,10 @@ const StudentRegistration = () => {
     e.preventDefault();
     console.log(formData);
 
+    setIsLoading(true);
+    setIsError(false);
+    setIsSuccess(false);
+
     const studentId = uuidv4();
 
     const dataToFirebase = {};
@@ -1488,14 +1502,28 @@ const StudentRegistration = () => {
       const data = await axios({
         url: `/api/schools/${schoolId}/students`,
         method: "post",
-        data: [...schoolData.students, dataToMongoDB],
+        data: [dataToMongoDB, ...schoolData.students],
         headers: {
           Authorization: `Bearer ${schoolToken}`,
         },
       });
-      console.log(data);
+      if (
+        data.status === 200 &&
+        data.statusText === "OK" &&
+        data.data.acknowledged === true
+      ) {
+        setIsLoading(false);
+        setIsError(false);
+        setIsSuccess(true);
+        dispatch(fetchSchoolData(schoolToken));
+        window.scrollTo({ top: 0, behavior: "smooth" });
+        setTimeout(() => dispatch(closeEditProfileModal()), 3000);
+      }
     } catch (error) {
-      console.log(error);
+      setIsLoading(false);
+      setIsSuccess(false);
+      setIsError(true);
+      studentRegPageRef.current.scrollIntoView();
     }
   };
 
@@ -1533,146 +1561,201 @@ const StudentRegistration = () => {
 
   //TODO  Create student profile in mongodb database.
   return (
-    <StudentRegistrationWrapper>
-      <StudentRegistrationContent
-        image={formData.image?.value}
-        showCamera={showCamera}
-      >
-        <div className="reg-header">
-          <img src={avatarURL} />
-          <div>
-            <h2>{schoolData.name}</h2>
-            <p>{schoolData.address}</p>
-            <p>{schoolData.country}</p>
-          </div>
-        </div>
-        <hr />
-        <h2 className="reg-title">Student Registration Form</h2>
-        <div className="reg-form">
-          <div className="passport-cont">
-            <label id="passport-title">Passport</label>
-            <div className="passport">
-              <img alt="" ref={imageRef} className="hidden" />
-              <canvas
-                width="426px"
-                height="426px"
-                ref={canvasRef}
-                id="canvas"
-              ></canvas>
-              {showCamera && <video ref={videoRef} autoPlay id="video" />}
+    <>
+      {isSuccess && (
+        <SuccessMessageWrapper>
+          <SuccessMessageContent>
+            <div className="success-message">
+              <p>
+                <FcApproval
+                  style={{
+                    fontSize: "5rem",
+                    paddingTop: "-5px",
+                  }}
+                />
+                <span>Student profile successfully created.</span>
+              </p>
             </div>
-            <div className="button-group">
-              {hasCamera && !showCamera && (
-                <label className="primary-white-btn" onClick={handleVideo}>
-                  <FaCameraRetro style={{ fontSize: "1.4rem" }} />
-                  <span>Use Camera</span>
-                </label>
-              )}
-              {hasCamera && showCamera && (
-                <label className="secondary-btn" onClick={handleSnapshot}>
-                  <FaCameraRetro style={{ fontSize: "1.4rem" }} />
-                  <span>Take Photo</span>
-                </label>
-              )}
-              <input
-                id="image-picker"
-                type="file"
-                ref={imagePickerRef}
-                accept="image/*"
-                capture="camera"
-                onChange={(e) => handleImgSelection(e)}
-                className="hidden"
-              />
-              {
-                <label
-                  htmlFor="image-picker"
-                  className="secondary-btn"
-                  onClick={handleImgSelection}
-                >
-                  <RiGalleryFill style={{ fontSize: "1.5rem" }} />
-                  <span>Choose from gallery</span>
-                </label>
-              }
-            </div>
-          </div>
-          <form onSubmit={(e) => handleSubmit(e)}>
-            {Object.entries(schoolData.templates.students).map((val, i) => (
-              <div key={i} className="field-container">
-                <label>{val[1].name}:</label>
-                {(() => {
-                  switch (val[1].type) {
-                    case "Text":
-                      return (
-                        <Text
-                          value={formData[val[0]]?.value}
-                          setFormData={setFormData}
-                          name={val[0]}
-                        />
-                      );
-                    case "Number":
-                      return (
-                        <Number
-                          value={formData[val[0]]?.value}
-                          setFormData={setFormData}
-                          name={val[0]}
-                        />
-                      );
-                    case "Options":
-                      return (
-                        <Options
-                          options={val[1].options}
-                          value={formData[val[0]]?.value}
-                          setFormData={setFormData}
-                          name={val[0]}
-                        />
-                      );
-                    case "Date Picker":
-                      return (
-                        <DatePicker
-                          value={formData[val[0]]?.value}
-                          setFormData={setFormData}
-                          formData={formData}
-                          name={val[0]}
-                        />
-                      );
-                    case "Image Picker":
-                      return (
-                        <ImagePicker
-                          value={formData[val[0]]?.value}
-                          setFormData={setFormData}
-                          formData={formData}
-                          name={val[0]}
-                        />
-                      );
-                    default:
-                      return null;
-                  }
-                })()}
+          </SuccessMessageContent>
+        </SuccessMessageWrapper>
+      )}
+      {!isSuccess && (
+        <StudentRegistrationWrapper>
+          <StudentRegistrationContent
+            image={formData.image?.value}
+            showCamera={showCamera}
+            ref={studentRegPageRef}
+          >
+            <div className="reg-header">
+              <img src={avatarURL} alt="" />
+              <div>
+                <h2>{schoolData.name}</h2>
+                <p>{schoolData.address}</p>
+                <p>{schoolData.country}</p>
               </div>
-            ))}
-            <p className="info">
-              <BsInfoCircleFill style={{ fontSize: "1rem" }} />
-              <span>
-                No field should be left empty, unwanted fields can filled with
-                "null" or hyphen(s) or any character of your choice.
-              </span>
-            </p>
-            {Object.entries(formData).every(
-              (value) => value[1].value !== "" || null || undefined
-            ) && (
-              <button className="primary-btn" id="submit-btn">
-                Submit
-              </button>
+            </div>
+            <hr />
+            <h2 className="reg-title">Student Registration Form</h2>
+            {isError && (
+              <div id="registration-error-message">
+                <p>
+                  <BiErrorCircle
+                    style={{ fontSize: "1.4rem", paddingTop: "-5px" }}
+                  />
+                  <span>
+                    Sorry, we couldn't create student profile, please try again
+                    later.
+                  </span>
+                </p>
+              </div>
             )}
-          </form>
+            <div className="reg-form">
+              <div className="passport-cont">
+                <label id="passport-title">Passport</label>
+                <div className="passport">
+                  <img alt="" ref={imageRef} className="hidden" />
+                  <canvas
+                    width="426px"
+                    height="426px"
+                    ref={canvasRef}
+                    id="canvas"
+                  ></canvas>
+                  {showCamera && <video ref={videoRef} autoPlay id="video" />}
+                </div>
+                <div className="button-group">
+                  {hasCamera && !showCamera && (
+                    <label className="primary-white-btn" onClick={handleVideo}>
+                      <FaCameraRetro style={{ fontSize: "1.4rem" }} />
+                      <span>Use Camera</span>
+                    </label>
+                  )}
+                  {hasCamera && showCamera && (
+                    <label className="secondary-btn" onClick={handleSnapshot}>
+                      <FaCameraRetro style={{ fontSize: "1.4rem" }} />
+                      <span>Take Photo</span>
+                    </label>
+                  )}
+                  <input
+                    id="image-picker"
+                    type="file"
+                    ref={imagePickerRef}
+                    accept="image/*"
+                    capture="camera"
+                    onChange={(e) => handleImgSelection(e)}
+                    className="hidden"
+                  />
+                  {
+                    <label
+                      htmlFor="image-picker"
+                      className="secondary-btn"
+                      onClick={handleImgSelection}
+                    >
+                      <RiGalleryFill style={{ fontSize: "1.5rem" }} />
+                      <span>Choose from gallery</span>
+                    </label>
+                  }
+                </div>
+              </div>
+              <form onSubmit={(e) => handleSubmit(e)}>
+                {Object.entries(schoolData.templates.students).map((val, i) => (
+                  <div key={i} className="field-container">
+                    <label>{val[1].name}:</label>
+                    {(() => {
+                      switch (val[1].type) {
+                        case "Text":
+                          return (
+                            <Text
+                              value={formData[val[0]]?.value}
+                              setFormData={setFormData}
+                              name={val[0]}
+                            />
+                          );
+                        case "Number":
+                          return (
+                            <Number
+                              value={formData[val[0]]?.value}
+                              setFormData={setFormData}
+                              name={val[0]}
+                            />
+                          );
+                        case "Options":
+                          return (
+                            <Options
+                              options={val[1].options}
+                              value={formData[val[0]]?.value}
+                              setFormData={setFormData}
+                              name={val[0]}
+                            />
+                          );
+                        case "Date Picker":
+                          return (
+                            <DatePicker
+                              value={formData[val[0]]?.value}
+                              setFormData={setFormData}
+                              formData={formData}
+                              name={val[0]}
+                            />
+                          );
+                        case "Image Picker":
+                          return (
+                            <ImagePicker
+                              value={formData[val[0]]?.value}
+                              setFormData={setFormData}
+                              formData={formData}
+                              name={val[0]}
+                            />
+                          );
+                        default:
+                          return null;
+                      }
+                    })()}
+                  </div>
+                ))}
+                <p className="info">
+                  <BsInfoCircleFill style={{ fontSize: "1rem" }} />
+                  <span>
+                    No field should be left empty, unwanted fields can filled
+                    with "null" or hyphen(s) or any character of your choice.
+                  </span>
+                </p>
+                {Object.entries(formData).every(
+                  (value) => !invalidValues.includes(value[1].value)
+                ) &&
+                  !isLoading && (
+                    <button className="primary-btn" id="submit-btn">
+                      Submit
+                    </button>
+                  )}
+                {isLoading && (
+                  <Spinner
+                    style={{ position: "absolute", bottom: 0, width: "100%" }}
+                  />
+                )}
+              </form>
+            </div>
+            <img
+              src={avatarURL}
+              alt="school-logo-watermark"
+              className="watermark"
+            />
+          </StudentRegistrationContent>
+        </StudentRegistrationWrapper>
+      )}
+    </>
+  );
+};
+
+// Saving Changes
+const Saving = () => {
+  return (
+    <SavingWrapper>
+      <SavingContent>
+        <div>
+          <Spinner />
         </div>
-        <img
-          src={avatarURL}
-          alt="school-logo-watermark"
-          className="watermark"
-        />
-      </StudentRegistrationContent>
-    </StudentRegistrationWrapper>
+        <p>Saving Changes</p>
+      </SavingContent>
+    </SavingWrapper>
   );
 };
 
@@ -1688,6 +1771,7 @@ const Form = () => {
       {formToShow === "createStudent" && <CreateStudent />}
       {formToShow === "createStudentTemplate" && <CreateStudentTemplate />}
       {formToShow === "studentRegistration" && <StudentRegistration />}
+      {formToShow === "saving" && <Saving />}
     </>
   );
 };

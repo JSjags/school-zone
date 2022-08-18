@@ -3,7 +3,7 @@ import { motion } from "framer-motion";
 
 import { Content, Wrapper } from "./Spinner.styles";
 
-export function Spinner() {
+export function Spinner({ style }) {
   const wrapperVariants = {
     hidden: {
       opacity: 0,
@@ -73,6 +73,7 @@ export function Spinner() {
       initial="hidden"
       animate="visible"
       exit="exit"
+      style={style && style}
     >
       <Content as={motion.div} variants={spinnerVariants} />
     </Wrapper>

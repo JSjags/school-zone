@@ -1,13 +1,12 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
+import axios from "axios";
 import { useNavigate } from "react-router";
 import {
-  Column,
   ColumnDirective,
   ColumnsDirective,
   GridComponent,
   Filter,
-  IFilter,
   Inject,
   Resize,
   Sort,
@@ -27,12 +26,14 @@ import {
   resetSchoolData,
 } from "../../features/school/schoolDataSlice";
 import {
+  closeEditProfileModal,
   openEditProfileModal,
   setCurrentPage,
   showForm,
 } from "../../features/config/configData";
 
 import { FaSignOutAlt } from "react-icons/fa";
+import { AiOutlineFileDone } from "react-icons/ai";
 import { BsPersonPlus } from "react-icons/bs";
 import { IoCreateOutline } from "react-icons/io5";
 import { MdMessage, MdNotifications, MdSettings } from "react-icons/md";
@@ -60,7 +61,9 @@ const Students = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const { token: authToken } = useSelector((state) => state.schoolAuth);
+  const { id: schoolId, token: authToken } = useSelector(
+    (state) => state.schoolAuth
+  );
   const { isEditProfileModalOpen } = useSelector((state) => state.config);
   const { students } = useSelector((state) => state.schoolData.data);
   const {
@@ -71,7 +74,11 @@ const Students = () => {
     message,
   } = useSelector((state) => state.schoolData);
 
+  const [savingSuccess, setSavingSuccess] = useState(false);
+  const [savingError, setSavingError] = useState(false);
   const [studentsGrid, setStudentsGrid] = useState([]);
+
+  const leaveOutData = ["image", "student_id"];
 
   const redirect = (location) => {
     if (location === "home") {
@@ -151,16 +158,92 @@ const Students = () => {
 
   useEffect(() => {
     students !== undefined && setStudentsGrid([...students]);
-    console.log(studentsGrid);
   }, [students]);
 
   useEffect(() => {
     dispatch(setCurrentPage("students"));
   }, [dispatch]);
 
-  // TODO Begin working on student page ASAP.
+  async function gridComplete(args) {
+    console.log(args);
+    if (args.requestType === "save") {
+      dispatch(openEditProfileModal());
+      dispatch(showForm("saving"));
+
+      try {
+        const data = await axios({
+          url: `/api/schools/${schoolId}/students/update`,
+          method: "put",
+          data: { type: args.requestType, data: args.data },
+          headers: {
+            Authorization: `Bearer ${authToken}`,
+          },
+        });
+        if (
+          data.status === 200 &&
+          data.statusText === "OK" &&
+          data.data.acknowledged === true
+        ) {
+          setSavingSuccess(true);
+          setSavingError(false);
+          dispatch(fetchSchoolData(authToken));
+          setTimeout(() => dispatch(closeEditProfileModal()), 3000);
+          setTimeout(() => setSavingSuccess(false), 10000);
+        }
+      } catch (error) {
+        setSavingSuccess(false);
+        setSavingError(true);
+        setTimeout(() => dispatch(closeEditProfileModal()), 3000);
+        setTimeout(() => setSavingError(false), 10000);
+      }
+    }
+    if (args.requestType === "delete") {
+      dispatch(openEditProfileModal());
+      dispatch(showForm("saving"));
+
+      try {
+        const data = await axios({
+          url: `/api/schools/${schoolId}/students/update`,
+          method: "put",
+          data: { type: args.requestType, data: args.data },
+          headers: {
+            Authorization: `Bearer ${authToken}`,
+          },
+        });
+        if (
+          data.status === 200 &&
+          data.statusText === "OK" &&
+          data.data.acknowledged === true
+        ) {
+          setSavingSuccess(true);
+          setSavingError(false);
+          dispatch(fetchSchoolData(authToken));
+          setTimeout(() => dispatch(closeEditProfileModal()), 3000);
+          setTimeout(() => setSavingSuccess(false), 10000);
+        }
+      } catch (error) {
+        setSavingSuccess(false);
+        setSavingError(true);
+        setTimeout(() => dispatch(closeEditProfileModal()), 3000);
+        setTimeout(() => setSavingError(false), 10000);
+      }
+    }
+  }
+  // TODO Add view profile on cavatar image click and add some instructions on how to use the grid.
   return (
     <Wrapper>
+      {savingSuccess && (
+        <div className="saving-success-message">
+          <AiOutlineFileDone style={{ fontSize: "1.4rem" }} />
+          <p>Changes saved successsfully.</p>
+        </div>
+      )}
+      {savingError && (
+        <div className="saving error-message">
+          <BiError style={{ fontSize: "1.4rem", paddingTop: "-5px" }} />
+          <p>Changes not saved, try again later.</p>
+        </div>
+      )}
       {isEditProfileModalOpen && <EditModal />}
       {isLoading && (
         <LoadingContainer>
@@ -224,12 +307,13 @@ const Students = () => {
                     allowExcelExport={true}
                     allowPdfExport={true}
                     contextMenuItems={contextMenuItems}
-                    toolbar={["Search", "Delete"]}
+                    toolbar={["Search", "Delete", "Edit"]}
                     allowSelection={true}
                     allowPaging={true}
                     allowResizing={true}
                     editSettings={{ allowEditing: true, allowDeleting: true }}
                     pageSettings={{ pageCount: 10 }}
+                    actionComplete={gridComplete}
                   >
                     <ColumnsDirective id="columns-directive">
                       <ColumnDirective
@@ -249,24 +333,57 @@ const Students = () => {
                       />
                       {Object.entries(students[0]).map(
                         (entry, i) =>
-                          entry[0] !== "image" && (
-                            <ColumnDirective
-                              key={i}
-                              field={entry[0]}
-                              headerText={entry[0]
-                                .replace(/([A-Z])/g, " $1")
-                                .replace(/^./, function (str) {
-                                  return str.toUpperCase();
-                                })}
-                              width="150"
-                              textAlign="left"
-                              id="column-directive"
-                              isPrimaryKey={
-                                entry[0] === "student_id" ? true : false
-                              }
-                            />
-                          )
+                          !leaveOutData.includes(entry[0]) &&
+                          (() => {
+                            switch (
+                              schoolData.templates.students[entry[0]].type
+                            ) {
+                              case "Options":
+                                return (
+                                  <ColumnDirective
+                                    key={i}
+                                    field={entry[0]}
+                                    headerText={entry[0]
+                                      .replace(/([A-Z])/g, " $1")
+                                      .replace(/^./, function (str) {
+                                        return str.toUpperCase();
+                                      })}
+                                    width="150"
+                                    textAlign="left"
+                                    id="column-directive"
+                                    editType="DropDownEdit"
+                                  />
+                                );
+                              default:
+                                return (
+                                  <ColumnDirective
+                                    key={i}
+                                    field={entry[0]}
+                                    headerText={entry[0]
+                                      .replace(/([A-Z])/g, " $1")
+                                      .replace(/^./, function (str) {
+                                        return str.toUpperCase();
+                                      })}
+                                    width="150"
+                                    textAlign="left"
+                                    id="column-directive"
+                                  />
+                                );
+                            }
+                          })()
                       )}
+                      <ColumnDirective
+                        field={"student_id"}
+                        headerText={"student_id"
+                          .replace(/([A-Z])/g, " $1")
+                          .replace(/^./, function (str) {
+                            return str.toUpperCase();
+                          })}
+                        width="150"
+                        textAlign="left"
+                        id="column-directive"
+                        allowEditing={false}
+                      />
                     </ColumnsDirective>
                     <Inject
                       services={[
