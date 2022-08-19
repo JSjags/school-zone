@@ -32,6 +32,7 @@ export const Wrapper = styled.div`
     backdrop-filter: blur(3px);
     display: flex;
     align-items: center;
+    justify-content: center;
     padding: 5px;
     color: red;
     width: clamp(200px, 40vw, 500px);
@@ -55,7 +56,7 @@ export const Content = styled.div`
     width: calc(100% - 20px);
     min-height: 600px;
     border-radius: 10px;
-    margin: 0 auto 30px;
+    margin: 0 auto 10px;
     position: relative;
     border-radius: 10px;
   }
@@ -399,6 +400,21 @@ export const Content = styled.div`
       object-fit: cover;
     }
   }
+  .student-id {
+    padding: 5px;
+    color: var(--primary-color);
+    align-items: center;
+    background-color: var(--whitesmoke);
+    border-radius: 10px;
+    display: flex;
+    gap: 5px;
+    width: fit-content;
+
+    span {
+      color: var(--secondary-color);
+      text-transform: none;
+    }
+  }
   .available-students {
     display: flex;
     gap: 30px;
@@ -430,6 +446,44 @@ export const Content = styled.div`
         font-size: clamp(1rem, 1vw, 1.2rem);
         font-weight: 500;
         font-family: var(--hind);
+      }
+    }
+  }
+
+  .instructions-panel {
+    background: var(--white);
+    border-radius: 10px;
+    margin: 30px 10px;
+    border: 1px solid var(--light-gray);
+    padding: 10px;
+
+    ul {
+      padding: 10px 0;
+    }
+
+    li {
+      list-style-position: inside;
+      span {
+        font-family: var(--hind);
+      }
+    }
+    li::marker {
+      content: "📎 ";
+      font-size: 1.2em;
+    }
+
+    p.info-notice {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      color: var(--primary-color);
+      padding-left: 5px;
+      margin-top: 20px;
+
+      span {
+        font-family: var(--hind);
+        color: var(--dark-gray);
+        font-size: 0.9rem;
       }
     }
   }

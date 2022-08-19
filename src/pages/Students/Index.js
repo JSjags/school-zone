@@ -29,12 +29,14 @@ import {
   closeEditProfileModal,
   openEditProfileModal,
   setCurrentPage,
+  setStudentImgUrl,
   showForm,
 } from "../../features/config/configData";
 
 import { FaSignOutAlt } from "react-icons/fa";
 import { AiOutlineFileDone } from "react-icons/ai";
-import { BsPersonPlus } from "react-icons/bs";
+import { BsPersonPlus, BsInfoCircleFill } from "react-icons/bs";
+import { FaRegIdCard } from "react-icons/fa";
 import { IoCreateOutline } from "react-icons/io5";
 import { MdMessage, MdNotifications, MdSettings } from "react-icons/md";
 import { BiError } from "react-icons/bi";
@@ -49,10 +51,27 @@ import {
 } from "../SchoolDashboard/SchoolDashboard.styles";
 import Spinner from "../../components/Spinner/Index";
 
-const AvatarTemplate = (props) => {
+const AvatarTemplate = ({ image }) => {
+  const dispatch = useDispatch();
+
   return (
-    <div className="student-avatar">
-      <img alt="" src={props.image} />
+    <div
+      className="student-avatar"
+      onClick={() => {
+        dispatch(setStudentImgUrl(image));
+        dispatch(openEditProfileModal());
+        dispatch(showForm("studentProfile"));
+      }}
+    >
+      <img alt="" src={image} />
+    </div>
+  );
+};
+const StudentIdTemplate = ({ student_id }) => {
+  return (
+    <div className="student-id">
+      <FaRegIdCard style={{ fontSize: "1.4rem" }} />
+      <span>{student_id}</span>
     </div>
   );
 };
@@ -154,7 +173,7 @@ const Students = () => {
     }
 
     dispatch(fetchSchoolData(authToken));
-  }, []);
+  }, [authToken, dispatch, navigate, message]);
 
   useEffect(() => {
     students !== undefined && setStudentsGrid([...students]);
@@ -224,12 +243,12 @@ const Students = () => {
       } catch (error) {
         setSavingSuccess(false);
         setSavingError(true);
-        setTimeout(() => dispatch(closeEditProfileModal()), 3000);
-        setTimeout(() => setSavingError(false), 10000);
+        dispatch(closeEditProfileModal());
+        setTimeout(() => setSavingError(false), 6000);
       }
     }
   }
-  // TODO Add view profile on cavatar image click and add some instructions on how to use the grid.
+  // TODO Add view profile on avatar image click and add some instructions on how to use the grid.
   return (
     <Wrapper>
       {savingSuccess && (
@@ -239,7 +258,7 @@ const Students = () => {
         </div>
       )}
       {savingError && (
-        <div className="saving error-message">
+        <div className="saving-error-message">
           <BiError style={{ fontSize: "1.4rem", paddingTop: "-5px" }} />
           <p>Changes not saved, try again later.</p>
         </div>
@@ -307,7 +326,7 @@ const Students = () => {
                     allowExcelExport={true}
                     allowPdfExport={true}
                     contextMenuItems={contextMenuItems}
-                    toolbar={["Search", "Delete", "Edit"]}
+                    toolbar={["Search", "Delete", "Edit", "Cancel"]}
                     allowSelection={true}
                     allowPaging={true}
                     allowResizing={true}
@@ -379,7 +398,8 @@ const Students = () => {
                           .replace(/^./, function (str) {
                             return str.toUpperCase();
                           })}
-                        width="150"
+                        width="350"
+                        template={StudentIdTemplate}
                         textAlign="left"
                         id="column-directive"
                         allowEditing={false}
@@ -401,6 +421,42 @@ const Students = () => {
                       ]}
                     />
                   </GridComponent>
+                </div>
+                <div className="instructions-panel">
+                  <h3>Instructions Panel</h3>
+                  <ul>
+                    <li>
+                      <span>
+                        Double-click and drag column header on either side to
+                        resize column.
+                      </span>
+                    </li>
+                    <li>
+                      <span>
+                        Double-click on field you wish to edit to begin editing.
+                      </span>
+                    </li>
+                    <li>
+                      <span>
+                        Click on student avatar to view student profile.
+                      </span>
+                    </li>
+                    <li>
+                      <span>
+                        Right-click on any field to access context menu.
+                      </span>
+                    </li>
+                    <li>
+                      <span>
+                        PDF, Excel and CSV Exports are available in the context
+                        menu.
+                      </span>
+                    </li>
+                  </ul>
+                  <p className="info-notice">
+                    <BsInfoCircleFill style={{ fontSize: "1.4rem" }} />
+                    <span>Student_id value cannot be edited or changed.</span>
+                  </p>
                 </div>
               </>
             )}

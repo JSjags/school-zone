@@ -339,7 +339,7 @@ th.e-headercell.e-defaultcursor {
 .e-toolbar .e-toolbar-items .e-toolbar-item.e-overlay .e-tbar-btn-text {
   font-weight: normal;
   font-family: var(--hind);
-  font-size: 1rem;
+  font-size: normal;
 }
 
 .e-toolbar.e-control[class*="e-toolbar"] {
@@ -431,6 +431,14 @@ th.e-headercell.e-defaultcursor {
   color: var(--deep-gray);
   border: 1px solid var(--light-gray);
   transition: all 200ms ease;
+}
+.e-toolbar
+  .e-toolbar-items
+  .e-toolbar-item
+  .e-tbar-btn.e-btn.e-tbtn-txt
+  .e-icons.e-btn-icon {
+  padding: 0;
+  font-size: normal;
 }
 
 .e-toolbar #grid-component_delete.e-tbar-btn:active {
@@ -529,7 +537,6 @@ div#grid-componentuniformSize_popup.e-ddl.e-popup.e-lib.e-control.e-popup-open {
   border-radius: 10px;
 }
 div#grid-componentuniformSize_options {
-  /* border-radius: 10px; */
   background: red;
 }
 div#grid-componentclass_popup {
@@ -554,6 +561,7 @@ div.e-content.e-dropdownbase .e-list-item.e-active {
   color: var(--secondary-color);
 }
 
+/*  Edit button stylings*/
 .e-toolbar
   .e-toolbar-items
   .e-toolbar-item
@@ -599,6 +607,9 @@ div.e-content.e-dropdownbase .e-list-item.e-active {
 .e-grid .e-edit::before,
 .e-grid-menu .e-edit::before {
   content: "\e81e";
+  display: inline-block;
+  height: 100%;
+  font-size: 1.1em;
   color: var(--deep-gray);
   font-weight: 500;
   transition: all 300ms ease;
@@ -623,6 +634,82 @@ div.e-content.e-dropdownbase .e-list-item.e-active {
   border-color: var(--secondary-color);
   border-radius: 5px;
   color: var(--secondary-color);
+  transition: all 300ms ease;
+}
+
+/*  Cancel button stylings*/
+.e-toolbar
+  .e-toolbar-items
+  .e-toolbar-item
+  #grid-component_cancel.e-tbar-btn-text {
+  color: var(--deep-gray);
+  font-family: var(--hind);
+  font-weight: 500;
+  letter-spacing: 0.3px;
+}
+.e-toolbar #grid-component_cancel.e-tbar-btn {
+  background: var(--white);
+  border-radius: 5px;
+  color: var(--deep-gray);
+  border: 1px solid var(--light-gray);
+  transition: all 200ms ease;
+}
+
+.e-toolbar #grid-component_cancel.e-tbar-btn:active {
+  transform: scale(1.05);
+  background: var(--deep-gray);
+  border-radius: 5px;
+  color: var(--white);
+  transition: all 300ms ease;
+}
+.e-toolbar #grid-component_cancel.e-tbar-btn:focus {
+  transform: scale(1.05);
+  background: var(--deep-gray);
+  box-shadow: 0 3px 6px var(--dark-gray);
+  border-radius: 5px;
+  color: var(--white);
+  transition: all 300ms ease;
+}
+.e-toolbar #grid-component_cancel.e-tbar-btn:hover {
+  transform: scale(1.05);
+  background: var(--deep-gray);
+  box-shadow: 0 3px 6px var(--dark-gray);
+  border-radius: 5px;
+  color: var(--white);
+  border: transparent;
+  transition: all 300ms ease;
+}
+
+.e-grid .e-cancel::before,
+.e-grid-menu .e-cancel::before {
+  content: "✖";
+  display: inline-block;
+  height: 100%;
+  transform: translateY(-2px);
+  color: var(--deep-gray);
+  font-size: 1.2rem;
+  transition: all 300ms ease;
+}
+
+.e-toolbar #grid-component_cancel.e-tbar-btn:hover .e-cancel::before,
+.e-toolbar #grid-component_cancel.e-tbar-btn:hover .e-tbar-btn-text {
+  border-color: var(--deep-gray);
+  border-radius: 5px;
+  color: var(--white);
+  transition: all 300ms ease;
+}
+.e-toolbar #grid-component_cancel.e-tbar-btn:focus .e-cancel::before,
+.e-toolbar #grid-component_cancel.e-tbar-btn:focus .e-tbar-btn-text {
+  border-color: var(--deep-gray);
+  border-radius: 5px;
+  color: var(--deep-gray);
+  transition: all 300ms ease;
+}
+.e-toolbar #grid-component_cancel.e-tbar-btn:active .e-cancel::before,
+.e-toolbar #grid-component_cancel.e-tbar-btn:active .e-tbar-btn-text {
+  border-color: var(--deep-gray);
+  border-radius: 5px;
+  color: var(--deep-gray);
   transition: all 300ms ease;
 }
 

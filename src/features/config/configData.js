@@ -4,6 +4,7 @@ const initialState = {
   isEditProfileModalOpen: false,
   formToShow: null,
   curentPage: null,
+  studentImageUrl: null,
 };
 
 export const configSlice = createSlice({
@@ -16,9 +17,13 @@ export const configSlice = createSlice({
     closeEditProfileModal: (state) => {
       state.isEditProfileModalOpen = false;
       state.formToShow = null;
+      state.studentImageUrl = null;
     },
     showForm: (state, action) => {
       state.formToShow = action.payload;
+    },
+    setStudentImgUrl: (state, action) => {
+      state.studentImageUrl = action.payload;
     },
     setCurrentPage: (state, action) => {
       state.currentPage = action.payload;
@@ -31,6 +36,7 @@ export const {
   closeEditProfileModal,
   showForm,
   setCurrentPage,
+  setStudentImgUrl,
 } = configSlice.actions;
 
 export default configSlice.reducer;

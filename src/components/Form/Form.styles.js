@@ -1287,3 +1287,84 @@ export const SavingContent = styled.div`
     font-family: var(--hind);
   }
 `;
+
+export const StudentProfileWrapper = styled.div`
+  width: 100%;
+  min-height: 80vh;
+  display: flex;
+  justify-content: center;
+`;
+export const StudentProfileContent = styled.div`
+  width: clamp(200px, 40%, 600px);
+  border-radius: 10px;
+  background: var(--white);
+  padding: 10px 10px 80px;
+  position: relative;
+
+  h2 {
+    font-size: clamp(1.5rem, 2vw, 2.5rem);
+    text-align: center;
+    position: relative;
+
+    ::after {
+      content: "";
+      position: absolute;
+      left: 50%;
+      bottom: -5px;
+      transform: translateX(-50%);
+      width: 30%;
+      height: 4px;
+      border-radius: 1px 1px 2px 2px;
+      background: var(--primary-color);
+    }
+  }
+
+  img.student-img {
+    display: block;
+    width: 100%;
+    border-radius: 10px;
+    box-shadow: 0 3px 6px var(--light-gray);
+    margin: 20px auto;
+  }
+  .student-details-cont {
+    margin-top: 20px;
+  }
+  .student-detail {
+    margin-top: 10px;
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+
+    label {
+      font-size: clamp(1rem, calc(1rem + 0.5vw), 1.2rem);
+      font-weight: 600;
+    }
+    span {
+      display: block;
+      font-family: var(--hind);
+      font-size: clamp(1rem, calc(1rem + 0.5vw), 1.2rem);
+      font-weight: 400;
+      text-transform: capitalize;
+      color: var(--dark-gray);
+    }
+  }
+  button.close-student-profile {
+    border: none;
+    background: var(--primary-color);
+    font-family: var(--hind);
+    border-radius: 10px;
+    color: var(--white);
+    font-weight: 500;
+    padding: 10px 20px;
+    font-size: 1rem;
+    cursor: pointer;
+    position: absolute;
+    bottom: 10px;
+    right: 10px;
+    transition: all 200ms ease;
+
+    :hover {
+      box-shadow: -3px -3px 0 var(--light-tint), 3px 3px 0 var(--dark-tint);
+    }
+  }
+`;

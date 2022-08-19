@@ -29,9 +29,7 @@ import {
   closeEditProfileModal,
   showForm,
 } from "../../features/config/configData";
-import schoolDataSlice, {
-  fetchSchoolData,
-} from "../../features/school/schoolDataSlice";
+import { fetchSchoolData } from "../../features/school/schoolDataSlice";
 
 import {
   ChangeAvatarContent,
@@ -46,6 +44,8 @@ import {
   EditProfileWrapper,
   SavingContent,
   SavingWrapper,
+  StudentProfileContent,
+  StudentProfileWrapper,
   StudentRegistrationContent,
   StudentRegistrationWrapper,
   SuccessMessageContent,
@@ -1130,12 +1130,6 @@ const CreateStudentTemplate = () => {
   const [isError, setIsError] = useState(false);
   const [templateMessage, setTemplateMessage] = useState(null);
 
-  const handleCreateTemplate = () => {
-    dispatch(showForm("createTemplate"));
-  };
-  const handleCancel = () => {
-    dispatch(closeEditProfileModal());
-  };
   const handleChange = (e) => {
     setTemplateOption((prev) => ({ ...prev, [e.target.name]: e.target.value }));
   };
@@ -1535,21 +1529,19 @@ const StudentRegistration = () => {
       const devices = await navigator.mediaDevices.enumerateDevices();
       setHasCamera(devices.some((d) => d.kind === "videoinput"));
 
-      const test = Object.entries(schoolData.templates.students).forEach(
-        (arr) => {
-          setFormData((prevState) => ({
-            ...prevState,
-            image: {
-              value: null,
-              type: "Image Picker",
-            },
-            [arr[0]]: {
-              value: "",
-              type: arr[1].type,
-            },
-          }));
-        }
-      );
+      Object.entries(schoolData.templates.students).forEach((arr) => {
+        setFormData((prevState) => ({
+          ...prevState,
+          image: {
+            value: null,
+            type: "Image Picker",
+          },
+          [arr[0]]: {
+            value: "",
+            type: arr[1].type,
+          },
+        }));
+      });
       context.current.clearRect(
         0,
         0,
@@ -1557,9 +1549,7 @@ const StudentRegistration = () => {
         context.current.canvas.clientHeight
       );
     })();
-  }, []);
-
-  //TODO  Create student profile in mongodb database.
+  }, [schoolData.templates.students]);
   return (
     <>
       {isSuccess && (
@@ -1759,6 +1749,50 @@ const Saving = () => {
   );
 };
 
+const StudentProfile = () => {
+  const dispatch = useDispatch();
+
+  const studentImageUrl = useSelector((state) => state.config.studentImageUrl);
+  const student = useSelector((state) => state.schoolData.data.students).filter(
+    (student) => student.image === studentImageUrl
+  );
+  return (
+    <StudentProfileWrapper>
+      <StudentProfileContent>
+        <h2>Student Profile</h2>
+        <img className="student-img" src={studentImageUrl} alt="Student" />
+        <div>
+          <h2 className="student-info">Student Information</h2>
+          <div className="student-details-cont">
+            {Object.entries(student[0]).map(
+              (detail) =>
+                detail[0] !== "image" && (
+                  <div className="student-detail" key={detail[0]}>
+                    <label>
+                      {detail[0]
+                        .replace(/([A-Z])/g, " $1")
+                        .replace(/^./, function (str) {
+                          return str.toUpperCase();
+                        })}
+                      :
+                    </label>
+                    <span>{detail[1]}</span>
+                  </div>
+                )
+            )}
+            <button
+              className="close-student-profile"
+              onClick={() => dispatch(closeEditProfileModal())}
+            >
+              Close
+            </button>
+          </div>
+        </div>
+      </StudentProfileContent>
+    </StudentProfileWrapper>
+  );
+};
+
 const Form = () => {
   const { formToShow } = useSelector((state) => state.config);
 
@@ -1772,6 +1806,7 @@ const Form = () => {
       {formToShow === "createStudentTemplate" && <CreateStudentTemplate />}
       {formToShow === "studentRegistration" && <StudentRegistration />}
       {formToShow === "saving" && <Saving />}
+      {formToShow === "studentProfile" && <StudentProfile />}
     </>
   );
 };
