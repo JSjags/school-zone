@@ -9,28 +9,12 @@ import {
 } from "../../features/school/schoolDataSlice";
 import { setCurrentPage } from "../../features/config/configData";
 
-import { FaSignOutAlt, FaIdCardAlt } from "react-icons/fa";
-import {
-  MdMessage,
-  MdNotifications,
-  MdSettings,
-  MdSpaceDashboard,
-  MdPeopleAlt,
-  MdLocationPin,
-} from "react-icons/md";
-
 import { Wrapper, Content } from "./Settings.styles";
+import PageHeader from "../../components/PageHeader/Index";
 
 const Settings = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-
-  const handleLogout = () => {
-    localStorage.removeItem("schoolCredentials");
-    dispatch(resetSchoolAuth());
-    dispatch(resetSchoolData());
-    navigate("/login");
-  };
 
   useEffect(() => {
     dispatch(setCurrentPage("settings"));
@@ -40,27 +24,7 @@ const Settings = () => {
     <Wrapper>
       <Content>
         <main>
-          <header>
-            <h1>Settings</h1>
-            <ul>
-              <li>
-                <MdMessage style={{ fontSize: "1.4rem" }} />
-                <span>Messages</span>
-              </li>
-              <li>
-                <MdNotifications style={{ fontSize: "1.4rem" }} />
-                <span>Notifications</span>
-              </li>
-              <li>
-                <MdSettings style={{ fontSize: "1.4rem" }} />
-                <span>Settings</span>
-              </li>
-            </ul>
-            <button id="sign-out" onClick={handleLogout}>
-              <FaSignOutAlt style={{ fontSize: "1.4rem" }} />
-              <span>Sign out</span>
-            </button>
-          </header>
+          <PageHeader title="Settings" />
         </main>
       </Content>
     </Wrapper>

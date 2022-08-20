@@ -30,6 +30,7 @@ import {
   LoadingContainer,
 } from "../SchoolDashboard/SchoolDashboard.styles";
 import Spinner from "../../components/Spinner/Index";
+import PageHeader from "../../components/PageHeader/Index";
 
 const Profile = () => {
   const dispatch = useDispatch();
@@ -42,12 +43,6 @@ const Profile = () => {
   const { data, isLoading, isSuccess, isError, message } = useSelector(
     (state) => state.schoolData
   );
-  const handleLogout = () => {
-    localStorage.removeItem("schoolCredentials");
-    dispatch(resetSchoolAuth());
-    dispatch(resetSchoolData());
-    navigate("/login");
-  };
 
   const handleEditProfileModal = () => {
     window.scrollTo({
@@ -124,27 +119,7 @@ const Profile = () => {
         <Content>
           {isEditProfileModalOpen && <EditModal />}
           <main>
-            <header>
-              <h1>Profile</h1>
-              <ul>
-                <li>
-                  <MdMessage style={{ fontSize: "1.4rem" }} />
-                  <span>Messages</span>
-                </li>
-                <li>
-                  <MdNotifications style={{ fontSize: "1.4rem" }} />
-                  <span>Notifications</span>
-                </li>
-                <li>
-                  <MdSettings style={{ fontSize: "1.4rem" }} />
-                  <span>Settings</span>
-                </li>
-              </ul>
-              <button id="sign-out" onClick={handleLogout}>
-                <FaSignOutAlt style={{ fontSize: "1.4rem" }} />
-                <span>Sign out</span>
-              </button>
-            </header>
+            <PageHeader title="Profile" />
             <section className="profile-upper-section">
               <div className="profile-cover">
                 <img

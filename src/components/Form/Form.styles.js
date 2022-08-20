@@ -538,13 +538,13 @@ export const SuccessMessageContent = styled.div`
   }
 `;
 
-export const CreateStudentWrapper = styled.div`
+export const CreateProfileWrapper = styled.div`
   width: 100%;
   display: flex;
   align-items: center;
   justify-content: center;
 `;
-export const CreateStudentContent = styled.div`
+export const CreateProfileContent = styled.div`
   display: flex;
   flex-direction: column;
   gap: 10px;

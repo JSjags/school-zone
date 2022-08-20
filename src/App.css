@@ -738,3 +738,22 @@ div.e-content.e-dropdownbase .e-list-item.e-active {
   .e-input-in-wrap:hover {
   border-color: black;
 }
+
+.e-grid th.e-headercell[aria-sort="ascending"] .e-headertext,
+.e-grid th.e-headercell[aria-sort="descending"] .e-headertext,
+.e-grid th.e-headercell[aria-sort="ascending"] .e-sortfilterdiv,
+.e-grid th.e-headercell[aria-sort="descending"] .e-sortfilterdiv {
+  color: var(--dark-secondary-color);
+  opacity: 1;
+}
+
+.e-grid .e-icon-ascending::before,
+.e-grid-menu .e-icon-ascending::before {
+  content: "\e840";
+  color: var(--dark-secondary-color);
+}
+.e-grid .e-icon-descending::before,
+.e-grid-menu .e-icon-descending::before {
+  content: "\e83f";
+  color: var(--dark-secondary-color);
+}

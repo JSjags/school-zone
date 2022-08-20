@@ -5,6 +5,7 @@ const initialState = {
   formToShow: null,
   curentPage: null,
   studentImageUrl: null,
+  staffImageUrl: null,
 };
 
 export const configSlice = createSlice({
@@ -25,6 +26,9 @@ export const configSlice = createSlice({
     setStudentImgUrl: (state, action) => {
       state.studentImageUrl = action.payload;
     },
+    setStaffImgUrl: (state, action) => {
+      state.staffImageUrl = action.payload;
+    },
     setCurrentPage: (state, action) => {
       state.currentPage = action.payload;
     },
@@ -37,6 +41,7 @@ export const {
   showForm,
   setCurrentPage,
   setStudentImgUrl,
+  setStaffImgUrl,
 } = configSlice.actions;
 
 export default configSlice.reducer;

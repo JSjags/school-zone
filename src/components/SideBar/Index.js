@@ -1,4 +1,5 @@
 import React, { useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 
 import { Content } from "./SideBar.styles";
@@ -20,6 +21,8 @@ export const defaultAvatarUrl =
   "https://th.bing.com/th/id/R.49a6854a63de1e699261f3aa0b98a471?rik=xgE%2b4OUEV%2fPu8Q&riu=http%3a%2f%2fcdn.onlinewebfonts.com%2fsvg%2fimg_285684.png&ehk=cxsRbD9Z36xapVJvQBCO2RTp2HQ46Uvp%2bush1b6%2bThI%3d&risl=&pid=ImgRaw&r=0";
 
 const SideBar = () => {
+  const navigate = useNavigate();
+
   const { data } = useSelector((state) => state.schoolData);
   const currentPage = useSelector((state) => state.config.currentPage);
 
@@ -34,7 +37,10 @@ const SideBar = () => {
   return (
     <Content>
       <aside>
-        <div className="aside-header">
+        <div
+          className="aside-header"
+          onClick={() => navigate("/schooldashboard/profile")}
+        >
           <div className="aside-bg-cont">
             <img
               className="aside-bg"

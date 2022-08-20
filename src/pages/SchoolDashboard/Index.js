@@ -19,6 +19,7 @@ import { FaSignOutAlt } from "react-icons/fa";
 import { MdMessage, MdNotifications, MdSettings } from "react-icons/md";
 import { BiError } from "react-icons/bi";
 
+import PageHeader from "../../components/PageHeader/Index";
 import Spinner from "../../components/Spinner/Index";
 import noDataSvg from "../../assets/no-data.svg";
 
@@ -63,13 +64,6 @@ const SchoolDashboard = () => {
     }
   };
 
-  const handleLogout = () => {
-    localStorage.removeItem("schoolCredentials");
-    dispatch(resetSchoolAuth());
-    dispatch(resetSchoolData());
-    navigate("/login");
-  };
-
   return (
     <Wrapper isSuccess={isSuccess ? true : false}>
       {isLoading && (
@@ -80,27 +74,7 @@ const SchoolDashboard = () => {
       {isSuccess && (
         <Content>
           <main>
-            <header>
-              <h1>Dashboard</h1>
-              <ul>
-                <li>
-                  <MdMessage style={{ fontSize: "1.4rem" }} />
-                  <span>Messages</span>
-                </li>
-                <li>
-                  <MdNotifications style={{ fontSize: "1.4rem" }} />
-                  <span>Notifications</span>
-                </li>
-                <li>
-                  <MdSettings style={{ fontSize: "1.4rem" }} />
-                  <span>Settings</span>
-                </li>
-              </ul>
-              <button id="sign-out" onClick={handleLogout}>
-                <FaSignOutAlt style={{ fontSize: "1.4rem" }} />
-                <span>Sign out</span>
-              </button>
-            </header>
+            <PageHeader title="Dashboard" />
             {data.students.length < 1 && data.staffs.length < 1 && (
               <div className="no-data">
                 <img alt="no-data" src={noDataSvg} />

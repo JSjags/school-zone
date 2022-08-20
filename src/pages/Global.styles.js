@@ -8,6 +8,7 @@ export const GlobalStyles = createGlobalStyle`
         --primary-color-hover: #fef2eb;
         --primary-color-active: #fbd0b5;
         --secondary-color: #63b231;
+        --dark-secondary-color: #8ad259;
         --light-tint: #54f6f6;
         --dark-tint: #fb413f;
         --deep-gray: rgba(0, 0, 0, 1);

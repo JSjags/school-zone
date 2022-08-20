@@ -36,8 +36,8 @@ import {
   ChangeAvatarWrapper,
   ChangePasswordContent,
   ChangePasswordWrapper,
-  CreateStudentContent,
-  CreateStudentWrapper,
+  CreateProfileContent,
+  CreateProfileWrapper,
   CreateTemplateContent,
   CreateTemplateWrapper,
   EditProfileContent,
@@ -1045,8 +1045,8 @@ const CreateStudent = () => {
   };
 
   return (
-    <CreateStudentWrapper>
-      <CreateStudentContent>
+    <CreateProfileWrapper>
+      <CreateProfileContent>
         <h2>Create Student Profile</h2>
         <hr style={{ visibility: "hidden", marginBottom: "10px" }} />
         {schoolData.templates?.students === undefined && (
@@ -1067,11 +1067,52 @@ const CreateStudent = () => {
             </div>
           </>
         )}
-      </CreateStudentContent>
-    </CreateStudentWrapper>
+      </CreateProfileContent>
+    </CreateProfileWrapper>
   );
 };
-// Create Template
+
+// Create Staff
+const CreateStaff = () => {
+  const dispatch = useDispatch();
+  const { data: schoolData } = useSelector((state) => state.schoolData);
+
+  const handleCreateTemplate = () => {
+    dispatch(showForm("createStaffTemplate"));
+  };
+  const handleCancel = () => {
+    dispatch(closeEditProfileModal());
+  };
+
+  return (
+    <CreateProfileWrapper>
+      <CreateProfileContent>
+        <h2>Create Staff Profile</h2>
+        <hr style={{ visibility: "hidden", marginBottom: "10px" }} />
+        {schoolData?.templates?.staffs === undefined && (
+          <>
+            <img
+              className="no-template-svg"
+              src={noTemplateFoundSvg}
+              alt="No Template Found"
+            />
+            <p>
+              Sorry, we could not find any template for staff registration.
+              <br />
+              Would you like to create a template right now.
+            </p>
+            <div className="choice-buttons">
+              <button onClick={handleCancel}>No, maybe later</button>
+              <button onClick={handleCreateTemplate}>Yes, I would</button>
+            </div>
+          </>
+        )}
+      </CreateProfileContent>
+    </CreateProfileWrapper>
+  );
+};
+
+// Create  Student Template
 const CreateStudentTemplate = () => {
   const initialFormFields = {
     firstName: {
@@ -1216,6 +1257,280 @@ const CreateStudentTemplate = () => {
         Authorization: `Bearer ${schoolToken}`,
       },
     });
+    if (response.status !== 200 && response.statusText !== "OK") {
+      setIsLoading(false);
+      setIsError(true);
+      return setTemplateMessage("Sorry, cannot save template at the moment.");
+    }
+    setIsLoading(false);
+    setIsError(false);
+    setIsSuccess(true);
+    setTemplateMessage("Template saved successfully.");
+
+    return setTimeout(() => {
+      dispatch(closeEditProfileModal());
+    }, 3000);
+  };
+  const handleOptionsFormat = (e) => {
+    setTemplateOption((prev) => ({
+      ...prev,
+      options: e.target.value
+        .split(",")
+        .map((str) => str.trim().split(" ").join("-"))
+        .join(" "),
+    }));
+  };
+
+  return (
+    <CreateTemplateWrapper>
+      <CreateTemplateContent
+        errors={errors}
+        isSuccess={isSuccess}
+        isError={isError}
+      >
+        <h2>Create Registration Template</h2>
+        <p>Set fields required for standard registration.</p>
+        <hr />
+        <div className="add-template-field-cont">
+          <div className="add-template-group">
+            <h3>Add template form</h3>
+            {errors && (
+              <p className="errors">
+                <BiErrorCircle style={{ fontSize: "1.2rem" }} />
+                <span>{errors}</span>
+              </p>
+            )}
+            <div className="field-values">
+              <input
+                onChange={handleChange}
+                name="name"
+                type="text"
+                value={templateOption.name}
+                placeholder="Field name"
+              />
+              <TemplateOptions
+                templateOption={templateOption}
+                setTemplateOption={setTemplateOption}
+                //   formData={formData}
+                errors={errors}
+                setErrors={setErrors}
+              />
+              {templateOption.type === "Options" && (
+                <div>
+                  <span className="nb">
+                    <BsInfoCircleFill />
+                    <span>Input must be a comma(,) seperated list.</span>
+                  </span>
+                  <input
+                    onChange={handleChange}
+                    onBlur={handleOptionsFormat}
+                    name="options"
+                    type="text"
+                    value={templateOption.options}
+                    placeholder="Field options"
+                  />
+                </div>
+              )}
+            </div>
+            <button onClick={handleAddTemplate}>
+              <MdPlaylistAdd style={{ fontSize: "1.4rem", color: "white" }} />
+              <span>Add field</span>
+            </button>
+          </div>
+          <div className="template-creator">
+            <form onSubmit={handleTemplateSubmit} className="templates">
+              <h3>Required fields</h3>
+              {templateMessage && (
+                <p className={isError ? "errors" : "success"}>
+                  {isError ? (
+                    <BiErrorCircle style={{ fontSize: "1.2rem" }} />
+                  ) : (
+                    <IoIosCloudDone style={{ fontSize: "1.2rem" }} />
+                  )}
+                  <span>{templateMessage}</span>
+                </p>
+              )}
+              {Object.entries(formFields).map((field, index) => (
+                <div className="form-group" key={index}>
+                  <label>{field[1].name}:</label>
+                  <div>
+                    <span>
+                      {field[1].type[0].toUpperCase() + field[1].type.slice(1)}
+                    </span>
+                  </div>
+                  <div
+                    className="delete-field"
+                    onClick={() => handleTemplateDelete(field)}
+                  >
+                    <MdDeleteForever style={{ fontSize: "1.4rem" }} />
+                  </div>
+                </div>
+              ))}
+              {!isLoading && (
+                <button className="submit">
+                  <TbTemplate style={{ fontSize: "1.4rem", color: "white" }} />
+                  <span>Submit Template</span>
+                </button>
+              )}
+              {isLoading && (
+                <div className="loading">
+                  <Spinner />
+                </div>
+              )}
+            </form>
+          </div>
+        </div>
+      </CreateTemplateContent>
+    </CreateTemplateWrapper>
+  );
+};
+
+// Create Staff Template
+const CreateStaffTemplate = () => {
+  const initialFormFields = {
+    firstName: {
+      name: "First Name",
+      type: "Text",
+    },
+    lastName: {
+      name: "Last Name",
+      type: "Text",
+    },
+    otherNames: {
+      name: "Other Names",
+      type: "Text",
+    },
+    dateOfBirth: {
+      name: "Date of Birth",
+      type: "Text",
+    },
+    nationality: {
+      name: "Nationality",
+      type: "Text",
+    },
+    phoneNumber: {
+      name: "Phone Number",
+      type: "Text",
+    },
+    Address: {
+      name: "Address",
+      type: "Text",
+    },
+    email: {
+      name: "Email",
+      type: "Text",
+    },
+  };
+
+  const dispatch = useDispatch();
+  const { data: schoolData } = useSelector((state) => state.schoolData);
+  const { id: schoolId, token: schoolToken } = useSelector(
+    (state) => state.schoolAuth
+  );
+
+  const [formFields, setFormFields] = useState(
+    schoolData.templates?.staffs
+      ? { ...schoolData.templates.staffs }
+      : initialFormFields
+  );
+  const [templateOption, setTemplateOption] = useState({
+    name: "",
+    type: "Select field type",
+    options: "",
+  });
+  const [errors, setErrors] = useState(null);
+  const [isLoading, setIsLoading] = useState(false);
+  const [isSuccess, setIsSuccess] = useState(false);
+  const [isError, setIsError] = useState(false);
+  const [templateMessage, setTemplateMessage] = useState(null);
+
+  const handleChange = (e) => {
+    setTemplateOption((prev) => ({ ...prev, [e.target.name]: e.target.value }));
+  };
+
+  const handleAddTemplate = (e) => {
+    if (
+      templateOption.name.trim() === "" &&
+      templateOption.type === "Select field type"
+    ) {
+      return setErrors("Please enter valid field name and field type");
+    }
+    if (templateOption.name.trim() === "") {
+      return setErrors("Please enter valid field name");
+    }
+    if (templateOption.name.trim().length < 3) {
+      return setErrors("Field name cannot be less than 3 characters");
+    }
+    if (templateOption.type === "Select field type") {
+      return setErrors("Please select field type");
+    }
+    if (
+      templateOption.type === "Options" &&
+      templateOption.options.length < 1
+    ) {
+      return setErrors("Options field cannot be empty");
+    }
+    if (
+      templateOption.type === "Options" &&
+      templateOption.options.trim().split(" ").length < 2
+    ) {
+      return setErrors("Options values must be more than 1.");
+    }
+    setErrors(null);
+    setFormFields((prev) => ({
+      ...prev,
+      [templateOption.name
+        .split(" ")
+        .map((str, i) =>
+          i < 1 ? str.toLowerCase() : str[0].toUpperCase() + str.slice(1)
+        )
+        .join("")]: {
+        name: templateOption.name
+          .split(" ")
+          .map((str, i) => str[0].toUpperCase() + str.slice(1))
+          .join(" "),
+        type: templateOption.type,
+        [templateOption.options && "options"]:
+          templateOption.options && templateOption.options,
+      },
+    }));
+    setTemplateOption({
+      name: "",
+      type: "Select field type",
+      options: "",
+    });
+  };
+
+  const handleTemplateDelete = (field) => {
+    let newFormFields = { ...formFields };
+    delete newFormFields[field[0]];
+    console.log(newFormFields);
+    setFormFields(newFormFields);
+  };
+
+  const handleTemplateSubmit = async (e) => {
+    e.preventDefault();
+    setErrors(null);
+    setTemplateOption({
+      name: "",
+      type: "Select field type",
+    });
+    setIsLoading(true);
+    setIsSuccess(false);
+    setIsError(false);
+    setTemplateMessage(null);
+    const response = await axios({
+      url: `/api/schools/${schoolId}/update`,
+      method: "put",
+      data: {
+        templateName: "staffs",
+        templateData: formFields,
+      },
+      headers: {
+        Authorization: `Bearer ${schoolToken}`,
+      },
+    });
+    console.log(response);
     if (response.status !== 200 && response.statusText !== "OK") {
       setIsLoading(false);
       setIsError(true);
@@ -1803,7 +2118,9 @@ const Form = () => {
       {formToShow === "changeCoverPhoto" && <ChangeCoverPhoto />}
       {formToShow === "changePassword" && <ChangePassword />}
       {formToShow === "createStudent" && <CreateStudent />}
+      {formToShow === "createStaff" && <CreateStaff />}
       {formToShow === "createStudentTemplate" && <CreateStudentTemplate />}
+      {formToShow === "createStaffTemplate" && <CreateStaffTemplate />}
       {formToShow === "studentRegistration" && <StudentRegistration />}
       {formToShow === "saving" && <Saving />}
       {formToShow === "studentProfile" && <StudentProfile />}

@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import axios from "axios";
 import { useNavigate } from "react-router";
+import axios from "axios";
 import {
   ColumnDirective,
   ColumnsDirective,
@@ -33,24 +33,23 @@ import {
   showForm,
 } from "../../features/config/configData";
 
-import { FaSignOutAlt } from "react-icons/fa";
 import { AiOutlineFileDone } from "react-icons/ai";
 import { BsPersonPlus, BsInfoCircleFill } from "react-icons/bs";
 import { FaRegIdCard } from "react-icons/fa";
 import { IoCreateOutline } from "react-icons/io5";
-import { MdMessage, MdNotifications, MdSettings } from "react-icons/md";
 import { BiError } from "react-icons/bi";
 
-import { Wrapper, Content } from "./Students.styles";
-import EditModal from "../../components/EditModal/Index";
-
-import noStudentSvg from "../../assets/no-student.svg";
 import {
   ErrorContainer,
   LoadingContainer,
 } from "../SchoolDashboard/SchoolDashboard.styles";
+import { Wrapper, Content } from "./Students.styles";
+import EditModal from "../../components/EditModal/Index";
+import PageHeader from "../../components/PageHeader/Index";
 import Spinner from "../../components/Spinner/Index";
+import noStudentSvg from "../../assets/no-student.svg";
 
+// Syncfusion grid component avatar template
 const AvatarTemplate = ({ image }) => {
   const dispatch = useDispatch();
 
@@ -67,6 +66,7 @@ const AvatarTemplate = ({ image }) => {
     </div>
   );
 };
+// Syncfusion grid component student_id template
 const StudentIdTemplate = ({ student_id }) => {
   return (
     <div className="student-id">
@@ -107,13 +107,6 @@ const Students = () => {
       localStorage.removeItem("schoolCredentials");
       return navigate("/login");
     }
-  };
-
-  const handleLogout = () => {
-    localStorage.removeItem("schoolCredentials");
-    dispatch(resetSchoolAuth());
-    dispatch(resetSchoolData());
-    navigate("/login");
   };
 
   const handleCreateStudent = () => {
@@ -248,7 +241,7 @@ const Students = () => {
       }
     }
   }
-  // TODO Add view profile on avatar image click and add some instructions on how to use the grid.
+
   return (
     <Wrapper>
       {savingSuccess && (
@@ -272,27 +265,7 @@ const Students = () => {
       {isSuccess && (
         <Content>
           <main>
-            <header>
-              <h1>Students</h1>
-              <ul>
-                <li>
-                  <MdMessage style={{ fontSize: "1.4rem" }} />
-                  <span>Messages</span>
-                </li>
-                <li>
-                  <MdNotifications style={{ fontSize: "1.4rem" }} />
-                  <span>Notifications</span>
-                </li>
-                <li>
-                  <MdSettings style={{ fontSize: "1.4rem" }} />
-                  <span>Settings</span>
-                </li>
-              </ul>
-              <button id="sign-out" onClick={handleLogout}>
-                <FaSignOutAlt style={{ fontSize: "1.4rem" }} />
-                <span>Sign out</span>
-              </button>
-            </header>
+            <PageHeader title="Students" />
             {students.length < 1 && (
               <div className="create-student">
                 <img alt="add-student" src={noStudentSvg}></img>
@@ -444,6 +417,12 @@ const Students = () => {
                     <li>
                       <span>
                         Right-click on any field to access context menu.
+                      </span>
+                    </li>
+                    <li>
+                      <span>
+                        Click on column header field to toggle sorting between
+                        ascending and descending orders.
                       </span>
                     </li>
                     <li>
