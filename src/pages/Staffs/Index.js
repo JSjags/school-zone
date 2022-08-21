@@ -216,7 +216,7 @@ const Staffs = () => {
 
       try {
         const data = await axios({
-          url: `/api/schools/${schoolId}/students/update`,
+          url: `/api/schools/${schoolId}/staffs/update`,
           method: "put",
           data: { type: args.requestType, data: args.data },
           headers: {
@@ -329,7 +329,7 @@ const Staffs = () => {
                           !leaveOutData.includes(entry[0]) &&
                           (() => {
                             switch (
-                              schoolData.templates.staffs[entry[0]].type
+                              schoolData.templates?.staffs[entry[0]]?.type
                             ) {
                               case "Options":
                                 return (

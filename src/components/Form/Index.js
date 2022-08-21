@@ -1176,6 +1176,9 @@ const CreateStudentTemplate = () => {
   };
 
   const handleAddTemplate = (e) => {
+    if (templateOption.name.trim().toLowerCase() === "image") {
+      return setErrors("Image is a reserved field name.");
+    }
     if (
       templateOption.name.trim() === "" &&
       templateOption.type === "Select field type"
@@ -1257,6 +1260,7 @@ const CreateStudentTemplate = () => {
         Authorization: `Bearer ${schoolToken}`,
       },
     });
+    console.log(response);
     if (response.status !== 200 && response.statusText !== "OK") {
       setIsLoading(false);
       setIsError(true);
@@ -1449,6 +1453,9 @@ const CreateStaffTemplate = () => {
   };
 
   const handleAddTemplate = (e) => {
+    if (templateOption.name.trim().toLowerCase() === "image") {
+      return setErrors("Image is a reserved field name.");
+    }
     if (
       templateOption.name.trim() === "" &&
       templateOption.type === "Select field type"
@@ -1765,7 +1772,7 @@ const StudentRegistration = () => {
     setIsError(false);
     setIsSuccess(false);
 
-    const studentId = uuidv4();
+    const staffId = uuidv4();
 
     const dataToFirebase = {};
     const dataToMongoDB = {};
@@ -1777,7 +1784,7 @@ const StudentRegistration = () => {
       return (dataToMongoDB[entry[0]] = entry[1].value);
     });
 
-    dataToMongoDB.student_id = studentId;
+    dataToMongoDB.staff_id = staffId;
 
     try {
       // get downloadURL(s) from firebase storage for uploaded images
@@ -1786,7 +1793,7 @@ const StudentRegistration = () => {
           storage,
           `${schoolData.name.split(" ").join("-")}-${
             schoolData._id
-          }/students/${studentId}/images/${Object.keys(dataToFirebase)[i]}`
+          }/students/${staffId}/images/${Object.keys(dataToFirebase)[i]}`
         )
       );
       const uploadResultArr = await Promise.all(
@@ -2050,6 +2057,397 @@ const StudentRegistration = () => {
   );
 };
 
+// Staff Registration
+const StaffRegistration = () => {
+  const dispatch = useDispatch();
+  const [hasCamera, setHasCamera] = useState("");
+
+  const [showCamera, setShowCamera] = useState(false);
+  const [, setShowCanvas] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const [isError, setIsError] = useState(false);
+  const [isSuccess, setIsSuccess] = useState(false);
+
+  const [formData, setFormData] = useState({});
+
+  const staffRegPageRef = useRef();
+  const canvas = useRef(null);
+  const context = useRef(null);
+
+  const canvasRef = useRef();
+  const videoRef = useRef();
+  const imageRef = useRef();
+  const imagePickerRef = useRef();
+
+  const avatarURL = useSelector((state) => state.schoolData.data.avatar_image);
+  const { data: schoolData } = useSelector((state) => state.schoolData);
+  const { id: schoolId, token: schoolToken } = useSelector(
+    (state) => state.schoolAuth
+  );
+
+  const invalidValues = ["", null, undefined];
+
+  const handleVideo = () => {
+    setShowCamera(true);
+    if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+      navigator.mediaDevices.getUserMedia({ video: true }).then((stream) => {
+        videoRef.current.srcObject = stream;
+        videoRef.current.play();
+      });
+    }
+  };
+
+  const handleSnapshot = () => {
+    setShowCamera(false);
+    setShowCanvas(false);
+
+    context.current.drawImage(
+      videoRef.current,
+      0,
+      0,
+      context.current.canvas.clientWidth,
+      context.current.canvas.clientHeight
+    );
+
+    setFormData((prevState) => ({
+      ...prevState,
+      image: {
+        value: canvas.current.toDataURL("image/jpeg", 0.75),
+        type: prevState.image.type,
+      },
+    }));
+  };
+
+  const handleImgSelection = (e) => {
+    const fileReader = new FileReader();
+
+    setShowCamera(false);
+    setShowCanvas(false);
+
+    fileReader.readAsDataURL(e.target.files[0]);
+
+    fileReader.onloadend = (e) => {
+      const url = e.target.result;
+      imageRef.current.src = url;
+
+      imageRef.current.onload = () => {
+        context.current.clearRect(
+          0,
+          0,
+          context.current.canvas.clientWidth,
+          context.current.canvas.clientHeight
+        );
+        context.current.drawImage(
+          imageRef.current,
+          0,
+          0,
+          context.current.canvas.clientWidth,
+          context.current.canvas.clientHeight
+        );
+        setFormData((prevState) => ({
+          ...prevState,
+          image: {
+            value: canvas.current.toDataURL("image/jpeg", 0.75),
+            type: prevState.image.type,
+          },
+        }));
+      };
+    };
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    console.log(formData);
+
+    setIsLoading(true);
+    setIsError(false);
+    setIsSuccess(false);
+
+    const staffId = uuidv4();
+
+    const dataToFirebase = {};
+    const dataToMongoDB = {};
+
+    Object.entries(formData).forEach((entry) => {
+      if (entry[1].type === "Image Picker") {
+        return (dataToFirebase[entry[0]] = entry[1].value);
+      }
+      return (dataToMongoDB[entry[0]] = entry[1].value);
+    });
+
+    dataToMongoDB.staff_id = staffId;
+
+    try {
+      // get downloadURL(s) from firebase storage for uploaded images
+      const storageRefArr = Object.entries(dataToFirebase).map((data, i) =>
+        ref(
+          storage,
+          `${schoolData.name.split(" ").join("-")}-${
+            schoolData._id
+          }/staffs/${staffId}/images/${Object.keys(dataToFirebase)[i]}`
+        )
+      );
+      const uploadResultArr = await Promise.all(
+        Object.entries(dataToFirebase).map((data, i) => {
+          if (Object.values(dataToFirebase)[i].startsWith("data:")) {
+            return uploadString(storageRefArr[i], data[1], "data_url");
+          }
+          return uploadBytes(storageRefArr[i], data[1]);
+        })
+      );
+      const downloadUrlArr = await Promise.all(
+        uploadResultArr.map((result) => getDownloadURL(result.ref))
+      );
+
+      // Update data to be sent to mongo db
+      downloadUrlArr.forEach(
+        (url, i) => (dataToMongoDB[Object.keys(dataToFirebase)[i]] = url)
+      );
+
+      console.log(dataToMongoDB);
+
+      const data = await axios({
+        url: `/api/schools/${schoolId}/staffs`,
+        method: "post",
+        data: [dataToMongoDB, ...schoolData.staffs],
+        headers: {
+          Authorization: `Bearer ${schoolToken}`,
+        },
+      });
+      if (
+        data.status === 200 &&
+        data.statusText === "OK" &&
+        data.data.acknowledged === true
+      ) {
+        setIsLoading(false);
+        setIsError(false);
+        setIsSuccess(true);
+        dispatch(fetchSchoolData(schoolToken));
+        window.scrollTo({ top: 0, behavior: "smooth" });
+        setTimeout(() => dispatch(closeEditProfileModal()), 3000);
+      }
+    } catch (error) {
+      setIsLoading(false);
+      setIsSuccess(false);
+      setIsError(true);
+      staffRegPageRef.current.scrollIntoView();
+    }
+  };
+
+  useEffect(() => {
+    canvas.current = canvasRef.current;
+    context.current = canvas.current.getContext("2d");
+
+    (async () => {
+      const devices = await navigator.mediaDevices.enumerateDevices();
+      setHasCamera(devices.some((d) => d.kind === "videoinput"));
+
+      Object.entries(schoolData.templates.staffs).forEach((arr) => {
+        setFormData((prevState) => ({
+          ...prevState,
+          image: {
+            value: null,
+            type: "Image Picker",
+          },
+          [arr[0]]: {
+            value: "",
+            type: arr[1].type,
+          },
+        }));
+      });
+      context.current.clearRect(
+        0,
+        0,
+        context.current.canvas.clientWidth,
+        context.current.canvas.clientHeight
+      );
+    })();
+  }, [schoolData.templates.staffs]);
+  return (
+    <>
+      {isSuccess && (
+        <SuccessMessageWrapper>
+          <SuccessMessageContent>
+            <div className="success-message">
+              <p>
+                <FcApproval
+                  style={{
+                    fontSize: "5rem",
+                    paddingTop: "-5px",
+                  }}
+                />
+                <span>Staff profile successfully created.</span>
+              </p>
+            </div>
+          </SuccessMessageContent>
+        </SuccessMessageWrapper>
+      )}
+      {!isSuccess && (
+        <StudentRegistrationWrapper>
+          <StudentRegistrationContent
+            image={formData.image?.value}
+            showCamera={showCamera}
+            ref={staffRegPageRef}
+          >
+            <div className="reg-header">
+              <img src={avatarURL} alt="" />
+              <div>
+                <h2>{schoolData.name}</h2>
+                <p>{schoolData.address}</p>
+                <p>{schoolData.country}</p>
+              </div>
+            </div>
+            <hr />
+            <h2 className="reg-title">Staff Registration Portal</h2>
+            {isError && (
+              <div id="registration-error-message">
+                <p>
+                  <BiErrorCircle
+                    style={{ fontSize: "1.4rem", paddingTop: "-5px" }}
+                  />
+                  <span>
+                    Sorry, we couldn't create staff profile, please try again
+                    later.
+                  </span>
+                </p>
+              </div>
+            )}
+            <div className="reg-form">
+              <div className="passport-cont">
+                <label id="passport-title">Passport</label>
+                <div className="passport">
+                  <img alt="" ref={imageRef} className="hidden" />
+                  <canvas
+                    width="426px"
+                    height="426px"
+                    ref={canvasRef}
+                    id="canvas"
+                  ></canvas>
+                  {showCamera && <video ref={videoRef} autoPlay id="video" />}
+                </div>
+                <div className="button-group">
+                  {hasCamera && !showCamera && (
+                    <label className="primary-white-btn" onClick={handleVideo}>
+                      <FaCameraRetro style={{ fontSize: "1.4rem" }} />
+                      <span>Use Camera</span>
+                    </label>
+                  )}
+                  {hasCamera && showCamera && (
+                    <label className="secondary-btn" onClick={handleSnapshot}>
+                      <FaCameraRetro style={{ fontSize: "1.4rem" }} />
+                      <span>Take Photo</span>
+                    </label>
+                  )}
+                  <input
+                    id="image-picker"
+                    type="file"
+                    ref={imagePickerRef}
+                    accept="image/*"
+                    capture="camera"
+                    onChange={(e) => handleImgSelection(e)}
+                    className="hidden"
+                  />
+                  {
+                    <label
+                      htmlFor="image-picker"
+                      className="secondary-btn"
+                      onClick={handleImgSelection}
+                    >
+                      <RiGalleryFill style={{ fontSize: "1.5rem" }} />
+                      <span>Choose from gallery</span>
+                    </label>
+                  }
+                </div>
+              </div>
+              <form onSubmit={(e) => handleSubmit(e)}>
+                {Object.entries(schoolData.templates.staffs).map((val, i) => (
+                  <div key={i} className="field-container">
+                    <label>{val[1].name}:</label>
+                    {(() => {
+                      switch (val[1].type) {
+                        case "Text":
+                          return (
+                            <Text
+                              value={formData[val[0]]?.value}
+                              setFormData={setFormData}
+                              name={val[0]}
+                            />
+                          );
+                        case "Number":
+                          return (
+                            <Number
+                              value={formData[val[0]]?.value}
+                              setFormData={setFormData}
+                              name={val[0]}
+                            />
+                          );
+                        case "Options":
+                          return (
+                            <Options
+                              options={val[1].options}
+                              value={formData[val[0]]?.value}
+                              setFormData={setFormData}
+                              name={val[0]}
+                            />
+                          );
+                        case "Date Picker":
+                          return (
+                            <DatePicker
+                              value={formData[val[0]]?.value}
+                              setFormData={setFormData}
+                              formData={formData}
+                              name={val[0]}
+                            />
+                          );
+                        case "Image Picker":
+                          return (
+                            <ImagePicker
+                              value={formData[val[0]]?.value}
+                              setFormData={setFormData}
+                              formData={formData}
+                              name={val[0]}
+                            />
+                          );
+                        default:
+                          return null;
+                      }
+                    })()}
+                  </div>
+                ))}
+                <p className="info">
+                  <BsInfoCircleFill style={{ fontSize: "1rem" }} />
+                  <span>
+                    No field should be left empty, unwanted fields can filled
+                    with "null" or hyphen(s) or any character of your choice.
+                  </span>
+                </p>
+                {Object.entries(formData).every(
+                  (value) => !invalidValues.includes(value[1].value)
+                ) &&
+                  !isLoading && (
+                    <button className="primary-btn" id="submit-btn">
+                      Submit
+                    </button>
+                  )}
+                {isLoading && (
+                  <Spinner
+                    style={{ position: "absolute", bottom: 0, width: "100%" }}
+                  />
+                )}
+              </form>
+            </div>
+            <img
+              src={avatarURL}
+              alt="school-logo-watermark"
+              className="watermark"
+            />
+          </StudentRegistrationContent>
+        </StudentRegistrationWrapper>
+      )}
+    </>
+  );
+};
+
 // Saving Changes
 const Saving = () => {
   return (
@@ -2122,6 +2520,7 @@ const Form = () => {
       {formToShow === "createStudentTemplate" && <CreateStudentTemplate />}
       {formToShow === "createStaffTemplate" && <CreateStaffTemplate />}
       {formToShow === "studentRegistration" && <StudentRegistration />}
+      {formToShow === "staffRegistration" && <StaffRegistration />}
       {formToShow === "saving" && <Saving />}
       {formToShow === "studentProfile" && <StudentProfile />}
     </>

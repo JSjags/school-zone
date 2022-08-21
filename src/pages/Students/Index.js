@@ -328,7 +328,7 @@ const Students = () => {
                           !leaveOutData.includes(entry[0]) &&
                           (() => {
                             switch (
-                              schoolData.templates.students[entry[0]].type
+                              schoolData.templates?.students[entry[0]]?.type
                             ) {
                               case "Options":
                                 return (

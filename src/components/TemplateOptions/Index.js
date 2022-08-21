@@ -105,6 +105,7 @@ const TemplateOptions = ({
           >
             {templateOptions.map((option, i) => (
               <li
+                key={i}
                 data-name="institutionLevel"
                 onClick={(e) => {
                   toggleMenu();
