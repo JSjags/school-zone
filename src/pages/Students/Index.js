@@ -200,7 +200,7 @@ const Students = () => {
           setSavingError(false);
           dispatch(fetchSchoolData(authToken));
           setTimeout(() => dispatch(closeEditProfileModal()), 3000);
-          setTimeout(() => setSavingSuccess(false), 10000);
+          setTimeout(() => setSavingSuccess(false), 7000);
         }
       } catch (error) {
         setSavingSuccess(false);
@@ -231,7 +231,7 @@ const Students = () => {
           setSavingError(false);
           dispatch(fetchSchoolData(authToken));
           setTimeout(() => dispatch(closeEditProfileModal()), 3000);
-          setTimeout(() => setSavingSuccess(false), 10000);
+          setTimeout(() => setSavingSuccess(false), 7000);
         }
       } catch (error) {
         setSavingSuccess(false);

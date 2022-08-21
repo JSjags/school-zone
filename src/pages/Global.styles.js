@@ -23,7 +23,7 @@ export const GlobalStyles = createGlobalStyle`
         --system-font: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen,
       Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
         --dark-gray: rgba(0, 0, 0, 0.7);
-        --translucent-white: rgba(255, 255, 255, 0.5);
+        --translucent-white: rgba(255, 255, 255, 0.7);
         --text-shadow: 
         -1px -1px var(--light-tint),
         1px 1px var(--dark-tint);

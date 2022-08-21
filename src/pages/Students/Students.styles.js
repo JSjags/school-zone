@@ -198,9 +198,10 @@ export const Content = styled.div`
         border-radius: 10px;
         font-weight: 500;
         font-size: 1rem;
-        background: whitesmoke;
+        background: var(--white);
         font-family: var(--hind);
         cursor: pointer;
+        box-shadow: 0 5px 10px var(--dark-mid-gray);
         transition: all 300ms ease;
 
         span {
@@ -209,7 +210,14 @@ export const Content = styled.div`
 
         :hover {
           background: white;
-          box-shadow: 0 5px 10px var(--dark-mid-gray);
+          transform: scale(1.1);
+          box-shadow: -5px -5px var(--light-tint), 5px 5px var(--dark-tint);
+          background: var(--primary-color);
+          color: white;
+          letter-spacing: 2px;
+          font-size: 1.1rem;
+          -webkit-text-stroke: 0.5px var(--primary-color-active);
+          text-shadow: 0 10px 3px rgba(0, 0, 0, 0.2);
         }
       }
     }

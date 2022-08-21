@@ -44,6 +44,8 @@ import {
   EditProfileWrapper,
   SavingContent,
   SavingWrapper,
+  StaffProfileContent,
+  StaffProfileWrapper,
   StudentProfileContent,
   StudentProfileWrapper,
   StudentRegistrationContent,
@@ -1828,6 +1830,14 @@ const StudentRegistration = () => {
         data.statusText === "OK" &&
         data.data.acknowledged === true
       ) {
+        // clear canvas
+        context.current.clearRect(
+          0,
+          0,
+          context.current.canvas.clientWidth,
+          context.current.canvas.clientHeight
+        );
+
         setIsLoading(false);
         setIsError(false);
         setIsSuccess(true);
@@ -1846,7 +1856,9 @@ const StudentRegistration = () => {
   useEffect(() => {
     canvas.current = canvasRef.current;
     context.current = canvas.current.getContext("2d");
+  }, []);
 
+  useEffect(() => {
     (async () => {
       const devices = await navigator.mediaDevices.enumerateDevices();
       setHasCamera(devices.some((d) => d.kind === "videoinput"));
@@ -1864,12 +1876,6 @@ const StudentRegistration = () => {
           },
         }));
       });
-      context.current.clearRect(
-        0,
-        0,
-        context.current.canvas.clientWidth,
-        context.current.canvas.clientHeight
-      );
     })();
   }, [schoolData.templates.students]);
   return (
@@ -2219,6 +2225,15 @@ const StaffRegistration = () => {
         data.statusText === "OK" &&
         data.data.acknowledged === true
       ) {
+        // Reset canvas
+
+        context.current.clearRect(
+          0,
+          0,
+          context.current.canvas.clientWidth,
+          context.current.canvas.clientHeight
+        );
+
         setIsLoading(false);
         setIsError(false);
         setIsSuccess(true);
@@ -2237,7 +2252,9 @@ const StaffRegistration = () => {
   useEffect(() => {
     canvas.current = canvasRef.current;
     context.current = canvas.current.getContext("2d");
+  }, []);
 
+  useEffect(() => {
     (async () => {
       const devices = await navigator.mediaDevices.enumerateDevices();
       setHasCamera(devices.some((d) => d.kind === "videoinput"));
@@ -2255,14 +2272,9 @@ const StaffRegistration = () => {
           },
         }));
       });
-      context.current.clearRect(
-        0,
-        0,
-        context.current.canvas.clientWidth,
-        context.current.canvas.clientHeight
-      );
     })();
   }, [schoolData.templates.staffs]);
+
   return (
     <>
       {isSuccess && (
@@ -2448,20 +2460,7 @@ const StaffRegistration = () => {
   );
 };
 
-// Saving Changes
-const Saving = () => {
-  return (
-    <SavingWrapper>
-      <SavingContent>
-        <div>
-          <Spinner />
-        </div>
-        <p>Saving Changes</p>
-      </SavingContent>
-    </SavingWrapper>
-  );
-};
-
+// Student Profile
 const StudentProfile = () => {
   const dispatch = useDispatch();
 
@@ -2505,6 +2504,64 @@ const StudentProfile = () => {
     </StudentProfileWrapper>
   );
 };
+// Student Profile
+const StaffProfile = () => {
+  const dispatch = useDispatch();
+
+  const staffImageUrl = useSelector((state) => state.config.staffImageUrl);
+  const staff = useSelector((state) => state.schoolData.data.staffs).filter(
+    (staff) => staff.image === staffImageUrl
+  );
+  return (
+    <StaffProfileWrapper>
+      <StaffProfileContent>
+        <h2>Staff Profile</h2>
+        <img className="staff-img" src={staffImageUrl} alt="staff" />
+        <div>
+          <h2 className="staff-info">Staff Information</h2>
+          <div className="staff-details-cont">
+            {Object.entries(staff[0]).map(
+              (detail) =>
+                detail[0] !== "image" && (
+                  <div className="staff-detail" key={detail[0]}>
+                    <label>
+                      {detail[0]
+                        .replace(/([A-Z])/g, " $1")
+                        .replace(/^./, function (str) {
+                          return str.toUpperCase();
+                        })}
+                      :
+                    </label>
+                    <span>{detail[1]}</span>
+                  </div>
+                )
+            )}
+            <button
+              className="close-staff-profile"
+              onClick={() => dispatch(closeEditProfileModal())}
+            >
+              Close
+            </button>
+          </div>
+        </div>
+      </StaffProfileContent>
+    </StaffProfileWrapper>
+  );
+};
+
+// Saving Changes
+const Saving = () => {
+  return (
+    <SavingWrapper>
+      <SavingContent>
+        <div>
+          <Spinner />
+        </div>
+        <p>Saving Changes</p>
+      </SavingContent>
+    </SavingWrapper>
+  );
+};
 
 const Form = () => {
   const { formToShow } = useSelector((state) => state.config);
@@ -2523,6 +2580,7 @@ const Form = () => {
       {formToShow === "staffRegistration" && <StaffRegistration />}
       {formToShow === "saving" && <Saving />}
       {formToShow === "studentProfile" && <StudentProfile />}
+      {formToShow === "staffProfile" && <StaffProfile />}
     </>
   );
 };

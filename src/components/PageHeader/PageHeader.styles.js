@@ -151,12 +151,13 @@ export const HeaderWrapper = styled.header`
     justify-content: center;
     align-items: center;
     gap: 5px;
-    background-color: whitesmoke;
+    background-color: var(--white);
     border: none;
     font-family: var(--hind);
     font-size: 1rem;
     padding: 10px 20px;
     color: var(--deep-gray);
+    box-shadow: 0 5px 10px var(--mid-gray);
     border-radius: 20px;
     transition: all 300ms ease-in-out;
     cursor: pointer;
