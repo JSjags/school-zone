@@ -1,8 +1,7 @@
-import { useState } from "react";
-import { TextWrapper } from "./Text.styles";
+import React from "react";
+import { TimePickerWrapper } from "./TimePicker.styles";
 
-const Text = ({ value, setFormData, name }) => {
-  const [text, setText] = useState("");
+const TimePicker = ({ value, formData, setFormData, name }) => {
   const handleChange = (e) => {
     setFormData((prev) => ({
       ...prev,
@@ -15,12 +14,12 @@ const Text = ({ value, setFormData, name }) => {
 
   return (
     <>
-      <TextWrapper
-        placeholder="Input text"
+      <TimePickerWrapper
+        as="input"
         name={name}
-        value={text}
+        type="time"
+        value={value}
         onChange={(e) => {
-          setText(e.target.value);
           handleChange(e);
         }}
       />
@@ -28,4 +27,4 @@ const Text = ({ value, setFormData, name }) => {
   );
 };
 
-export default Text;
+export default TimePicker;

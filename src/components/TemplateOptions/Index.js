@@ -14,6 +14,7 @@ const TemplateOptions = ({
     "Number",
     "Options",
     "Date Picker",
+    "Time Picker",
     "Image Picker",
   ];
 

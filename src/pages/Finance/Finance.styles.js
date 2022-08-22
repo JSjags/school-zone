@@ -216,19 +216,22 @@ export const Content = styled.div`
       flex-wrap: wrap;
 
       button {
+        width: clamp(200px, 10vw, 215px);
+        height: clamp(130px, 5vh, 190px);
         display: flex;
         flex-direction: column;
         align-items: center;
+        justify-content: center;
         gap: 5px;
-        background: whitesmoke;
         border: none;
-        height: 100%;
+        margin: 20px;
         border-radius: 10px;
-        padding: 50px 20px;
         font-weight: 500;
         font-size: 1rem;
+        background: var(--white);
         font-family: var(--hind);
         cursor: pointer;
+        box-shadow: 0 5px 10px var(--dark-mid-gray);
         transition: all 300ms ease;
 
         span {
@@ -237,7 +240,14 @@ export const Content = styled.div`
 
         :hover {
           background: white;
-          box-shadow: 0 5px 10px var(--dark-mid-gray);
+          transform: scale(1.1);
+          box-shadow: -5px -5px var(--light-tint), 5px 5px var(--dark-tint);
+          background: var(--primary-color);
+          color: white;
+          letter-spacing: 2px;
+          font-size: 1.1rem;
+          -webkit-text-stroke: 0.5px var(--primary-color-active);
+          text-shadow: 0 10px 3px rgba(0, 0, 0, 0.2);
         }
       }
     }
