@@ -35,6 +35,7 @@ export const ImagePickerContent = styled.div`
     margin-top: 15px;
     margin-bottom: 5px;
     transition: all 200ms ease-in-out;
+    width: clamp(240px, 100%, 500px);
 
     :hover {
       box-shadow: 0 5px 8px rgba(0, 0, 0, 0.3);

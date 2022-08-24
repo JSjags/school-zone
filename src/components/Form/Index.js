@@ -1873,7 +1873,6 @@ const CreateFinanceTemplate = () => {
         Authorization: `Bearer ${schoolToken}`,
       },
     });
-    console.log(response);
     if (response.status !== 200 && response.statusText !== "OK") {
       setIsLoading(false);
       setIsError(true);
@@ -1883,6 +1882,7 @@ const CreateFinanceTemplate = () => {
     setIsError(false);
     setIsSuccess(true);
     setTemplateMessage("Template saved successfully.");
+    dispatch(fetchSchoolData(schoolToken));
 
     return setTimeout(() => {
       dispatch(closeEditProfileModal());
@@ -2859,7 +2859,7 @@ const RecordFinance = () => {
     setIsError(false);
     setIsSuccess(false);
 
-    const staffId = uuidv4();
+    const templateId = uuidv4();
 
     const dataToFirebase = {};
     const dataToMongoDB = {};
@@ -2871,7 +2871,7 @@ const RecordFinance = () => {
       return (dataToMongoDB[entry[0]] = entry[1].value);
     });
 
-    dataToMongoDB.staff_id = staffId;
+    dataToMongoDB.template_id = templateId;
 
     try {
       // get downloadURL(s) from firebase storage for uploaded images
@@ -2880,7 +2880,7 @@ const RecordFinance = () => {
           storage,
           `${schoolData.name.split(" ").join("-")}-${
             schoolData._id
-          }/finance/${staffId}/images/${Object.keys(dataToFirebase)[i]}`
+          }/finance/${templateId}/images/${Object.keys(dataToFirebase)[i]}`
         )
       );
       const uploadResultArr = await Promise.all(
@@ -2903,17 +2903,18 @@ const RecordFinance = () => {
       console.log(dataToMongoDB);
 
       const data = await axios({
-        url: `/api/schools/${schoolId}/staffs`,
+        url: `/api/schools/${schoolId}/finance`,
         method: "post",
-        data: [dataToMongoDB, ...schoolData.staffs],
+        data: dataToMongoDB,
         headers: {
           Authorization: `Bearer ${schoolToken}`,
         },
       });
+      console.log(data);
       if (
         data.status === 200 &&
         data.statusText === "OK" &&
-        data.data.acknowledged === true
+        data.data.data.acknowledged === true
       ) {
         setIsLoading(false);
         setIsError(false);
@@ -2958,7 +2959,7 @@ const RecordFinance = () => {
                   }}
                 />
                 <span>
-                  {formData.statementType.value} successfully created.
+                  {formData.statementType.value} successfully recorded.
                 </span>
               </p>
             </div>

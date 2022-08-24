@@ -21,6 +21,8 @@ import EditModal from "../../components/EditModal/Index";
 import PageHeader from "../../components/PageHeader/Index";
 
 import noFinanceSvg from "../../assets/no-financial-data.svg";
+import { LoadingContainer } from "../SchoolDashboard/SchoolDashboard.styles";
+import Spinner from "../../components/Spinner/Index";
 
 const Finance = () => {
   const dispatch = useDispatch();
@@ -29,8 +31,14 @@ const Finance = () => {
   const { id: schoolId, token: schoolToken } = useSelector(
     (state) => state.schoolAuth
   );
-  const { data: schoolData } = useSelector((state) => state.schoolData);
-  const { financialData } = useSelector((state) => state.schoolData.data);
+  const {
+    data: schoolData,
+    financialData,
+    isLoading,
+    isSuccess,
+    isError,
+    message,
+  } = useSelector((state) => state.schoolData);
   const { isEditProfileModalOpen } = useSelector((state) => state.config);
 
   const handleCreateFinance = () => {
@@ -62,6 +70,11 @@ const Finance = () => {
 
   return (
     <Wrapper>
+      {isLoading && (
+        <LoadingContainer>
+          <Spinner />
+        </LoadingContainer>
+      )}
       {isEditProfileModalOpen && <EditModal />}
       <Content>
         <main>
