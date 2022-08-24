@@ -22,7 +22,7 @@ import {
   getDownloadURL,
   uploadString,
 } from "firebase/storage";
-import { stringify, v4 as uuidv4 } from "uuid";
+import { v4 as uuidv4 } from "uuid";
 
 import { storage } from "../../firebase/firebase.config";
 import {
@@ -68,7 +68,7 @@ import noTemplateFoundSvg from "../../assets/no-template.svg";
 import TemplateOptions from "../TemplateOptions/Index";
 import TimePicker from "../TimePicker/Index";
 
-// Form types
+// Form types and modals
 
 // Edit Profile
 const EditProfileForm = () => {
@@ -2851,6 +2851,8 @@ const RecordFinance = () => {
 
   const invalidValues = ["", null, undefined];
 
+  const statementId = uuidv4();
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     console.log(formData);
@@ -2858,8 +2860,6 @@ const RecordFinance = () => {
     setIsLoading(true);
     setIsError(false);
     setIsSuccess(false);
-
-    const templateId = uuidv4();
 
     const dataToFirebase = {};
     const dataToMongoDB = {};
@@ -2871,8 +2871,6 @@ const RecordFinance = () => {
       return (dataToMongoDB[entry[0]] = entry[1].value);
     });
 
-    dataToMongoDB.template_id = templateId;
-
     try {
       // get downloadURL(s) from firebase storage for uploaded images
       const storageRefArr = Object.entries(dataToFirebase).map((data, i) =>
@@ -2880,9 +2878,11 @@ const RecordFinance = () => {
           storage,
           `${schoolData.name.split(" ").join("-")}-${
             schoolData._id
-          }/finance/${templateId}/images/${Object.keys(dataToFirebase)[i]}`
+          }/finance/${statementId}/images/${Object.keys(dataToFirebase)[i]}`
         )
       );
+
+      // Upload data to firebase storage
       const uploadResultArr = await Promise.all(
         Object.entries(dataToFirebase).map((data, i) => {
           if (Object.values(dataToFirebase)[i].startsWith("data:")) {
@@ -2900,7 +2900,7 @@ const RecordFinance = () => {
         (url, i) => (dataToMongoDB[Object.keys(dataToFirebase)[i]] = url)
       );
 
-      console.log(dataToMongoDB);
+      dataToMongoDB.statement_id = statementId;
 
       const data = await axios({
         url: `/api/schools/${schoolId}/finance`,
@@ -2910,7 +2910,6 @@ const RecordFinance = () => {
           Authorization: `Bearer ${schoolToken}`,
         },
       });
-      console.log(data);
       if (
         data.status === 200 &&
         data.statusText === "OK" &&

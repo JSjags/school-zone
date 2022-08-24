@@ -12,13 +12,21 @@ const Options = ({ options, value, setFormData, name }) => {
   };
 
   const handleChange = (e) => {
-    setFormData((prev) => ({
-      ...prev,
-      [OptionsRef.current.name]: {
-        value: !e.target.value ? e.target.textContent : e.target.value,
-        type: prev[OptionsRef.current.name].type,
-      },
-    }));
+    setFormData((prev) => {
+      if (name === "view") {
+        return {
+          ...prev,
+          view: !e.target.value ? e.target.textContent : e.target.value,
+        };
+      }
+      return {
+        ...prev,
+        [OptionsRef.current.name]: {
+          value: !e.target.value ? e.target.textContent : e.target.value,
+          type: prev[OptionsRef.current.name].type,
+        },
+      };
+    });
     console.log(e.target.textContent);
   };
 
@@ -45,8 +53,8 @@ const Options = ({ options, value, setFormData, name }) => {
   };
 
   return (
-    <OptionsWrapper>
-      <OptionsContent>
+    <OptionsWrapper name={name} value={value}>
+      <OptionsContent name={name} value={value}>
         <FaChevronLeft
           onClick={toggleMenu}
           style={
@@ -71,7 +79,7 @@ const Options = ({ options, value, setFormData, name }) => {
         />
         <input
           ref={OptionsRef}
-          id="level"
+          id="options"
           readOnly
           name={name}
           value={value}

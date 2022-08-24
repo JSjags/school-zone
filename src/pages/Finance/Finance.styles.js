@@ -252,4 +252,163 @@ export const Content = styled.div`
       }
     }
   }
+
+  .available-finance {
+    padding: 20px;
+  }
+
+  .action-buttons-box {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .left-hand {
+    display: flex;
+    flex-wrap: nowrap;
+
+    .item {
+      border: 1px solid var(--dark-mid-gray);
+    }
+  }
+  .item {
+    display: flex;
+    gap: 5px;
+    align-items: center;
+    border-radius: 10px;
+    padding: 5px 10px 5px 5px;
+
+    label {
+      font-size: clamp(1.1rem, 2vw, 1.2rem);
+      font-weight: 500;
+    }
+  }
+  .finance-box {
+    width: 100%;
+    min-height: 100px;
+    box-shadow: 0 10px 20px var(--dark-mid-gray);
+    border-radius: 10px;
+    padding: 10px;
+    margin-bottom: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+
+    h2 {
+      padding-bottom: 20px;
+    }
+  }
+  .financial-item {
+    width: 100%;
+    border-radius: 10px;
+    box-shadow: 0 5px 10px var(--dark-mid-gray);
+    padding: 5px;
+  }
+  .revenue {
+    overflow: hidden;
+    background: url(https://cdn2.iconfinder.com/data/icons/wsd-business-2/64/wsd-business-01-512.png),
+      #00d600;
+    position: relative;
+    background-repeat: no-repeat;
+    background-size: clamp(200px, 50%, 500px);
+    background-position: 80% 20%;
+
+    h3 {
+      background: white;
+      padding: 5px 10px;
+      color: #00d600;
+      border-radius: 100000px;
+      width: fit-content;
+      margin: 10px 0;
+    }
+
+    .statement-id {
+      color: #00d600;
+    }
+  }
+  .expense {
+    overflow: hidden;
+    background: url(https://cdn1.iconfinder.com/data/icons/materia-arrows-symbols-vol-4/24/018_163_arrow_chart_low-512.png),
+      red;
+    position: relative;
+    background-repeat: no-repeat;
+    background-size: clamp(200px, 50%, 500px);
+    background-position: 90% 60%;
+
+    h3 {
+      background: white;
+      padding: 5px 10px;
+      color: red;
+      border-radius: 100000px;
+      width: fit-content;
+      margin: 10px 0;
+    }
+
+    .statement-id {
+      color: red;
+    }
+  }
+  .amount {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .in-figures {
+    font-size: clamp(1.2rem, 3vw, 1.7rem);
+    color: var(--white);
+    font-family: var(--hind);
+    display: inline-block;
+    font-weight: 500;
+  }
+  .in-words {
+    display: inline-block;
+    margin-left: 20px;
+    font-size: clamp(1.1rem, 1vw, 1.2rem);
+    text-transform: capitalize;
+    color: var(--white);
+    font-family: var(--hind);
+  }
+  .description {
+    padding: 5px 0 0px;
+  }
+  .desc-title {
+    font-family: var(--garamond);
+    color: white;
+    font-weight: 500;
+    text-decoration: underline;
+    text-decoration-color: var(--primary-color);
+    text-underline-offset: 1px;
+    text-decoration-thickness: 3px;
+    text-decoration-skip-ink: none;
+  }
+  .desc-body {
+    font-family: var(--hind);
+    color: white;
+  }
+
+  .statement-id {
+    color: #00d600;
+    margin-top: 10px;
+    background: var(--white);
+    padding: 2px 5px;
+    border-radius: 20px;
+    width: fit-content;
+    display: flex;
+    flex-wrap: nowrap;
+    justify-content: center;
+    align-items: center;
+
+    span {
+      white-space: nowrap;
+      font-family: var(--hind);
+      display: inline-block;
+      margin-left: 5px;
+      text-overflow: ellipsis;
+      font-size: clamp(0.5rem, 1vw, 0.8rem);
+    }
+  }
+  .date-time {
+    display: flex;
+    gap: 20px;
+  }
 `;

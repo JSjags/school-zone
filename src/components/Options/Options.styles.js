@@ -1,4 +1,4 @@
-import styled from "styled-components";
+import styled, { css } from "styled-components";
 
 export const OptionsWrapper = styled.div`
   font-size: 1rem;
@@ -8,10 +8,17 @@ export const OptionsWrapper = styled.div`
   outline-color: var(--primary-color);
   outline-offset: 2px;
   outline-width: 3px;
-  min-width: 300px;
-  width: clamp(240px, 100%, 500px);
+  ${({ name, value }) =>
+    name === "view"
+      ? css`
+          width: calc(${value.length}ch + 55px);
+        `
+      : css`
+          min-width: 300px;
+          width: clamp(240px, 100%, 500px);
+          margin-bottom: 20px;
+        `}
   height: 40px;
-  margin-bottom: 20px;
   position: relative;
 
   #options-list {
@@ -42,6 +49,7 @@ export const OptionsWrapper = styled.div`
 
 export const OptionsContent = styled.div`
   cursor: pointer;
+  position: relative;
 
   input {
     display: block;
@@ -57,10 +65,18 @@ export const OptionsContent = styled.div`
     outline-offset: 2px;
     outline-width: 3px;
     cursor: pointer;
-    width: clamp(240px, 100%, 500px);
-    background: var(--whitesmoke);
-    margin-top: 15px;
-    margin-bottom: 5px;
+    ${({ name, value }) =>
+      name === "view"
+        ? css`
+            width: calc(${value.length}ch + 55px);
+            background: var(--white);
+          `
+        : css`
+            width: clamp(240px, 100%, 500px);
+            margin-top: 15px;
+            margin-bottom: 5px;
+            background: var(--whitesmoke);
+          `}
     transition: all 200ms ease-in-out;
     text-transform: capitalize;
     position: relative;
