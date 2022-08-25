@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { useNavigate } from "react-router";
 
@@ -17,7 +17,13 @@ import { BsPersonPlus } from "react-icons/bs";
 import { BiBookAdd, BiError } from "react-icons/bi";
 import { IoCreateOutline } from "react-icons/io5";
 import { TbListDetails } from "react-icons/tb";
-import { FaRegIdCard } from "react-icons/fa";
+import {
+  FaAngleDoubleLeft,
+  FaAngleDoubleRight,
+  FaAngleLeft,
+  FaAngleRight,
+  FaRegIdCard,
+} from "react-icons/fa";
 
 import { Wrapper, Content } from "./Finance.styles";
 import EditModal from "../../components/EditModal/Index";
@@ -46,6 +52,8 @@ const Finance = () => {
 
   const internationalNumberFormat = new Intl.NumberFormat("en-US");
 
+  const doublePrevRef = useRef();
+
   const { id: schoolId, token: schoolToken } = useSelector(
     (state) => state.schoolAuth
   );
@@ -67,6 +75,22 @@ const Finance = () => {
       localStorage.removeItem("schoolCredentials");
       return navigate("/login");
     }
+  };
+
+  const [pageNumber, setPageNumber] = useState(1);
+  const [maxIndex, setMaxIndex] = useState(pageNumber * 10);
+
+  const formatDateTime = (arg1, arg2) => {
+    const d = arg1.split("-");
+    const t = arg2.split(":");
+    const date = new Date(
+      parseInt(d[0]),
+      parseInt(d[1]) - 1,
+      parseInt(d[2]),
+      parseInt(t[0]),
+      parseInt(t[1])
+    );
+    return date;
   };
 
   const handleCreateFinance = () => {
@@ -92,6 +116,12 @@ const Finance = () => {
     dispatch(openEditProfileModal());
     dispatch(showForm("recordFinance"));
   };
+
+  useEffect(() => {
+    if (pageNumber - 2 < 1) {
+      doublePrevRef.current.disabled = true;
+    }
+  }, [pageNumber]);
 
   useEffect(() => {
     dispatch(setCurrentPage("finance"));
@@ -155,59 +185,213 @@ const Finance = () => {
                 </div>
                 <div className="finance-box">
                   <h2>{formData.view}</h2>
-                  {finance.map((fin, index, arr) => (
-                    <div
-                      key={index}
-                      className={
-                        fin.statementType.toLowerCase() === "revenue"
-                          ? "financial-item revenue"
-                          : "financial-item expense"
+                  {formData.view.toLowerCase() === "all" &&
+                    finance.map(
+                      (fin, index) =>
+                        index >= maxIndex - 10 &&
+                        index < maxIndex && (
+                          <div
+                            key={index}
+                            className={
+                              fin.statementType.toLowerCase() === "revenue"
+                                ? "financial-item revenue"
+                                : "financial-item expense"
+                            }
+                          >
+                            <h3>{fin.statementType}</h3>
+                            <p classname="amount">
+                              <span className="in-figures">
+                                {fin.statementType.toLowerCase() === "revenue"
+                                  ? "+"
+                                  : "-"}
+                              </span>
+                              <span className="in-figures">
+                                {schoolData.currency}
+                              </span>
+                              <span className="in-figures">
+                                {internationalNumberFormat.format(
+                                  fin.AmountInFigures
+                                )}
+                              </span>
+                              <span className="in-words">
+                                {fin.AmountInWords}
+                              </span>
+                            </p>
+                            <p className="description">
+                              <span className="desc-title">Description</span>
+                              <span className="desc-body">
+                                {": " + fin.statementDescription}
+                              </span>
+                            </p>
+                            <p className="description date-time">
+                              <div>
+                                <span className="desc-title">Date</span>
+                                <span className="desc-body">
+                                  {": " + formatDateTime(fin.date, fin.time)}
+                                </span>
+                              </div>
+                            </p>
+                            <p className="statement-id">
+                              <FaRegIdCard
+                                style={{
+                                  fontSize: "clamp(0.5rem, 1vw, 0.8rem)",
+                                  color: "var(--primary-color)",
+                                }}
+                              />
+                              <span>{fin.statement_id}</span>
+                            </p>
+                          </div>
+                        )
+                    )}
+                  {formData.view.toLowerCase() === "revenue" &&
+                    finance
+                      .filter((f) => f.statementType === "Revenue")
+                      .map(
+                        (fin, index) =>
+                          index >= maxIndex - 10 &&
+                          index < maxIndex && (
+                            <div
+                              key={index}
+                              className={"financial-item revenue"}
+                            >
+                              <h3>{fin.statementType}</h3>
+                              <p classname="amount">
+                                <span className="in-figures">+</span>
+                                <span className="in-figures">
+                                  {schoolData.currency}
+                                </span>
+                                <span className="in-figures">
+                                  {internationalNumberFormat.format(
+                                    fin.AmountInFigures
+                                  )}
+                                </span>
+                                <span className="in-words">
+                                  {fin.AmountInWords}
+                                </span>
+                              </p>
+                              <p className="description">
+                                <span className="desc-title">Description</span>
+                                <span className="desc-body">
+                                  {": " + fin.statementDescription}
+                                </span>
+                              </p>
+                              <p className="description date-time">
+                                <div>
+                                  <span className="desc-title">Date</span>
+                                  <span className="desc-body">
+                                    {": " + formatDateTime(fin.date, fin.time)}
+                                  </span>
+                                </div>
+                              </p>
+                              <p className="statement-id">
+                                <FaRegIdCard
+                                  style={{
+                                    fontSize: "clamp(0.5rem, 1vw, 0.8rem)",
+                                    color: "var(--primary-color)",
+                                  }}
+                                />
+                                <span>{fin.statement_id}</span>
+                              </p>
+                            </div>
+                          )
+                      )}
+                  {formData.view.toLowerCase() === "expense" &&
+                    finance
+                      .filter((f) => f.statementType === "Expense")
+                      .map(
+                        (fin, index) =>
+                          index >= maxIndex - 10 &&
+                          index < maxIndex && (
+                            <div key={index} className="financial-item expense">
+                              <h3>{fin.statementType}</h3>
+                              <p classname="amount">
+                                <span className="in-figures">-</span>
+                                <span className="in-figures">
+                                  {schoolData.currency}
+                                </span>
+                                <span className="in-figures">
+                                  {internationalNumberFormat.format(
+                                    fin.AmountInFigures
+                                  )}
+                                </span>
+                                <span className="in-words">
+                                  {fin.AmountInWords}
+                                </span>
+                              </p>
+                              <p className="description">
+                                <span className="desc-title">Description</span>
+                                <span className="desc-body">
+                                  {": " + fin.statementDescription}
+                                </span>
+                              </p>
+                              <p className="description date-time">
+                                <div>
+                                  <span className="desc-title">Date</span>
+                                  <span className="desc-body">
+                                    {": " + formatDateTime(fin.date, fin.time)}
+                                  </span>
+                                </div>
+                              </p>
+                              <p className="statement-id">
+                                <FaRegIdCard
+                                  style={{
+                                    fontSize: "clamp(0.5rem, 1vw, 0.8rem)",
+                                    color: "var(--primary-color)",
+                                  }}
+                                />
+                                <span>{fin.statement_id}</span>
+                              </p>
+                            </div>
+                          )
+                      )}
+                </div>
+                <div className="page-info">
+                  <div className="page-controls">
+                    <button
+                      ref={doublePrevRef}
+                      className="page-controls_btn"
+                      onClick={() => {
+                        setPageNumber((prevState) => prevState - 2);
+                      }}
+                    >
+                      <FaAngleDoubleLeft />
+                    </button>
+                    <button
+                      className="page-controls_btn"
+                      onClick={() =>
+                        setPageNumber((prevState) => prevState - 1)
                       }
                     >
-                      <h3>{fin.statementType}</h3>
-                      <p classname="amount">
-                        <span className="in-figures">
-                          {fin.statementType.toLowerCase() === "revenue"
-                            ? "+"
-                            : "-"}
-                        </span>
-                        <span className="in-figures">
-                          {schoolData.currency}
-                        </span>
-                        <span className="in-figures">
-                          {internationalNumberFormat.format(
-                            fin.AmountInFigures
-                          )}
-                        </span>
-                        <span className="in-words">{fin.AmountInWords}</span>
-                      </p>
-                      <p className="description">
-                        <span className="desc-title">Description</span>
-                        <span className="desc-body">
-                          {": " + fin.statementDescription}
-                        </span>
-                      </p>
-                      <p className="description date-time">
-                        <div>
-                          <span className="desc-title">Date</span>
-                          <span className="desc-body">{": " + fin.date}</span>
-                        </div>
-                        <div>
-                          <span className="desc-title">Time</span>
-                          <span className="desc-body">{": " + fin.time}</span>
-                        </div>
-                      </p>
-                      <p className="statement-id">
-                        <FaRegIdCard
-                          style={{
-                            fontSize: "clamp(0.5rem, 1vw, 0.8rem)",
-                            color: "var(--primary-color)",
-                          }}
-                        />
-                        <span>{fin.statement_id}</span>
-                      </p>
-                    </div>
-                  ))}
+                      <FaAngleLeft />
+                    </button>
+                    <span className="page-controls_number">
+                      Page {pageNumber} of {Math.ceil(finance.length / 10)}
+                    </span>
+                    <button
+                      className="page-controls_btn"
+                      onClick={() =>
+                        setPageNumber((prevState) => prevState + 1)
+                      }
+                    >
+                      <FaAngleRight />
+                    </button>
+                    <button
+                      className="page-controls_btn"
+                      onClick={() =>
+                        setPageNumber((prevState) => prevState + 2)
+                      }
+                    >
+                      <FaAngleDoubleRight />
+                    </button>
+                  </div>
+                  <div className="page-details">
+                    <span className="current-items">
+                      Items {maxIndex - 9} - {maxIndex}
+                    </span>
+                    <span className="total-items">
+                      ({finance.length} Items)
+                    </span>
+                  </div>
                 </div>
               </div>
             )}
