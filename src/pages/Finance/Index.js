@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { useNavigate } from "react-router";
 
@@ -51,8 +51,6 @@ const Finance = () => {
   });
 
   const internationalNumberFormat = new Intl.NumberFormat("en-US");
-
-  const doublePrevRef = useRef();
 
   const { id: schoolId, token: schoolToken } = useSelector(
     (state) => state.schoolAuth
@@ -117,11 +115,38 @@ const Finance = () => {
     dispatch(showForm("recordFinance"));
   };
 
-  useEffect(() => {
-    if (pageNumber - 2 < 1) {
-      doublePrevRef.current.disabled = true;
-    }
-  }, [pageNumber]);
+  const checkButtonRef = useCallback(
+    (node) => {
+      if (node === null) return;
+
+      if (pageNumber - 2 < 1 && node.classList.contains("double-left")) {
+        node.disabled = true;
+        return node.classList.add("disabled");
+      }
+      if (pageNumber - 1 < 1 && node.classList.contains("left")) {
+        node.disabled = true;
+        return node.classList.add("disabled");
+      }
+      if (
+        pageNumber + 1 > Math.ceil(finance.length / 10) &&
+        node.classList.contains("right")
+      ) {
+        node.disabled = true;
+        return node.classList.add("disabled");
+      }
+      if (
+        pageNumber + 2 > Math.ceil(finance.length / 10) &&
+        node.classList.contains("double-right")
+      ) {
+        node.disabled = true;
+        return node.classList.add("disabled");
+      }
+
+      node.disabled = false;
+      node.classList.remove("disabled");
+    },
+    [pageNumber]
+  );
 
   useEffect(() => {
     dispatch(setCurrentPage("finance"));
@@ -159,7 +184,7 @@ const Finance = () => {
                 </div>
               </div>
             )}
-            {finance && finance.length && (
+            {!isLoading && finance && finance.length && (
               <div className="available-finance">
                 <Button callback={handleNewFinanceRecord}>
                   <BiBookAdd style={{ fontSize: "1.4rem" }} />
@@ -188,7 +213,9 @@ const Finance = () => {
                   {formData.view.toLowerCase() === "all" &&
                     finance.map(
                       (fin, index) =>
-                        index >= maxIndex - 10 &&
+                        index >=
+                          maxIndex -
+                            (maxIndex % 10 === 0 ? 10 : maxIndex % 10) &&
                         index < maxIndex && (
                           <div
                             key={index}
@@ -199,7 +226,7 @@ const Finance = () => {
                             }
                           >
                             <h3>{fin.statementType}</h3>
-                            <p classname="amount">
+                            <p className="amount">
                               <span className="in-figures">
                                 {fin.statementType.toLowerCase() === "revenue"
                                   ? "+"
@@ -218,19 +245,17 @@ const Finance = () => {
                               </span>
                             </p>
                             <p className="description">
-                              <span className="desc-title">Description</span>
+                              <span className="desc-title">Description:</span>
                               <span className="desc-body">
-                                {": " + fin.statementDescription}
+                                {fin.statementDescription}
                               </span>
                             </p>
-                            <p className="description date-time">
-                              <div>
-                                <span className="desc-title">Date</span>
-                                <span className="desc-body">
-                                  {": " + formatDateTime(fin.date, fin.time)}
-                                </span>
-                              </div>
-                            </p>
+                            <div className="description date-time">
+                              <span className="desc-title">Date:</span>
+                              <span className="desc-body">
+                                {"" + formatDateTime(fin.date, fin.time)}
+                              </span>
+                            </div>
                             <p className="statement-id">
                               <FaRegIdCard
                                 style={{
@@ -345,22 +370,38 @@ const Finance = () => {
                           )
                       )}
                 </div>
+
                 <div className="page-info">
                   <div className="page-controls">
                     <button
-                      ref={doublePrevRef}
-                      className="page-controls_btn"
+                      ref={checkButtonRef}
+                      className="page-controls_btn double-left"
                       onClick={() => {
                         setPageNumber((prevState) => prevState - 2);
+                        setMaxIndex((prev) => {
+                          if (prev % 10 === 0) {
+                            return prev - 20;
+                          }
+                          const remainder = prev % 10;
+                          return prev - remainder - 10;
+                        });
                       }}
                     >
                       <FaAngleDoubleLeft />
                     </button>
                     <button
-                      className="page-controls_btn"
-                      onClick={() =>
-                        setPageNumber((prevState) => prevState - 1)
-                      }
+                      ref={checkButtonRef}
+                      className="page-controls_btn left"
+                      onClick={() => {
+                        setPageNumber((prevState) => prevState - 1);
+                        setMaxIndex((prev) => {
+                          if (prev % 10 === 0) {
+                            return prev - 10;
+                          }
+                          const remainder = prev % 10;
+                          return prev - remainder;
+                        });
+                      }}
                     >
                       <FaAngleLeft />
                     </button>
@@ -368,25 +409,45 @@ const Finance = () => {
                       Page {pageNumber} of {Math.ceil(finance.length / 10)}
                     </span>
                     <button
-                      className="page-controls_btn"
-                      onClick={() =>
-                        setPageNumber((prevState) => prevState + 1)
-                      }
+                      ref={checkButtonRef}
+                      className="page-controls_btn right"
+                      onClick={() => {
+                        setPageNumber((prevState) => prevState + 1);
+                        setMaxIndex((prev) => {
+                          const maxItems = finance.length;
+                          const diff = maxItems - maxIndex;
+
+                          if (diff > 10) return prev + 10;
+                          else return prev + diff;
+                        });
+                      }}
                     >
                       <FaAngleRight />
                     </button>
                     <button
-                      className="page-controls_btn"
-                      onClick={() =>
-                        setPageNumber((prevState) => prevState + 2)
-                      }
+                      ref={checkButtonRef}
+                      className="page-controls_btn double-right"
+                      onClick={() => {
+                        setPageNumber((prevState) => prevState + 2);
+                        setMaxIndex((prev) => {
+                          const maxItems = finance.length;
+                          const diff = maxItems - maxIndex;
+
+                          if (diff > 20) return prev + 20;
+                          else return prev + diff;
+                        });
+                      }}
                     >
                       <FaAngleDoubleRight />
                     </button>
                   </div>
                   <div className="page-details">
                     <span className="current-items">
-                      Items {maxIndex - 9} - {maxIndex}
+                      Items{" "}
+                      {maxIndex % 10 === 0
+                        ? maxIndex - 9
+                        : maxIndex - ((maxIndex % 10) - 1)}{" "}
+                      - {maxIndex}
                     </span>
                     <span className="total-items">
                       ({finance.length} Items)

@@ -349,9 +349,7 @@ export const Content = styled.div`
     }
   }
   .amount {
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
+    letter-spacing: none;
   }
   .in-figures {
     font-size: clamp(1.2rem, 3vw, 1.7rem);
@@ -370,6 +368,9 @@ export const Content = styled.div`
   }
   .description {
     padding: 5px 0 0px;
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
   }
   .desc-title {
     font-family: var(--garamond);
@@ -407,10 +408,6 @@ export const Content = styled.div`
       font-size: clamp(0.5rem, 1vw, 0.8rem);
     }
   }
-  .date-time {
-    display: flex;
-    gap: 20px;
-  }
 
   .page-info {
     display: flex;
@@ -434,6 +431,7 @@ export const Content = styled.div`
     display: flex;
     align-items: center;
     padding: 5px;
+    position: relative;
     justify-content: center;
     cursor: pointer;
     transition: all 200ms linear;
@@ -441,6 +439,19 @@ export const Content = styled.div`
     :hover {
       transform: scale(1.4);
       color: var(--secondary-color);
+    }
+  }
+  .page-controls_btn.disabled {
+    ::after {
+      content: "";
+      display: block;
+      height: 100%;
+      width: 100%;
+      position: absolute;
+      top: 0;
+      left: 0;
+      border-radius: 50px;
+      backdrop-filter: grayscale(100%);
     }
   }
   .page-controls_number {
