@@ -1,7 +1,7 @@
 import styled from "styled-components";
 
 export const SearchBarWrapper = styled.div`
-  width: 100%;
+  width: fit-content;
   padding: 10px 0;
   display: grid;
   justify-items: right;
@@ -12,6 +12,19 @@ export const SearchBarContent = styled.div`
   padding: 10px 0;
   position: relative;
   padding-right: 20px;
+
+  .button-holder {
+    position: absolute;
+    right: 0;
+    bottom: 13px;
+    transition: all 200ms linear;
+
+    :hover {
+      transform: scale(1.1);
+      color: var(--primary-color);
+      cursor: pointer;
+    }
+  }
 
   input {
     padding: 5px 0;

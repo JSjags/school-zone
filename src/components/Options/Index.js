@@ -9,14 +9,15 @@ const Options = ({ options, value, setFormData, name }) => {
 
   const toggleMenu = () => {
     setIsOpen(!isOpen);
+    console.log(options);
   };
 
   const handleChange = (e) => {
     setFormData((prev) => {
-      if (name === "view") {
+      if (name === "view" || "filter") {
         return {
           ...prev,
-          view: !e.target.value ? e.target.textContent : e.target.value,
+          [name]: !e.target.value ? e.target.textContent : e.target.value,
         };
       }
       return {
@@ -112,7 +113,9 @@ const Options = ({ options, value, setFormData, name }) => {
                     OptionsRef.current.blur();
                   }}
                 >
-                  {val}
+                  {val.replace(/([A-Z])/g, " $1").replace(/^./, function (str) {
+                    return str;
+                  })}
                 </li>
               );
             })}
