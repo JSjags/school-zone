@@ -9,12 +9,11 @@ const Options = ({ options, value, setFormData, name }) => {
 
   const toggleMenu = () => {
     setIsOpen(!isOpen);
-    console.log(options);
   };
 
   const handleChange = (e) => {
     setFormData((prev) => {
-      if (name === "view" || "filter") {
+      if (name === "view" || name === "filter") {
         return {
           ...prev,
           [name]: !e.target.value ? e.target.textContent : e.target.value,
@@ -28,7 +27,6 @@ const Options = ({ options, value, setFormData, name }) => {
         },
       };
     });
-    console.log(e.target.textContent);
   };
 
   const optionsVariants = {

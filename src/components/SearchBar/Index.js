@@ -1,8 +1,9 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { FaSearch } from "react-icons/fa";
 import { SearchBarWrapper, SearchBarContent } from "./SearchBar.styles";
 
 const SearchBar = ({
+  showSearch,
   setShowSearch,
   setSearchText,
   financeData,
@@ -102,6 +103,10 @@ const SearchBar = ({
       setShowSearch(false);
     }
   };
+
+  useEffect(() => {
+    !showSearch && setValue("");
+  }, [showSearch]);
 
   return (
     <SearchBarWrapper>

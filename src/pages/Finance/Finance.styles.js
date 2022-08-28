@@ -142,25 +142,44 @@ export const Content = styled.div`
     display: flex;
     flex-direction: column;
     gap: 20px;
-
-    h2 {
-      padding-bottom: 20px;
-    }
+    transform-style: preserve-3d;
   }
   .search-text {
     color: var(--secondary-color);
     font-weight: 500;
     font-size: clamp(1.5rem, 2vw, 1.7rem);
+    text-transform: capitalize;
+  }
+  .filter-view {
+    color: var(--secondary-color);
+    font-weight: 500;
+    text-transform: capitalize;
   }
   .filter-text {
     color: var(--secondary-color);
     font-weight: 500;
+    text-transform: capitalize;
   }
   .financial-item {
     width: 100%;
     border-radius: 10px;
     box-shadow: 0 5px 10px var(--dark-mid-gray);
     padding: 5px;
+    transition: all 300ms ease;
+    transform: translateY(-20px);
+    cursor: pointer;
+
+    :hover {
+      transform: scale(1.02) translateY(-10px) translateZ(10px);
+      box-shadow: 0 10px 30px var(--dark-gray);
+    }
+  }
+  .header-rule {
+    width: 5%;
+    border: none;
+    border-bottom: 6px solid var(--primary-color);
+    border-radius: 2px 2px 6px 6px;
+    transform: translateY(-20px);
   }
   .revenue {
     overflow: hidden;
@@ -356,5 +375,14 @@ export const Content = styled.div`
   .no-results {
     font-family: var(--hind);
     margin: 0 0 10px 0;
+  }
+  .total-finance {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    box-shadow: 0 5px 10px var(--light-gray);
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
   }
 `;
