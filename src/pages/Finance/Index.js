@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useMemo } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { useNavigate } from "react-router";
 import { fetchSchoolData } from "../../features/school/schoolDataSlice";
@@ -9,8 +9,13 @@ import {
 } from "../../features/config/configData";
 
 import { BsPersonPlus } from "react-icons/bs";
-import { RiFilterLine } from "react-icons/ri";
-import { BiBookAdd, BiError } from "react-icons/bi";
+import { RiFilterLine, RiFundsFill } from "react-icons/ri";
+import {
+  BiBookAdd,
+  BiError,
+  BiLineChartDown,
+  BiLineChart,
+} from "react-icons/bi";
 import { IoCreateOutline } from "react-icons/io5";
 import { TbListDetails } from "react-icons/tb";
 import {
@@ -62,7 +67,10 @@ const Finance = () => {
   const [searchedData, setSearchedData] = useState("");
   const [showSearch, setShowSearch] = useState(false);
 
-  const internationalNumberFormat = new Intl.NumberFormat("en-US");
+  const internationalNumberFormat = useMemo(
+    () => new Intl.NumberFormat("en-US", { maximumFractionDigits: 2 }),
+    []
+  );
 
   const redirect = (location) => {
     if (location === "home") {
@@ -112,6 +120,43 @@ const Finance = () => {
   const handleNewFinanceRecord = () => {
     dispatch(openEditProfileModal());
     dispatch(showForm("recordFinance"));
+  };
+
+  const calculateTotalRevenue = useCallback(() => {
+    const totalRevenue = finance
+      .filter((fin) => fin.statementType.trim().toLowerCase() === "revenue")
+      .reduce((acc, curr) => {
+        return parseFloat(acc) + parseFloat(curr.AmountInFigures);
+      }, 0);
+
+    return internationalNumberFormat.format(totalRevenue);
+  }, [finance, internationalNumberFormat]);
+
+  const calculateTotalExpenses = useCallback(() => {
+    const totalExpenses = finance
+      .filter((fin) => fin.statementType.trim().toLowerCase() === "expense")
+      .reduce((acc, curr) => {
+        return parseFloat(acc) + parseFloat(curr.AmountInFigures);
+      }, 0);
+
+    return internationalNumberFormat.format(totalExpenses);
+  }, [finance, internationalNumberFormat]);
+
+  const analyseFinancialStatus = () => {
+    return parseFloat(calculateTotalRevenue().replaceAll(",", "")) >
+      parseFloat(calculateTotalExpenses().replaceAll(",", ""))
+      ? "Budget Surplus"
+      : "Budget Deficit";
+  };
+  const analyseFinancialStatusAmount = () => {
+    return new Intl.NumberFormat("en-US", {
+      style: "currency",
+      currency: "USD",
+      maximumFractionDigits: 2,
+    }).format(
+      parseFloat(calculateTotalRevenue().replaceAll(",", "")) -
+        parseFloat(calculateTotalExpenses().replaceAll(",", ""))
+    );
   };
 
   const financeLength = useCallback(() => {
@@ -751,10 +796,100 @@ const Finance = () => {
                     </div>
                   )}
                 </div>
-                <div className="total-finance">
-                  {showTotalFinance && <div></div>}
+                <div
+                  className={
+                    !showTotalFinance ? "total-finance" : "total-finance active"
+                  }
+                >
+                  {showTotalFinance && (
+                    <>
+                      <h2 className="finance-summary">Finance Summary</h2>
+                      <div className="total-finance-info">
+                        <div className="total-revenue">
+                          <h2>Total Revenue:</h2>
+                          <p>
+                            +{schoolData.currency}
+                            {calculateTotalRevenue()}
+                          </p>
+                        </div>
+                        <div className="total-expenses">
+                          <h2>Total Expenses:</h2>
+                          <p>
+                            -{schoolData.currency}
+                            {calculateTotalExpenses()}
+                          </p>
+                        </div>
+                        <div className="financial-status">
+                          <h2>Financial Status:</h2>
+                          <p>
+                            {analyseFinancialStatus() === "Budget Deficit" ? (
+                              <>
+                                <BiLineChartDown
+                                  style={{ color: "red", fontSize: "1.4rem" }}
+                                />
+                                <span style={{ color: "red" }}>
+                                  Budget Deficit
+                                </span>
+                              </>
+                            ) : (
+                              <>
+                                <BiLineChart
+                                  style={{
+                                    color: "var(--secondary-color",
+                                    fontSize: "1.4rem",
+                                  }}
+                                />
+                                <span
+                                  style={{ color: "var(--secondary-color" }}
+                                >
+                                  Budget Surplus
+                                </span>
+                              </>
+                            )}
+                          </p>
+                        </div>
+                        <div className="financial-status">
+                          <h2>{analyseFinancialStatus()}:</h2>
+                          <p>
+                            {Math.sign(
+                              parseFloat(
+                                analyseFinancialStatusAmount()
+                                  .replaceAll(",", "")
+                                  .replace("$", "")
+                              )
+                            ) === -1 ? (
+                              <span className="deficit">
+                                {analyseFinancialStatusAmount()}
+                              </span>
+                            ) : (
+                              <span className="surplus">
+                                {analyseFinancialStatusAmount()}
+                              </span>
+                            )}
+                          </p>
+                        </div>
+                      </div>
+                      <button
+                        onClick={() => {
+                          setShowTotalFinance(false);
+                        }}
+                      >
+                        Dismiss
+                      </button>
+                    </>
+                  )}
                   {!showTotalFinance && (
-                    <button onClick={() => setShowTotalFinance(true)}></button>
+                    <button
+                      onClick={() => {
+                        setShowTotalFinance(true);
+                      }}
+                    >
+                      <RiFundsFill
+                        style={{
+                          fontSize: "1.4rem, color: var(--primary-color)",
+                        }}
+                      />
+                    </button>
                   )}
                 </div>
               </>

@@ -376,13 +376,142 @@ export const Content = styled.div`
     font-family: var(--hind);
     margin: 0 0 10px 0;
   }
+  .finance-summary {
+    position: relative;
+    width: fit-content;
+    padding-bottom: 20px;
+    left: 0;
+
+    ::after {
+      content: "";
+      position: absolute;
+      display: block;
+      bottom: 14px;
+      width: 40%;
+      height: 4px;
+      border-radius: 2px 2px 4px 4px;
+      background: var(--secondary-color);
+    }
+  }
   .total-finance {
-    width: 50px;
-    height: 50px;
+    width: clamp(50px, 5vw, 70px);
+    height: clamp(50px, 5vw, 70px);
+    background: var(--white);
     border-radius: 50%;
     box-shadow: 0 5px 10px var(--light-gray);
     position: fixed;
     bottom: 20px;
     right: 20px;
+    transition: all 200ms linear;
+    cursor: pointer;
+
+    button {
+      width: 100%;
+      height: 100%;
+      border-radius: 50%;
+      background-color: var(--white);
+      border: none;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: clamp(50px, 5vw, 70px);
+      cursor: pointer;
+      color: var(--primary-color);
+      transition: all 300ms ease;
+    }
+
+    :hover button {
+      color: var(--white);
+      background-color: var(--primary-color);
+    }
+    :hover {
+      transform: scale(1.1);
+    }
+  }
+  .total-finance.active {
+    width: clamp(240px, 100%, 500px);
+    height: auto;
+    display: grid;
+    border-radius: 10px;
+    padding: 10px;
+    z-index: 100;
+
+    button {
+      border-radius: 50px;
+      align-self: flex-end;
+      justify-self: right;
+      background-color: var(--primary-color);
+      color: var(--white);
+      font-family: var(--hind);
+      padding: 5px 20px;
+      border: none;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: clamp(1rem, 5vw, 1.2rem);
+      width: fit-content;
+      height: fit-content;
+      cursor: pointer;
+      transition: all 300ms ease;
+
+      :hover {
+        box-shadow: -3px -3px var(--light-tint), 3px 3px var(--dark-tint);
+      }
+    }
+
+    :hover button {
+      color: var(--white);
+      background-color: var(--primary-color);
+    }
+    :hover {
+      transform: scale(1.03);
+    }
+  }
+
+  .total-finance-info {
+    width: clamp(240px, 100%, 500px);
+    height: auto;
+    border-radius: 10px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    align-items: center;
+    gap: 20px;
+    margin-bottom: 30px;
+  }
+  .total-revenue {
+    color: var(--secondary-color);
+  }
+  .total-expenses {
+    color: red;
+  }
+  .total-revenue,
+  .total-expenses,
+  .financial-status {
+    width: 100%;
+
+    h2 {
+      font-weight: 600;
+    }
+
+    p {
+      width: 100%;
+      text-align: center;
+      font-family: var(--hind);
+      font-size: clamp(1.2rem, 3vw, 1.4rem);
+      letter-spacing: 1px;
+      font-weight: 500;
+      margin: 5px 0 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+    }
+  }
+  .deficit {
+    color: red;
+  }
+  .surplus {
+    color: var(--secondary-color);
   }
 `;
