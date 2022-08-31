@@ -40,6 +40,7 @@ export const GlobalStyles = createGlobalStyle`
         color: var(--primary-color);
         font-family: var(--garamond);
     }
+
     .primary-btn {
       display: flex;
       align-items: center;
@@ -63,6 +64,7 @@ export const GlobalStyles = createGlobalStyle`
       }
     
     }
+    
     .secondary-btn {
       font-size: 1rem;
       display: flex;
@@ -134,6 +136,31 @@ export const GlobalStyles = createGlobalStyle`
         background: white;
           box-shadow: 0 5px 10px var(--secondary-dark-mid-gray);
           color: var(--secondary-color);
+      }
+    
+    }
+    .delete-btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      font-size: 1rem;
+      border: none;
+      border-radius: 5px;
+      padding: 10px 20px;
+      box-shadow: 0 5px 10px var(--dark-mid-gray);
+      width: 100%;
+      background: var(--white);
+      font-family: var(--hind);
+      color: red;
+      font-weight: 500;
+      transition: all 200ms ease;
+      cursor: pointer;
+
+      :hover {
+        background: red;
+        color: white;
+        transform: scale(1.05);
       }
     
     }

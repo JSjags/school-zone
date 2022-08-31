@@ -3,9 +3,10 @@ import { createSlice } from "@reduxjs/toolkit";
 const initialState = {
   isEditProfileModalOpen: false,
   formToShow: null,
-  curentPage: null,
+  currentPage: null,
   studentImageUrl: null,
   staffImageUrl: null,
+  financeStatementId: null,
 };
 
 export const configSlice = createSlice({
@@ -19,6 +20,8 @@ export const configSlice = createSlice({
       state.isEditProfileModalOpen = false;
       state.formToShow = null;
       state.studentImageUrl = null;
+      state.financeStatementId = null;
+      document.body.style.overflowY = "scroll";
     },
     showForm: (state, action) => {
       state.formToShow = action.payload;
@@ -32,6 +35,9 @@ export const configSlice = createSlice({
     setCurrentPage: (state, action) => {
       state.currentPage = action.payload;
     },
+    setFinanceStatementId: (state, action) => {
+      state.financeStatementId = action.payload;
+    },
   },
 });
 
@@ -42,6 +48,7 @@ export const {
   setCurrentPage,
   setStudentImgUrl,
   setStaffImgUrl,
+  setFinanceStatementId,
 } = configSlice.actions;
 
 export default configSlice.reducer;

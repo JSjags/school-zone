@@ -1391,7 +1391,7 @@ export const RecordFinanceContent = styled.div`
     gap: 20px;
     margin: clamp(20px, 5vh, 40px) clamp(20px, 5%, 50px);
     position: relative;
-    padding-bottom: 40px;
+    padding-bottom: 50px;
     z-index: 100;
 
     form {
@@ -1468,20 +1468,21 @@ export const RecordFinanceContent = styled.div`
     background: var(--whitesmoke);
   }
   #submit-btn {
-    position: absolute;
-    bottom: 0;
-    width: 100%;
+    width: clamp(150px, 100%, 350px);
   }
   .info {
     display: flex;
     gap: 5px;
-    align-items: flex-start;
+    align-items: center;
     font-size: 0.8rem;
     padding: 0 0 10px 0;
 
     span {
       line-height: 0.8rem;
     }
+  }
+  .submit-btn-notice {
+    margin: clamp(20px, 5vh, 40px) clamp(20px, 5%, 50px);
   }
 
   img.watermark {
@@ -1493,6 +1494,15 @@ export const RecordFinanceContent = styled.div`
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%) scale(0.8);
+  }
+  .action-btns-container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: clamp(30px, 20%, 100px);
+    position: absolute;
+    bottom: 0;
+    width: 100%;
   }
 
   .hidden {
@@ -1690,6 +1700,55 @@ export const StaffProfileContent = styled.div`
 
     :hover {
       box-shadow: -3px -3px 0 var(--light-tint), 3px 3px 0 var(--dark-tint);
+    }
+  }
+`;
+
+export const DeleteModalWrapper = styled.div`
+  position: relative;
+  width: 100%;
+  height: calc(100vh - 60px);
+  top: 60px;
+  overflow: scroll;
+`;
+
+export const DeleteModalContent = styled.div`
+  width: clamp(240px, 90%, 500px);
+  max-height: 400px;
+  background: white;
+  border-radius: 10px;
+  position: sticky;
+  top: 100px;
+  margin: 0 auto;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
+
+  p {
+    font-family: var(--hind);
+  }
+  .btn-group {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    margin-bottom: 20px;
+  }
+  #registration-error-message {
+    color: red;
+    gap: 5px;
+    font-family: var(--garamond);
+    background: rgba(255, 0, 0, 0.3);
+    padding: 5px;
+    border-radius: 5px;
+    border: 1px solid red;
+    font-family: var(--hind);
+
+    p {
+      display: flex;
+      align-items: center;
+      padding: 5px;
+      gap: 5px;
     }
   }
 `;

@@ -7,7 +7,11 @@ import { TbTemplate } from "react-icons/tb";
 import { FaCameraRetro } from "react-icons/fa";
 import { IoIosCloudDone } from "react-icons/io";
 import { RiGalleryFill } from "react-icons/ri";
-import { MdPlaylistAdd, MdDeleteForever } from "react-icons/md";
+import {
+  MdPlaylistAdd,
+  MdDeleteForever,
+  MdPublishedWithChanges,
+} from "react-icons/md";
 import { BsImage, BsCloudUpload, BsInfoCircleFill } from "react-icons/bs";
 import { isStrongPassword } from "validator";
 import { MdChangeCircle, MdPreview } from "react-icons/md";
@@ -21,7 +25,9 @@ import {
   uploadBytes,
   getDownloadURL,
   uploadString,
+  deleteObject,
 } from "firebase/storage";
+
 import { v4 as uuidv4 } from "uuid";
 
 import { storage } from "../../firebase/firebase.config";
@@ -40,6 +46,8 @@ import {
   CreateProfileWrapper,
   CreateTemplateContent,
   CreateTemplateWrapper,
+  DeleteModalContent,
+  DeleteModalWrapper,
   EditProfileContent,
   EditProfileWrapper,
   RecordFinanceContent,
@@ -67,6 +75,8 @@ import ImagePicker from "../ImagePicker/Index";
 import noTemplateFoundSvg from "../../assets/no-template.svg";
 import TemplateOptions from "../TemplateOptions/Index";
 import TimePicker from "../TimePicker/Index";
+import { useMemo } from "react";
+import { useLayoutEffect } from "react";
 
 // Form types and modals
 
@@ -2394,7 +2404,7 @@ const StudentRegistration = () => {
                 <p className="info">
                   <BsInfoCircleFill style={{ fontSize: "1rem" }} />
                   <span>
-                    No field should be left empty, unwanted fields can filled
+                    No field should be left empty, unwanted fields can be filled
                     with "null" or hyphen(s) or any character of your choice.
                   </span>
                 </p>
@@ -2800,7 +2810,7 @@ const StaffRegistration = () => {
                 <p className="info">
                   <BsInfoCircleFill style={{ fontSize: "1rem" }} />
                   <span>
-                    No field should be left empty, unwanted fields can filled
+                    No field should be left empty, unwanted fields can be filled
                     with "null" or hyphen(s) or any character of your choice.
                   </span>
                 </p>
@@ -3059,7 +3069,7 @@ const RecordFinance = () => {
                 <p className="info">
                   <BsInfoCircleFill style={{ fontSize: "1rem" }} />
                   <span>
-                    No field should be left empty, unwanted fields can filled
+                    No field should be left empty, unwanted fields can be filled
                     with "null" or hyphen(s) or any character of your choice.
                   </span>
                 </p>
@@ -3087,6 +3097,554 @@ const RecordFinance = () => {
         </RecordFinanceWrapper>
       )}
     </>
+  );
+};
+
+// Financial Statement View
+const FinancialStatement = () => {
+  const dispatch = useDispatch();
+
+  const [isLoading, setIsLoading] = useState(false);
+  const [isError, setIsError] = useState(false);
+  const [isSuccess, setIsSuccess] = useState(false);
+  const [showSubmit, setShowSubmit] = useState(false);
+
+  const [formData, setFormData] = useState({});
+
+  const staffRegPageRef = useRef();
+
+  const avatarURL = useSelector((state) => state.schoolData.data.avatar_image);
+  const { data: schoolData } = useSelector((state) => state.schoolData);
+  const { id: schoolId, token: schoolToken } = useSelector(
+    (state) => state.schoolAuth
+  );
+  const { financeStatementId } = useSelector((state) => state.config);
+
+  const invalidValues = ["", null, undefined];
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    console.log(formData);
+
+    setIsLoading(true);
+    setIsError(false);
+    setIsSuccess(false);
+
+    const dataToFirebase = {};
+    const dataToMongoDB = {};
+
+    Object.entries(formData).forEach((entry) => {
+      if (
+        entry[1].type === "Image Picker" &&
+        entry[1].value !== formDataCopy.current[entry[0]]["value"]
+      ) {
+        return (dataToFirebase[entry[0]] = entry[1].value);
+      }
+      return (dataToMongoDB[entry[0]] = entry[1].value);
+    });
+
+    try {
+      // get downloadURL(s) from firebase storage for uploaded images
+      const storageRefArr = Object.entries(dataToFirebase).map((data, i) =>
+        ref(
+          storage,
+          `${schoolData.name.split(" ").join("-")}-${
+            schoolData._id
+          }/finance/${financeStatementId}/images/${
+            Object.keys(dataToFirebase)[i]
+          }`
+        )
+      );
+
+      // Upload data to firebase storage
+      let uploadResultArr, downloadUrlArr;
+
+      if (Object.entries(dataToFirebase).length && storageRefArr.length) {
+        uploadResultArr = await Promise.all(
+          Object.entries(dataToFirebase).map((data, i) => {
+            if (Object.values(dataToFirebase)[i].startsWith("data:")) {
+              return uploadString(storageRefArr[i], data[1], "data_url");
+            }
+            return uploadBytes(storageRefArr[i], data[1]);
+          })
+        );
+      }
+      if (uploadResultArr && uploadResultArr.length) {
+        downloadUrlArr = await Promise.all(
+          uploadResultArr.map((result) => getDownloadURL(result.ref))
+        );
+      }
+
+      // Update data to be sent to mongo db
+      if (downloadUrlArr && downloadUrlArr.length) {
+        downloadUrlArr.forEach(
+          (url, i) => (dataToMongoDB[Object.keys(dataToFirebase)[i]] = url)
+        );
+      }
+
+      dataToMongoDB.statement_id = financeStatementId;
+
+      const data = await axios({
+        url: `/api/schools/${schoolId}/finance`,
+        method: "put",
+        data: dataToMongoDB,
+        headers: {
+          Authorization: `Bearer ${schoolToken}`,
+        },
+      });
+      if (
+        data.status === 200 &&
+        data.statusText === "OK" &&
+        data.data.data.acknowledged === true
+      ) {
+        setIsLoading(false);
+        setIsError(false);
+        setIsSuccess(true);
+        dispatch(fetchSchoolData(schoolToken));
+        window.scrollTo({ top: 0, behavior: "smooth" });
+        setTimeout(() => dispatch(closeEditProfileModal()), 3000);
+      }
+    } catch (error) {
+      console.log(error);
+      setIsLoading(false);
+      setIsSuccess(false);
+      setIsError(true);
+      staffRegPageRef.current.scrollIntoView();
+    }
+  };
+
+  const filteredFinance = useMemo(
+    () =>
+      schoolData.finance
+        .filter((item) => item.statement_id === financeStatementId)
+        .map(({ statement_id, ...rest }) => rest),
+    [schoolData.finance, financeStatementId]
+  );
+
+  useLayoutEffect(() => {
+    (() => {
+      Object.entries(schoolData.templates.finance).forEach((arr) => {
+        setFormData((prevState) => ({
+          ...prevState,
+          [arr[0]]: {
+            value: filteredFinance[0][arr[0]],
+            type: arr[1].type,
+          },
+        }));
+      });
+    })();
+  }, [schoolData.templates.finance, filteredFinance]);
+
+  const formDataCopy = useRef({});
+
+  useEffect(() => {
+    if (Object.values(formDataCopy.current).length) {
+      console.log(formDataCopy.current);
+      return setShowSubmit(
+        Object.entries(formDataCopy.current).some(
+          (val) => val[1]["value"] !== formData[val[0]]["value"]
+        )
+      );
+    }
+    formDataCopy.current = { ...formData };
+    console.log(formDataCopy);
+  }, [formData]);
+
+  return (
+    <>
+      {isSuccess && (
+        <SuccessMessageWrapper>
+          <SuccessMessageContent>
+            <div className="success-message">
+              <p>
+                <FcApproval
+                  style={{
+                    fontSize: "5rem",
+                    paddingTop: "-5px",
+                  }}
+                />
+                <span>
+                  {formData.statementType.value} of ID: {financeStatementId}{" "}
+                  successfully updated.
+                </span>
+              </p>
+            </div>
+          </SuccessMessageContent>
+        </SuccessMessageWrapper>
+      )}
+      {!isSuccess && (
+        <RecordFinanceWrapper>
+          <RecordFinanceContent ref={staffRegPageRef}>
+            <div className="reg-header">
+              <img src={avatarURL} alt="" />
+              <div>
+                <h2>{schoolData.name}</h2>
+                <p>{schoolData.address}</p>
+                <p>{schoolData.country}</p>
+              </div>
+            </div>
+            <hr />
+            <h2 className="reg-title">Manage Financial Record</h2>
+            {isError && (
+              <div id="registration-error-message">
+                <p>
+                  <BiErrorCircle
+                    style={{ fontSize: "1.4rem", paddingTop: "-5px" }}
+                  />
+                  <span>
+                    Sorry, we couldn't record {formData.statementType.value},
+                    please try again later.
+                  </span>
+                </p>
+              </div>
+            )}
+            <p className="info submit-btn-notice">
+              <BsInfoCircleFill
+                style={{ fontSize: "1.2rem", color: "var(--primary-color)" }}
+              />
+              <span>
+                The submit button will only be displayed if any modification is
+                made to the current financial record.
+              </span>
+            </p>
+            <div className="reg-form">
+              <form onSubmit={(e) => handleSubmit(e)}>
+                {Object.entries(schoolData.templates.finance).map((val, i) => (
+                  <div key={i} className="field-container">
+                    <label>{val[1].name}:</label>
+                    {(() => {
+                      switch (val[1].type) {
+                        case "Text":
+                          return (
+                            <Text
+                              value={formData[val[0]]?.value}
+                              setFormData={setFormData}
+                              name={val[0]}
+                            />
+                          );
+                        case "Number":
+                          return (
+                            <Number
+                              value={formData[val[0]]?.value}
+                              setFormData={setFormData}
+                              name={val[0]}
+                            />
+                          );
+                        case "Options":
+                          return (
+                            <Options
+                              options={val[1].options}
+                              value={formData[val[0]]?.value}
+                              setFormData={setFormData}
+                              name={val[0]}
+                            />
+                          );
+                        case "Date Picker":
+                          return (
+                            <DatePicker
+                              value={formData[val[0]]?.value}
+                              setFormData={setFormData}
+                              formData={formData}
+                              name={val[0]}
+                            />
+                          );
+                        case "Time Picker":
+                          return (
+                            <TimePicker
+                              value={formData[val[0]]?.value}
+                              setFormData={setFormData}
+                              formData={formData}
+                              name={val[0]}
+                            />
+                          );
+                        case "Image Picker":
+                          return (
+                            <ImagePicker
+                              value={formData[val[0]]?.value}
+                              setFormData={setFormData}
+                              formData={formData}
+                              name={val[0]}
+                            />
+                          );
+                        default:
+                          return null;
+                      }
+                    })()}
+                  </div>
+                ))}
+                <p className="info">
+                  <BsInfoCircleFill
+                    style={{
+                      fontSize: "1.2rem",
+                      color: "var(--primary-color)",
+                    }}
+                  />
+                  <span>
+                    No field should be left empty, unwanted fields can be filled
+                    with "null" or hyphen(s) or any character of your choice.
+                  </span>
+                </p>
+                {Object.entries(formData).every(
+                  (value) => !invalidValues.includes(value[1].value)
+                ) && (
+                  <div className="action-btns-container">
+                    {!isLoading && (
+                      <p
+                        onClick={() => {
+                          dispatch(showForm("deleteModal"));
+                          window.scrollTo({
+                            top: 0,
+                            left: 0,
+                            behavior: "smooth",
+                          });
+                          setTimeout(
+                            () => (document.body.style.overflowY = "hidden"),
+                            300
+                          );
+                        }}
+                        className="delete-btn"
+                        id="submit-btn"
+                      >
+                        <MdDeleteForever style={{ fontSize: "1.4rem" }} />
+                        <span>Delete record</span>
+                      </p>
+                    )}
+
+                    {!isLoading && showSubmit && (
+                      <button className="primary-btn" id="submit-btn">
+                        <MdPublishedWithChanges
+                          style={{ fontSize: "1.4rem" }}
+                        />
+                        <span>Update record</span>
+                      </button>
+                    )}
+                  </div>
+                )}
+                {isLoading && (
+                  <Spinner
+                    style={{ position: "absolute", bottom: 0, width: "100%" }}
+                  />
+                )}
+              </form>
+            </div>
+            <img
+              src={avatarURL}
+              alt="school-logo-watermark"
+              className="watermark"
+            />
+          </RecordFinanceContent>
+        </RecordFinanceWrapper>
+      )}
+    </>
+  );
+};
+// Student Profile
+const StaffProfile = () => {
+  const dispatch = useDispatch();
+
+  const staffImageUrl = useSelector((state) => state.config.staffImageUrl);
+  const staff = useSelector((state) => state.schoolData.data.staffs).filter(
+    (staff) => staff.image === staffImageUrl
+  );
+  return (
+    <StaffProfileWrapper>
+      <StaffProfileContent>
+        <h2>Staff Profile</h2>
+        <img className="staff-img" src={staffImageUrl} alt="staff" />
+        <div>
+          <h2 className="staff-info">Staff Information</h2>
+          <div className="staff-details-cont">
+            {Object.entries(staff[0]).map(
+              (detail) =>
+                detail[0] !== "image" && (
+                  <div className="staff-detail" key={detail[0]}>
+                    <label>
+                      {detail[0]
+                        .replace(/([A-Z])/g, " $1")
+                        .replace(/^./, function (str) {
+                          return str.toUpperCase();
+                        })}
+                      :
+                    </label>
+                    <span>{detail[1]}</span>
+                  </div>
+                )
+            )}
+            <button
+              className="close-staff-profile"
+              onClick={() => dispatch(closeEditProfileModal())}
+            >
+              Close
+            </button>
+          </div>
+        </div>
+      </StaffProfileContent>
+    </StaffProfileWrapper>
+  );
+};
+
+const DeleteModal = () => {
+  const [isLoading, setIsLoading] = useState(false);
+  const [isError, setIsError] = useState(false);
+  const [isSuccess, setIsSuccess] = useState(false);
+
+  const dispatch = useDispatch();
+
+  const { data: schoolData } = useSelector((state) => state.schoolData);
+  const { financeStatementId } = useSelector((state) => state.config);
+  const { id: schoolId } = useSelector((state) => state.schoolAuth);
+  const { token: schoolToken } = useSelector((state) => state.schoolAuth);
+
+  const handleDelete = async () => {
+    setIsLoading(true);
+    setIsError(false);
+    setIsSuccess(false);
+
+    const filteredData = schoolData.finance.filter(
+      (f) => f.statement_id === financeStatementId
+    );
+    const imagePickerFields = Object.entries(schoolData.templates.finance)
+      .filter((f) => f[1]["type"] === "Image Picker")
+      .map((r) => r[0]);
+
+    try {
+      const storageRefArr = filteredData.map((item) => {
+        for (const key in item) {
+          if (imagePickerFields.includes(key)) {
+            return ref(
+              storage,
+              `${schoolData.name.split(" ").join("-")}-${
+                schoolData._id
+              }/finance/${financeStatementId}/images/${key}`
+            );
+          }
+        }
+      });
+
+      const firebaseResp = await Promise.all(
+        storageRefArr.map((ref) => deleteObject(ref))
+      );
+
+      console.log(firebaseResp);
+
+      if (!firebaseResp) {
+        throw new Error("Doc not deleted from firebase");
+      }
+      try {
+        const serverResponse = await axios({
+          url: `/api/schools/${schoolId}/finance/remove`,
+          method: "put",
+          data: { financeStatementId },
+          headers: {
+            Authorization: "Bearer " + schoolToken,
+          },
+        });
+        if (
+          serverResponse.status !== 200 &&
+          serverResponse.statusText !== "OK"
+        ) {
+          throw new Error("Could not delete financial record from mongoDB");
+        }
+
+        setIsLoading(false);
+        setIsError(false);
+        setIsSuccess(true);
+      } catch (error) {
+        setIsLoading(false);
+        setIsError(true);
+        setIsSuccess(false);
+        console.log(error);
+      }
+    } catch (error) {
+      setIsLoading(false);
+      setIsError(true);
+      setIsSuccess(false);
+      console.log(error);
+    }
+  };
+  return (
+    <DeleteModalWrapper>
+      {isSuccess && (
+        <SuccessMessageWrapper>
+          <SuccessMessageContent>
+            <div className="success-message">
+              <p>
+                <FcApproval
+                  style={{
+                    fontSize: "5rem",
+                    paddingTop: "-5px",
+                  }}
+                />
+                <span>Finance record deleted successfully.</span>
+              </p>
+            </div>
+          </SuccessMessageContent>
+        </SuccessMessageWrapper>
+      )}
+      {!isSuccess && (
+        <DeleteModalContent>
+          <h2>Delete Record</h2>
+          {isError && (
+            <div id="registration-error-message">
+              <p>
+                <BiErrorCircle
+                  style={{ fontSize: "1.4rem", paddingTop: "-5px" }}
+                />
+                <span>
+                  Sorry, we couldn't delete this record, please try again later.
+                </span>
+              </p>
+            </div>
+          )}
+          <p>
+            Are you sure you want to delete this financial record with
+            Statement-ID : {financeStatementId}.
+          </p>
+          <div className="btn-group">
+            {!isLoading && (
+              <button
+                className="white-btn"
+                onClick={() => {
+                  dispatch(showForm("financialStatement"));
+                  document.body.style.overflowY = "scroll";
+                }}
+              >
+                No, Cancel
+              </button>
+            )}
+            {!isLoading && (
+              <button className="delete-btn" onClick={handleDelete}>
+                Yes, Delete
+              </button>
+            )}
+            {isLoading && (
+              <Spinner
+                style={{
+                  position: "absolute",
+                  bottom: 0,
+                  left: 0,
+                  width: "100%",
+                }}
+              />
+            )}
+          </div>
+        </DeleteModalContent>
+      )}
+    </DeleteModalWrapper>
+  );
+};
+
+// Saving Changes
+const Saving = () => {
+  return (
+    <SavingWrapper>
+      <SavingContent>
+        <div>
+          <Spinner />
+        </div>
+        <p>Saving Changes</p>
+      </SavingContent>
+    </SavingWrapper>
   );
 };
 
@@ -3135,65 +3693,6 @@ const StudentProfile = () => {
   );
 };
 
-// Student Profile
-const StaffProfile = () => {
-  const dispatch = useDispatch();
-
-  const staffImageUrl = useSelector((state) => state.config.staffImageUrl);
-  const staff = useSelector((state) => state.schoolData.data.staffs).filter(
-    (staff) => staff.image === staffImageUrl
-  );
-  return (
-    <StaffProfileWrapper>
-      <StaffProfileContent>
-        <h2>Staff Profile</h2>
-        <img className="staff-img" src={staffImageUrl} alt="staff" />
-        <div>
-          <h2 className="staff-info">Staff Information</h2>
-          <div className="staff-details-cont">
-            {Object.entries(staff[0]).map(
-              (detail) =>
-                detail[0] !== "image" && (
-                  <div className="staff-detail" key={detail[0]}>
-                    <label>
-                      {detail[0]
-                        .replace(/([A-Z])/g, " $1")
-                        .replace(/^./, function (str) {
-                          return str.toUpperCase();
-                        })}
-                      :
-                    </label>
-                    <span>{detail[1]}</span>
-                  </div>
-                )
-            )}
-            <button
-              className="close-staff-profile"
-              onClick={() => dispatch(closeEditProfileModal())}
-            >
-              Close
-            </button>
-          </div>
-        </div>
-      </StaffProfileContent>
-    </StaffProfileWrapper>
-  );
-};
-
-// Saving Changes
-const Saving = () => {
-  return (
-    <SavingWrapper>
-      <SavingContent>
-        <div>
-          <Spinner />
-        </div>
-        <p>Saving Changes</p>
-      </SavingContent>
-    </SavingWrapper>
-  );
-};
-
 const Form = () => {
   const { formToShow } = useSelector((state) => state.config);
 
@@ -3214,6 +3713,8 @@ const Form = () => {
       {formToShow === "recordFinance" && <RecordFinance />}
       {formToShow === "studentProfile" && <StudentProfile />}
       {formToShow === "staffProfile" && <StaffProfile />}
+      {formToShow === "financialStatement" && <FinancialStatement />}
+      {formToShow === "deleteModal" && <DeleteModal />}
       {formToShow === "saving" && <Saving />}
     </>
   );

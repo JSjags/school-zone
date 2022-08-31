@@ -494,7 +494,8 @@ export const Content = styled.div`
       font-weight: 600;
     }
 
-    p {
+    p,
+    .financial-status-box {
       width: 100%;
       text-align: center;
       font-family: var(--hind);

@@ -5,6 +5,7 @@ import { fetchSchoolData } from "../../features/school/schoolDataSlice";
 import {
   openEditProfileModal,
   setCurrentPage,
+  setFinanceStatementId,
   showForm,
 } from "../../features/config/configData";
 
@@ -56,7 +57,7 @@ const Finance = () => {
   const { finance } = useSelector((state) => state.schoolData.data);
   const { isEditProfileModalOpen } = useSelector((state) => state.config);
 
-  const viewOptions = "All Revenue Expense";
+  const viewOptions = "All Revenue Expenses";
 
   const [formData, setFormData] = useState({
     view: "All",
@@ -355,10 +356,18 @@ const Finance = () => {
                             <div
                               key={index}
                               className={
-                                fin.statementType.toLowerCase() === "revenue"
+                                fin.statementType.trim().toLowerCase() ===
+                                "revenue"
                                   ? "financial-item revenue"
                                   : "financial-item expense"
                               }
+                              onClick={() => {
+                                dispatch(openEditProfileModal());
+                                dispatch(showForm("financialStatement"));
+                                dispatch(
+                                  setFinanceStatementId(fin.statement_id)
+                                );
+                              }}
                             >
                               <h3>{fin.statementType}</h3>
                               <p className="amount">
@@ -406,7 +415,10 @@ const Finance = () => {
                     {!showSearch &&
                       formData.view.trim().toLowerCase() === "revenue" &&
                       finance
-                        .filter((f) => f.statementType === "Revenue")
+                        .filter(
+                          (f) =>
+                            f.statementType.trim().toLowerCase() === "revenue"
+                        )
                         .map(
                           (fin, index) =>
                             index >=
@@ -416,9 +428,16 @@ const Finance = () => {
                               <div
                                 key={index}
                                 className={"financial-item revenue"}
+                                onClick={() => {
+                                  dispatch(openEditProfileModal());
+                                  dispatch(showForm("financialStatement"));
+                                  dispatch(
+                                    setFinanceStatementId(fin.statement_id)
+                                  );
+                                }}
                               >
                                 <h3>{fin.statementType}</h3>
-                                <p classname="amount">
+                                <p className="amount">
                                   <span className="in-figures">+</span>
                                   <span className="in-figures">
                                     {schoolData.currency}
@@ -464,7 +483,10 @@ const Finance = () => {
                     {!showSearch &&
                       formData.view.trim().toLowerCase() === "expense" &&
                       finance
-                        .filter((f) => f.statementType === "Expense")
+                        .filter(
+                          (f) =>
+                            f.statementType.trim().toLowerCase() === "expense"
+                        )
                         .map(
                           (fin, index) =>
                             index >=
@@ -474,6 +496,13 @@ const Finance = () => {
                               <div
                                 key={index}
                                 className="financial-item expense"
+                                onClick={() => {
+                                  dispatch(openEditProfileModal());
+                                  dispatch(showForm("financialStatement"));
+                                  dispatch(
+                                    setFinanceStatementId(fin.statement_id)
+                                  );
+                                }}
                               >
                                 <h3>{fin.statementType}</h3>
                                 <p classname="amount">
@@ -530,10 +559,18 @@ const Finance = () => {
                             <div
                               key={index}
                               className={
-                                fin.statementType.toLowerCase() === "revenue"
+                                fin.statementType.trim().toLowerCase() ===
+                                "revenue"
                                   ? "financial-item revenue"
                                   : "financial-item expense"
                               }
+                              onClick={() => {
+                                dispatch(openEditProfileModal());
+                                dispatch(showForm("financialStatement"));
+                                dispatch(
+                                  setFinanceStatementId(fin.statement_id)
+                                );
+                              }}
                             >
                               <h3>{fin.statementType}</h3>
                               <p className="amount">
@@ -581,7 +618,10 @@ const Finance = () => {
                     {showSearch &&
                       formData.view.trim().toLowerCase() === "revenue" &&
                       searchedData
-                        .filter((f) => f.statementType === "Revenue")
+                        .filter(
+                          (f) =>
+                            f.statementType.trim().toLowerCase() === "revenue"
+                        )
                         .map(
                           (fin, index) =>
                             index >=
@@ -591,6 +631,13 @@ const Finance = () => {
                               <div
                                 key={index}
                                 className={"financial-item revenue"}
+                                onClick={() => {
+                                  dispatch(openEditProfileModal());
+                                  dispatch(showForm("financialStatement"));
+                                  dispatch(
+                                    setFinanceStatementId(fin.statement_id)
+                                  );
+                                }}
                               >
                                 <h3>{fin.statementType}</h3>
                                 <p classname="amount">
@@ -639,7 +686,10 @@ const Finance = () => {
                     {showSearch &&
                       formData.view.trim().toLowerCase() === "expense" &&
                       searchedData
-                        .filter((f) => f.statementType === "Expense")
+                        .filter(
+                          (f) =>
+                            f.statementType.trim().toLowerCase() === "expense"
+                        )
                         .map(
                           (fin, index) =>
                             index >=
@@ -649,6 +699,13 @@ const Finance = () => {
                               <div
                                 key={index}
                                 className="financial-item expense"
+                                onClick={() => {
+                                  dispatch(openEditProfileModal());
+                                  dispatch(showForm("financialStatement"));
+                                  dispatch(
+                                    setFinanceStatementId(fin.statement_id)
+                                  );
+                                }}
                               >
                                 <h3>{fin.statementType}</h3>
                                 <p classname="amount">
@@ -821,7 +878,7 @@ const Finance = () => {
                         </div>
                         <div className="financial-status">
                           <h2>Financial Status:</h2>
-                          <p>
+                          <div className="financial-status-box">
                             {analyseFinancialStatus() === "Budget Deficit" ? (
                               <>
                                 <BiLineChartDown
@@ -832,7 +889,7 @@ const Finance = () => {
                                 </span>
                               </>
                             ) : (
-                              <>
+                              <p>
                                 <BiLineChart
                                   style={{
                                     color: "var(--secondary-color",
@@ -844,9 +901,9 @@ const Finance = () => {
                                 >
                                   Budget Surplus
                                 </span>
-                              </>
+                              </p>
                             )}
-                          </p>
+                          </div>
                         </div>
                         <div className="financial-status">
                           <h2>{analyseFinancialStatus()}:</h2>
