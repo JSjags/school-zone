@@ -31,6 +31,7 @@ export const HeaderWrapper = styled.header`
       font-size: 1rem;
       font-family: var(--hind);
       transition: all 200ms ease;
+      color: var(--text);
       cursor: pointer;
 
       :hover {
@@ -157,7 +158,7 @@ export const HeaderWrapper = styled.header`
     font-size: 1rem;
     padding: 10px 20px;
     color: var(--deep-gray);
-    box-shadow: 0 5px 10px var(--mid-gray);
+    box-shadow: 0 5px 10px var(--dark-gray);
     border-radius: 20px;
     transition: all 300ms ease-in-out;
     cursor: pointer;

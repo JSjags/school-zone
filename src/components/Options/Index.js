@@ -13,7 +13,7 @@ const Options = ({ options, value, setFormData, name }) => {
 
   const handleChange = (e) => {
     setFormData((prev) => {
-      if (name === "view" || name === "filter") {
+      if (name === "view" || name === "filter" || name === "theme") {
         return {
           ...prev,
           [name]: !e.target.value ? e.target.textContent : e.target.value,
@@ -59,6 +59,7 @@ const Options = ({ options, value, setFormData, name }) => {
           style={
             isOpen
               ? {
+                  color: "var(--text)",
                   position: "absolute",
                   top: "50%",
                   right: 10,
@@ -67,6 +68,7 @@ const Options = ({ options, value, setFormData, name }) => {
                   zIndex: 100,
                 }
               : {
+                  color: "var(--text)",
                   position: "absolute",
                   top: "50%",
                   right: 10,

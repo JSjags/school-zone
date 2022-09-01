@@ -3,7 +3,7 @@ import styled, { css } from "styled-components";
 export const Wrapper = styled.div`
   flex: 1;
   height: 100%;
-  background: var(--whitesmoke);
+  background: var(--background);
   ${(props) =>
     props.isSuccess === false &&
     css`
@@ -22,10 +22,10 @@ export const Content = styled.div`
 
   main {
     flex: 1;
-    background: blue;
-    border-radius: 10px;
-    background: white;
+    border-radius: 5px;
+    background: var(--background);
     min-height: 100vh;
+    border: 1px solid var(--dark-mid-gray);
   }
   .create-finance {
     margin-top: 100px;
@@ -65,7 +65,8 @@ export const Content = styled.div`
         border-radius: 10px;
         font-weight: 500;
         font-size: 1rem;
-        background: var(--white);
+        background: var(--background);
+        color: var(--text);
         font-family: var(--hind);
         cursor: pointer;
         box-shadow: 0 5px 10px var(--dark-mid-gray);
@@ -76,7 +77,7 @@ export const Content = styled.div`
         }
 
         :hover {
-          background: white;
+          background: var(--white);
           transform: scale(1.1);
           box-shadow: -5px -5px var(--light-tint), 5px 5px var(--dark-tint);
           background: var(--primary-color);
@@ -92,6 +93,8 @@ export const Content = styled.div`
 
   .available-finance {
     padding: 20px;
+    background: var(--background);
+    border-radius: 10px;
   }
 
   .action-buttons-box {
@@ -107,6 +110,7 @@ export const Content = styled.div`
 
     .item {
       border: 1px solid var(--dark-mid-gray);
+      color: var(--text);
     }
   }
   .right-hand {
@@ -126,6 +130,7 @@ export const Content = styled.div`
     align-items: center;
     border-radius: 10px;
     padding: 5px 10px 5px 5px;
+    color: var(--text);
 
     label {
       font-size: clamp(1.1rem, 2vw, 1.2rem);
@@ -135,7 +140,8 @@ export const Content = styled.div`
   .finance-box {
     width: 100%;
     min-height: 100px;
-    box-shadow: 0 10px 20px var(--dark-mid-gray);
+    box-shadow: 0 10px 20px var(--light-gray);
+    border: 1px solid var(--dark-mid-gray);
     border-radius: 10px;
     padding: 10px;
     margin-bottom: 20px;
@@ -163,7 +169,7 @@ export const Content = styled.div`
   .financial-item {
     width: 100%;
     border-radius: 10px;
-    box-shadow: 0 5px 10px var(--dark-mid-gray);
+    box-shadow: 0 5px 10px var(--light-gray);
     padding: 5px;
     transition: all 300ms ease;
     transform: translateY(-20px);
@@ -345,7 +351,7 @@ export const Content = styled.div`
     display: inline-flex;
     padding: 5px 10px;
     border-radius: 5px;
-    box-shadow: 0 3px 7px var(--dark-mid-gray);
+    box-shadow: 0 3px 7px var(--dark-gray);
   }
   .page-details {
     width: clamp(200px, 100%, 300px);
@@ -375,6 +381,7 @@ export const Content = styled.div`
   .no-results {
     font-family: var(--hind);
     margin: 0 0 10px 0;
+    color: var(--text);
   }
   .finance-summary {
     position: relative;
@@ -396,9 +403,10 @@ export const Content = styled.div`
   .total-finance {
     width: clamp(50px, 5vw, 70px);
     height: clamp(50px, 5vw, 70px);
-    background: var(--white);
+    background: var(--background);
     border-radius: 50%;
-    box-shadow: 0 5px 10px var(--light-gray);
+    box-shadow: 0 5px 10px var(--dark-gray);
+    border: 1px solid var(--dark-mid-gray);
     position: fixed;
     bottom: 20px;
     right: 20px;
@@ -409,7 +417,7 @@ export const Content = styled.div`
       width: 100%;
       height: 100%;
       border-radius: 50%;
-      background-color: var(--white);
+      background-color: var(--background);
       border: none;
       display: flex;
       align-items: center;

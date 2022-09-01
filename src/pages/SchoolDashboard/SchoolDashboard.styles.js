@@ -3,7 +3,7 @@ import styled, { css } from "styled-components";
 export const Wrapper = styled.div`
   flex: 1;
   min-height: 100vh;
-  background: var(--whitesmoke);
+  background: var(--background);
   ${(props) =>
     props.isSuccess === false &&
     css`
@@ -213,12 +213,12 @@ export const LoadingContainer = styled.div`
   min-height: 100vh;
   display: flex;
   flex-direction: column;
-  background: white;
+  background: var(--background);
   align-items: center;
   justify-content: center;
   border-radius: 5px;
   margin: 10px 10px 10px 0;
-  color: red;
+  color: var(--text);
   gap: 2rem;
   font-family: var(--hind);
   font-size: 1.2rem;

@@ -3549,6 +3549,8 @@ const DeleteModal = () => {
         setIsLoading(false);
         setIsError(false);
         setIsSuccess(true);
+        dispatch(fetchSchoolData(schoolToken));
+        setTimeout(() => dispatch(closeEditProfileModal()), 3000);
       } catch (error) {
         setIsLoading(false);
         setIsError(true);

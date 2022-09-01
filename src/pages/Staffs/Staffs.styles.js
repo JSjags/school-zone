@@ -3,7 +3,7 @@ import styled, { css } from "styled-components";
 export const Wrapper = styled.div`
   flex: 1;
   height: 100%;
-  background: var(--whitesmoke);
+  background: var(--background);
   ${(props) =>
     props.isSuccess === false &&
     css`
@@ -66,11 +66,11 @@ export const Content = styled.div`
     position: absolute;
     bottom: 0;
     top: 0;
-    box-shadow: 0 10px 20px var(--lightest-gray);
+    box-shadow: 0 10px 20px var(--dark-gray);
     border-radius: 10px;
     scrollbar-color: var(--primary-color);
     overflow-y: scroll;
-    border: 1px solid var(--light-gray);
+    border: 1px solid var(--dark-mid-gray);
 
     ::-webkit-scrollbar {
       width: 20px;
@@ -151,9 +151,9 @@ export const Content = styled.div`
 
   main {
     flex: 1;
-    background: blue;
     border-radius: 10px;
-    background: white;
+    background: var(--background);
+    border: 1px solid var(--dark-mid-gray);
     min-height: 100vh;
     position: relative;
   }
@@ -173,6 +173,7 @@ export const Content = styled.div`
     }
     p {
       font-weight: 500;
+      color: var(--text);
     }
     .create-staff-button-group {
       width: 100%;
@@ -195,10 +196,12 @@ export const Content = styled.div`
         border-radius: 10px;
         font-weight: 500;
         font-size: 1rem;
-        background: var(--white);
+        background: var(--background);
+        border: 1px solid var(--dark-mid-gray);
+        color: var(--text);
         font-family: var(--hind);
         cursor: pointer;
-        box-shadow: 0 5px 10px var(--dark-mid-gray);
+        box-shadow: 0 5px 10px var(--dark-gray);
         transition: all 300ms ease;
 
         span {
@@ -223,10 +226,10 @@ export const Content = styled.div`
     width: 70px;
     height: 70px;
     border-radius: 50%;
-    background: var(--mid-gray);
+    background: var(--background);
     margin: 0 auto;
     overflow: hidden;
-    box-shadow: 0 0 0 0.5px var(--light-gray);
+    box-shadow: 0 0 0 0.5px var(--dark-mid-gray);
     transition: all 200ms ease;
 
     :hover {
@@ -267,15 +270,16 @@ export const Content = styled.div`
       border-radius: 5px;
       border: none;
       align-items: center;
-      background: white;
-      border: 1px solid var(--light-gray);
+      background: var(--background);
+      border: 1px solid var(--dark-mid-gray);
+      color: var(--text);
       cursor: pointer;
       transition: all 300ms ease;
 
       :hover {
-        background-color: white;
-        color: var(--primary-color);
-        box-shadow: 0 4px 10px var(--primary-color);
+        background-color: var(--primary-color);
+        color: var(--white);
+        box-shadow: 0 4px 10px var(--dark-gray);
         border: 1px solid transparent;
         transform: scale(1.05);
       }
@@ -303,6 +307,7 @@ export const Content = styled.div`
       list-style-position: inside;
       span {
         font-family: var(--hind);
+        color: var(--text);
       }
     }
     li::marker {

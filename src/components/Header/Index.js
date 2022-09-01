@@ -106,7 +106,7 @@ const Header = () => {
         // overflow: `${isLoggedIn && "hidden"}`,
         width: `${isLoggedIn ? "20%" : "100%"}`,
         position: `${isLoggedIn && "relative"}`,
-        background: `${isLoggedIn && "var(--whitesmoke)"}`,
+        background: `${isLoggedIn && "var(--background)"}`,
         display: `${isError && "none"}`,
       }}
     >

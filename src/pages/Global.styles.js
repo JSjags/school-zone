@@ -1,32 +1,94 @@
 import { createGlobalStyle } from "styled-components";
 
+export const lightTheme = {
+  body: "#FFF",
+  text: "#363537",
+  toggleBorder: "#FFF",
+  background: "#363537",
+  translucentEffect: "rgba(255, 255, 255, 0.7)",
+  garamond: "'EB Garamond', serif",
+  hind: "'Hind Madurai', sans-serif",
+  primaryColor: "#f46e16",
+  primaryColorHover: "#fef2eb",
+  primaryColorActive: "#fbd0b5",
+  secondaryColor: "#63b231",
+  darkSecondaryColor: " #8ad259",
+  lightTint: "#54f6f6",
+  darkTint: "#fb413f",
+  deepGray: "rgba(0, 0, 0, 1)",
+  whitesmoke: "whitesmoke",
+  midGray: "#d9d9d9",
+  darkMidGray: "#bababa",
+  secondaryDarkMidGray: "rgba(0, 149, 12, 0.5)",
+  white: "white",
+  lightGray: " rgba(0, 0, 0, 0.3)",
+  lightestGray: "rgba(0, 0, 0, 0.1)",
+  whiteSmoke: "rgba(0, 0, 0, 0.05)",
+  systemFont:
+    "-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif",
+  darkGray: "rgba(0, 0, 0, 0.7)",
+  textShadow: "-1px -1px var(--light-tint), 1px 1px var(--dark-tint)",
+};
+
+export const darkTheme = {
+  body: "#363537",
+  text: "#FAFAFA",
+  toggleBorder: "#6B8096",
+  background: "#999",
+  translucentEffect: "rgba(0, 0, 0, 0.7)",
+  garamond: "'EB Garamond', serif",
+  hind: "'Hind Madurai', sans-serif",
+  primaryColor: "#f46e16",
+  primaryColorHover: "#fef2eb",
+  primaryColorActive: "#fbd0b5",
+  secondaryColor: "#63b231",
+  darkSecondaryColor: " #8ad259",
+  lightTint: "#54f6f6",
+  darkTint: "#fb413f",
+  deepGray: "rgba(0, 0, 0, 1)",
+  whitesmoke: "whitesmoke",
+  midGray: "#d9d9d9",
+  darkMidGray: "#bababa",
+  secondaryDarkMidGray: "rgba(0, 149, 12, 0.5)",
+  white: "white",
+  lightGray: " rgba(0, 0, 0, 0.3)",
+  lightestGray: "rgba(0, 0, 0, 0.1)",
+  whiteSmoke: "#888888",
+  red: "rgba(255, 0, 0, 1)",
+  systemFont:
+    "-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif",
+  darkGray: "rgba(0, 0, 0, 0.7)",
+  textShadow: "-1px -1px var(--light-tint), 1px 1px var(--dark-tint)",
+};
+
 export const GlobalStyles = createGlobalStyle`
     :root {
-        --garamond: 'EB Garamond', serif;
-        --hind: 'Hind Madurai', sans-serif;
-        --primary-color: #f46e16;
-        --primary-color-hover: #fef2eb;
-        --primary-color-active: #fbd0b5;
-        --secondary-color: #63b231;
-        --dark-secondary-color: #8ad259;
-        --light-tint: #54f6f6;
-        --dark-tint: #fb413f;
-        --deep-gray: rgba(0, 0, 0, 1);
-        --whitesmoke: whitesmoke;
-        --mid-gray: #d9d9d9;
-        --dark-mid-gray: #bababa;
-        --secondary-dark-mid-gray: rgba(0, 149, 12, 0.5);
-        --white: #ffffff;
-        --light-gray: rgba(0, 0, 0, 0.3);
-        --lightest-gray: rgba(0, 0, 0, 0.1);
-        --whitesmoke: rgba(0, 0, 0, 0.05);
-        --system-font: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen,
-      Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
-        --dark-gray: rgba(0, 0, 0, 0.7);
-        --translucent-white: rgba(255, 255, 255, 0.7);
-        --text-shadow: 
-        -1px -1px var(--light-tint),
-        1px 1px var(--dark-tint);
+        --garamond: ${({ theme }) => theme.garamond};
+        --hind: ${({ theme }) => theme.hind};
+        --background: ${({ theme }) => theme.body};
+        --text: ${({ theme }) => theme.text};
+        --primary-color: ${({ theme }) => theme.primaryColor};
+        --primary-color-hover:  ${({ theme }) => theme.primaryColorHover};
+        --primary-color-active: ${({ theme }) => theme.primaryColorActive};
+        --secondary-color: ${({ theme }) => theme.secondaryColor};
+        --dark-secondary-color: ${({ theme }) => theme.darkSecondaryColor};
+        --light-tint: ${({ theme }) => theme.lightTint};
+        --dark-tint: ${({ theme }) => theme.darkTint};
+        --deep-gray: ${({ theme }) => theme.deepGray};
+        --whitesmoke: ${({ theme }) => theme.whiteSmoke};
+        --mid-gray: ${({ theme }) => theme.midGray};
+        --dark-mid-gray: ${({ theme }) => theme.darkMidGray};
+        --secondary-dark-mid-gray:${({ theme }) => theme.secondaryDarkMidGray};
+        --white: ${({ theme }) => theme.white};
+        --red: ${({ theme }) => theme.red};
+        --light-gray: ${({ theme }) => theme.lightGray};
+        --lightest-gray: ${({ theme }) => theme.lightestGray}
+        --whitesmoke: ${({ theme }) => theme.whiteSmoke};
+        --system-font: ${({ theme }) => theme.systemFont};
+        --dark-gray: ${({ theme }) => theme.darkGray};
+        --translucent-white: ${({ theme }) => theme.translucentEffect};
+        --text-shadow: ${({ theme }) => theme.textShadow};
+
     }
     * {
         margin: 0;
@@ -35,6 +97,7 @@ export const GlobalStyles = createGlobalStyle`
     }
     body {
         position: relative;
+        background: ${({ theme }) => theme.body};
     }
      h1, h2, h3, h4, h5, label {
         color: var(--primary-color);
@@ -53,14 +116,14 @@ export const GlobalStyles = createGlobalStyle`
       width: 100%;
       background: var(--primary-color);
       font-family: var(--hind);
-      color: white;
+      color: var(--white);
       transition: all 200ms ease;
       cursor: pointer;
 
       :hover {
         box-shadow: -5px -5px var(--light-tint), 5px 5px var(--dark-tint);
         background: var(--primary-color);
-        color: white;
+        color: var(--white);
       }
     
     }
@@ -86,7 +149,7 @@ export const GlobalStyles = createGlobalStyle`
         transform: scale(1.1);
         box-shadow: 0 5px 10px var(--secondary-dark-mid-gray);
         background: var(--secondary-color);
-        color: white;
+        color: var(--white);
       }
     }
     .primary-white-btn {
@@ -110,7 +173,7 @@ export const GlobalStyles = createGlobalStyle`
         transform: scale(1.05);
         box-shadow: 0 5px 10px var(--primary-dark-mid-gray);
         background: var(--primary-color);
-        color: white;
+        color: var(--white);
       }
     }
     .white-btn {
@@ -125,7 +188,7 @@ export const GlobalStyles = createGlobalStyle`
       width: 100%;
       background: var(--white);
       font-family: var(--hind);
-      color: black;
+      color: var(--deep-gray);
       font-weight: 500;
       transition: all 200ms ease;
       width: 100%;
@@ -133,7 +196,7 @@ export const GlobalStyles = createGlobalStyle`
       transition: all 300ms ease;
 
       :hover {
-        background: white;
+        background: var(--white);
           box-shadow: 0 5px 10px var(--secondary-dark-mid-gray);
           color: var(--secondary-color);
       }
@@ -152,14 +215,14 @@ export const GlobalStyles = createGlobalStyle`
       width: 100%;
       background: var(--white);
       font-family: var(--hind);
-      color: red;
+      color: var(--red);
       font-weight: 500;
       transition: all 200ms ease;
       cursor: pointer;
 
       :hover {
-        background: red;
-        color: white;
+        background: var(--red);
+        color: var(--white);
         transform: scale(1.05);
       }
     

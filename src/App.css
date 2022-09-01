@@ -15,7 +15,7 @@
 
 /* Grid Header */
 .e-grid [class^="e-"] {
-  color: var(--white);
+  color: var(--text);
   font-size: 1rem;
   text-transform: capitalize;
   font-weight: 800;
@@ -35,7 +35,7 @@
 
 .e-grid .e-gridheader tr th {
   border: none;
-  border-right: 0.5px solid var(--mid-gray);
+  border-right: 0.5px solid var(--dark-mid-gray);
   padding: 0 0 0 5px;
   transition: all 200ms ease;
 }
@@ -57,9 +57,9 @@
 /* Columns */
 .e-grid:not(.e-row-responsive) .e-gridcontent tr.e-row .e-rowcell {
   border: none;
-  border-right: 0.5px solid var(--mid-gray);
+  border-right: 0.5px solid var(--dark-mid-gray);
   padding: 10px 5px;
-  color: black;
+  color: var(--text);
   font-size: 0.95rem;
   font-family: var(--hind);
   font-weight: 500;
@@ -69,11 +69,11 @@
 }
 
 .e-grid .e-gridheader {
-  background-color: #fff;
-  border-bottom-color: #e0e0e0;
-  border-top-color: #e0e0e0;
+  background-color: var(--background);
+  border-bottom-color: var(--dark-mid-gray);
+  border-top-color: var(--dark-mid-gray);
   border-radius: 0px;
-  color: rgba(0, 0, 0, 0.54);
+  color: var(--dark-gray);
   transition: all 200ms ease;
 }
 .e-row .e-altrow {
@@ -89,9 +89,8 @@
 
 .e-checkbox-wrapper .e-frame,
 .e-css.e-checkbox-wrapper .e-frame {
-  background-color: #fff;
-  border-color: #757575;
-  border: 1px solid var(--light-gray);
+  background-color: var(--background);
+  border: 1px solid var(--dark-mid-gray);
   border-radius: 50%;
   transition: all 200ms ease;
 }
@@ -102,7 +101,7 @@
   font-weight: 300;
   border-radius: 50%;
   border-color: transparent;
-  color: #fff;
+  color: var(--text);
   transition: all 200ms ease;
 }
 
@@ -136,7 +135,7 @@ tr.e-row[aria-selected="true"] .e-selectionbackground.e-active {
   tr[role="row"]:not(.e-detailrow):hover
   .e-detailrowexpand:not(.e-cellselectionbackground):not(.e-active):not(.e-updatedtd):not(.e-indentcell) {
   background-color: var(--primary-color-hover);
-  color: #000;
+  color: var(--text);
   transition: all 200ms ease;
 }
 
@@ -293,8 +292,8 @@ th.e-headercell.e-defaultcursor {
 }
 .e-contextmenu-wrapper ul .e-menu-item.e-focused,
 .e-contextmenu-container ul .e-menu-item.e-focused {
-  color: rgba(0, 0, 0, 0.87);
-  outline: 0 solid rgba(0, 0, 0, 0.12);
+  color: var(--dark-gray);
+  outline: 0 solid var(--lightest-gray);
   outline-offset: 0;
   background-color: var(--primary-color-hover);
 }
@@ -319,10 +318,10 @@ th.e-headercell.e-defaultcursor {
 .e-input-group.e-control-wrapper input.e-input,
 .e-input-group textarea.e-input,
 .e-input-group.e-control-wrapper textarea.e-input {
-  border-color: rgba(0, 0, 0, 0.42);
+  border-color: var(--dark-mid-gray);
   font-family: var(--hind);
   font-size: 1rem;
-  color: var(--deep-gray);
+  color: var(--text);
   caret-color: var(--primary-color);
   font-weight: normal;
 }
@@ -372,11 +371,11 @@ th.e-headercell.e-defaultcursor {
   background: var(--primary-color);
   font-family: var(--garamond);
   font-weight: normal;
-  color: #fff;
+  color: var(--white);
   opacity: 1;
 }
 .e-pager .e-numericitem.e-focused {
-  background: white;
+  background: var(--white);
   font-family: var(--hind);
   font-weight: normal;
   color: var(--white);
@@ -405,13 +404,13 @@ th.e-headercell.e-defaultcursor {
 }
 .e-grid .e-gridcontent tr:first-child td {
   border-top-color: transparent;
-  color: var(--deep-gray);
+  color: var(--text);
   font-family: var(--hind);
   font-weight: normal;
 }
 
 .e-toolbar .e-toolbar-items .e-toolbar-item .e-tbar-btn-text {
-  color: var(--deep-gray);
+  color: var(--text);
   font-family: var(--hind);
   font-weight: 500;
   letter-spacing: 0.3px;
@@ -420,16 +419,16 @@ th.e-headercell.e-defaultcursor {
   .e-toolbar-items
   .e-toolbar-item
   #grid-component_delete.e-tbar-btn-text {
-  color: var(--deep-gray);
+  color: var(--text);
   font-family: var(--hind);
   font-weight: normal;
   letter-spacing: 0.3px;
 }
 .e-toolbar #grid-component_delete.e-tbar-btn {
-  background: var(--white);
+  background: var(--background);
   border-radius: 5px;
   color: var(--deep-gray);
-  border: 1px solid var(--light-gray);
+  border: 1px solid var(--dark-mid-gray);
   transition: all 200ms ease;
 }
 .e-toolbar
@@ -445,12 +444,12 @@ th.e-headercell.e-defaultcursor {
   transform: scale(1.05);
   background: red;
   border-radius: 5px;
-  color: var(--white);
+  color: var(--text);
   transition: all 300ms ease;
 }
 .e-toolbar #grid-component_delete.e-tbar-btn:focus {
   transform: scale(1.05);
-  background: var(--white);
+  background: var(--background);
   box-shadow: 0 3px 6px rgba(255, 0, 0, 0.696);
   border-radius: 5px;
   color: red;
@@ -461,14 +460,14 @@ th.e-headercell.e-defaultcursor {
   background: var(--white);
   box-shadow: 0 3px 6px rgba(255, 0, 0, 0.696);
   border-radius: 5px;
-  color: red;
+  color: var(--red);
   border: 1px solid transparent;
   transition: all 300ms ease;
 }
 .e-grid .e-delete::before,
 .e-grid-menu .e-delete::before {
   content: "\e84e";
-  color: var(--deep-gray);
+  color: var(--text);
   font-weight: 500;
   transition: all 300ms ease;
 }

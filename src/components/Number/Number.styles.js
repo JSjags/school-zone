@@ -1,4 +1,4 @@
-import styled from "styled-components";
+import styled, { css } from "styled-components";
 
 export const NumberWrapper = styled.input`
   display: block;
@@ -15,10 +15,26 @@ export const NumberWrapper = styled.input`
   outline-width: 3px;
   cursor: pointer;
   width: clamp(240px, 100%, 500px);
-  background: whitesmoke;
   margin-top: 15px;
+  margin-right: 5px;
   margin-bottom: 5px;
   transition: all 200ms ease-in-out;
+  color: var(--text);
+
+  ${({ name, value }) =>
+    name === "paginationResults"
+      ? css`
+          border: 1px solid var(--dark-mid-gray);
+          width: calc(${value.toString().length}ch + 45px);
+          background: var(--background);
+        `
+      : css`
+          width: clamp(240px, 100%, 500px);
+          margin-top: 15px;
+          margin-bottom: 5px;
+          background: var(--background);
+          backdrop-filter: invert(0.3);
+        `}
 
   :hover {
     box-shadow: 0 5px 8px rgba(0, 0, 0, 0.3);
@@ -26,5 +42,9 @@ export const NumberWrapper = styled.input`
 
   :focus {
     background: transparent;
+  }
+
+  ::-webkit-inner-spin-button:increment {
+    appearance: none;
   }
 `;

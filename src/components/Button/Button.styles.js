@@ -8,15 +8,16 @@ export const StyledButton = styled.button`
   border-radius: 5px;
   border: none;
   align-items: center;
-  background: white;
-  border: 1px solid var(--light-gray);
+  background: var(--background);
+  color: var(--text);
+  border: 1px solid var(--dark-mid-gray);
   cursor: pointer;
   transition: all 300ms ease;
 
   :hover {
-    background-color: white;
-    color: var(--primary-color);
-    box-shadow: 0 4px 10px var(--primary-color);
+    background-color: var(--primary-color);
+    color: var(--white);
+    box-shadow: 0 4px 10px var(--dark-gray);
     border: 1px solid transparent;
     transform: scale(1.05);
   }

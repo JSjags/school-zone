@@ -18,6 +18,7 @@ export const SearchBarContent = styled.div`
     right: 0;
     bottom: 13px;
     transition: all 200ms linear;
+    color: var(--text);
 
     :hover {
       transform: scale(1.1);
@@ -32,6 +33,8 @@ export const SearchBarContent = styled.div`
     font-family: var(--hind);
     font-size: clamp(1rem, 1vw, 1.1rem);
     outline: none;
+    background: var(--background);
+    color: var(--text);
 
     :focus + .underline {
       height: 2px;

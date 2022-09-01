@@ -3,7 +3,7 @@ import styled, { css } from "styled-components";
 export const Wrapper = styled.div`
   flex: 1;
   height: 100%;
-  background: var(--whitesmoke);
+  background: var(--background);
   ${(props) =>
     props.isSuccess === false &&
     css`
@@ -22,9 +22,9 @@ export const Content = styled.div`
 
   main {
     flex: 1;
-    background: blue;
     border-radius: 10px;
-    background: white;
+    background: var(--background);
+    border: 1px solid var(--dark-mid-gray);
     min-height: 100vh;
   }
 
@@ -66,7 +66,7 @@ export const Content = styled.div`
       top: 60%;
       left: 0;
       transform: translate(-93%, -97%);
-      box-shadow: 5px 5px 0 var(--white);
+      box-shadow: 5px 5px 0 var(--background);
     }
 
     ::after {
@@ -80,7 +80,7 @@ export const Content = styled.div`
       top: 60%;
       left: 209px;
       transform: translate(-100%, -97%);
-      box-shadow: -5px 5px 0 var(--white);
+      box-shadow: -5px 5px 0 var(--background);
     }
 
     .profile-pic-img-cont {
@@ -106,7 +106,7 @@ export const Content = styled.div`
     }
     p {
       font-family: var(--hind);
-      color: var(--dark-gray);
+      color: var(--text);
     }
   }
 
@@ -114,11 +114,12 @@ export const Content = styled.div`
     width: 90%;
     margin: 0 auto;
     min-height: 60vh;
-    background: white;
+    background: var(--background);
     transform: translate(0, -100px);
 
     .sub-section:first-child {
       margin-bottom: 30px;
+      margin-top: 20px;
     }
     .sub-section {
       display: flex;
@@ -126,7 +127,8 @@ export const Content = styled.div`
       gap: 30px;
       padding: 10px 20px;
       border-radius: 10px;
-      box-shadow: 0 7px 20px var(--mid-gray);
+      box-shadow: 0 7px 20px var(--dark-gray);
+      border: 1px solid var(--dark-mid-gray);
 
       h2 {
         color: var(--primary-color);
@@ -156,7 +158,7 @@ export const Content = styled.div`
           color: var(--dark-mid-gray);
           padding: 10px 5px;
           font-size: 1rem;
-          background-color: whitesmoke;
+          background-color: var(--translucent-white);
           border: none;
           border-radius: 10px;
           font-family: var(--hind);
@@ -185,7 +187,7 @@ export const Content = styled.div`
         border-radius: 10px;
         border: none;
         cursor: pointer;
-        background: white;
+        background: var(--background);
         transition: all 0.3s ease;
 
         span {
