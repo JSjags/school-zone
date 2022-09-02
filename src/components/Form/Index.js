@@ -2137,7 +2137,7 @@ const StudentRegistration = () => {
     setIsError(false);
     setIsSuccess(false);
 
-    const staffId = uuidv4();
+    const studentId = uuidv4();
 
     const dataToFirebase = {};
     const dataToMongoDB = {};
@@ -2149,7 +2149,7 @@ const StudentRegistration = () => {
       return (dataToMongoDB[entry[0]] = entry[1].value);
     });
 
-    dataToMongoDB.staff_id = staffId;
+    dataToMongoDB.student_id = studentId;
 
     try {
       // get downloadURL(s) from firebase storage for uploaded images
@@ -2158,7 +2158,7 @@ const StudentRegistration = () => {
           storage,
           `${schoolData.name.split(" ").join("-")}-${
             schoolData._id
-          }/students/${staffId}/images/${Object.keys(dataToFirebase)[i]}`
+          }/students/${studentId}/images/${Object.keys(dataToFirebase)[i]}`
         )
       );
       const uploadResultArr = await Promise.all(

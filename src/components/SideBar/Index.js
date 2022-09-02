@@ -5,12 +5,9 @@ import { useSelector } from "react-redux";
 import { Content } from "./SideBar.styles";
 import { FaIdCardAlt, FaRegMoneyBillAlt } from "react-icons/fa";
 import { RiProfileFill } from "react-icons/ri";
-import {
-  MdSettings,
-  MdSpaceDashboard,
-  MdPeopleAlt,
-  MdLocationPin,
-} from "react-icons/md";
+import { IoCreateOutline } from "react-icons/io5";
+import { BsFillCalendarWeekFill, BsKanban } from "react-icons/bs";
+import { MdSettings, MdSpaceDashboard, MdPeopleAlt } from "react-icons/md";
 
 import { Link } from "react-router-dom";
 
@@ -66,6 +63,7 @@ const SideBar = () => {
         </div>
         <section id="lower-section">
           <ul id="menu">
+            <li className="section-heading">GENERAL</li>
             <Link
               to={"/schooldashboard"}
               className={currentPage === "schooldashboard" ? "current" : ""}
@@ -126,15 +124,47 @@ const SideBar = () => {
                 <span>Settings</span>
               </li>
             </Link>
-          </ul>
 
-          <div className="school-address">
+            {/* <div className="school-address">
             <MdLocationPin style={{ color: "white", fontSize: "1.5rem" }} />
             <div id="address-cont">
               <h3 id="country">{data.country}</h3>
               <p id="address">{data.address}</p>
             </div>
-          </div>
+          </div> */}
+
+            <li className="section-heading">APPLICATIONS</li>
+            <Link
+              to={"/*"}
+              className={currentPage === "calendar" ? "current" : ""}
+              onClick={handleNavClick}
+            >
+              <li>
+                <BsFillCalendarWeekFill style={{ fontSize: "1.5rem" }} />
+                <span>Calendar</span>
+              </li>
+            </Link>
+            <Link
+              to={"/*"}
+              className={currentPage === "kanban" ? "current" : ""}
+              onClick={handleNavClick}
+            >
+              <li>
+                <IoCreateOutline style={{ fontSize: "1.7rem" }} />
+                <span>Editor</span>
+              </li>
+            </Link>
+            <Link
+              to={"/*"}
+              className={currentPage === "kanban" ? "current" : ""}
+              onClick={handleNavClick}
+            >
+              <li>
+                <BsKanban style={{ fontSize: "1.5rem" }} />
+                <span>Kanban</span>
+              </li>
+            </Link>
+          </ul>
         </section>
       </aside>
     </Content>

@@ -7,6 +7,7 @@ const initialState = {
   isSuccess: false,
   isError: false,
   message: null,
+  isSettingsLoading: false,
 };
 
 export const fetchSchoolData = createAsyncThunk(
@@ -28,6 +29,23 @@ export const fetchSchoolData = createAsyncThunk(
           error.toString();
         return thunkAPI.rejectWithValue(message);
       }
+    }
+  }
+);
+
+export const fetchSchoolSettings = createAsyncThunk(
+  "config/fetchSchoolSettings",
+  async (token, thunkAPI) => {
+    try {
+      const settingsData = await schoolService.fetchSchoolSettings(token);
+      return await thunkAPI.fulfillWithValue(settingsData);
+    } catch (error) {
+      const message =
+        error.name ||
+        error.response.data.message ||
+        error.message ||
+        error.toString();
+      return thunkAPI.rejectWithValue(message);
     }
   }
 );
@@ -76,6 +94,13 @@ export const schoolDataSlice = createSlice({
         state.isSuccess = false;
         state.message = action.payload;
       });
+    builder.addCase(fetchSchoolSettings.fulfilled, (state, action) => {
+      state.settings = action.payload;
+      state.isSettingsLoading = false;
+      state.isError = false;
+      state.isSuccess = true;
+      state.message = "successful";
+    });
   },
 });
 

@@ -38,6 +38,9 @@ export const configSlice = createSlice({
     setFinanceStatementId: (state, action) => {
       state.financeStatementId = action.payload;
     },
+    setSchoolSettings: (state, action) => {
+      state.settings = action.payload;
+    },
   },
 });
 

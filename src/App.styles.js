@@ -9,6 +9,6 @@ export const Wrapper = styled.div`
       width: 100%;
       display: flex;
       min-height: 100vh;
-      background: var(--deep-gray);
+      background: var(--background);
     `}
 `;

@@ -2,10 +2,34 @@ import { useState, useRef } from "react";
 import { OptionsWrapper, OptionsContent } from "./Options.styles";
 import { motion, AnimatePresence } from "framer-motion";
 import { FaChevronLeft } from "react-icons/fa";
+import { useSelector, useDispatch } from "react-redux";
+import axios from "axios";
 
-const Options = ({ options, value, setFormData, name }) => {
+import { fetchSchoolSettings } from "../../features/school/schoolDataSlice";
+
+const Options = ({ options, value, formData, setFormData, name }) => {
+  const dispatch = useDispatch();
+
+  const { id: schoolId, token: schoolToken } = useSelector(
+    (state) => state.schoolAuth
+  );
+
   const OptionsRef = useRef();
   const [isOpen, setIsOpen] = useState(false);
+
+  const updateSettings = async (object) => {
+    const serverResponse = await axios({
+      url: `/api/schools/${schoolId}/settings`,
+      method: "put",
+      data: object,
+      headers: {
+        Authorization: `Bearer ${schoolToken}`,
+      },
+    });
+    console.log(serverResponse);
+    serverResponse.data.message === "successful" &&
+      dispatch(fetchSchoolSettings(schoolToken));
+  };
 
   const toggleMenu = () => {
     setIsOpen(!isOpen);
@@ -14,10 +38,13 @@ const Options = ({ options, value, setFormData, name }) => {
   const handleChange = (e) => {
     setFormData((prev) => {
       if (name === "view" || name === "filter" || name === "theme") {
-        return {
+        const newObject = {
           ...prev,
           [name]: !e.target.value ? e.target.textContent : e.target.value,
         };
+        console.log(newObject);
+        updateSettings(newObject);
+        return newObject;
       }
       return {
         ...prev,

@@ -11,7 +11,7 @@ export const HeaderWrapper = styled.header`
   z-index: 1000;
   background: var(--translucent-white);
   backdrop-filter: blur(5px);
-  border-radius: 5px;
+  border-radius: 10px;
 
   h1 {
     color: var(--primary-color);
@@ -152,14 +152,14 @@ export const HeaderWrapper = styled.header`
     justify-content: center;
     align-items: center;
     gap: 5px;
-    background-color: var(--white);
+    background-color: var(--transparent);
     border: none;
     font-family: var(--hind);
     font-size: 1rem;
     padding: 10px 20px;
-    color: var(--deep-gray);
-    box-shadow: 0 5px 10px var(--dark-gray);
+    color: var(--text);
     border-radius: 20px;
+    border: 1px solid var(--dark-mid-gray);
     transition: all 300ms ease-in-out;
     cursor: pointer;
 

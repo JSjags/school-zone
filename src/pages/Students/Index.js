@@ -272,11 +272,15 @@ const Students = () => {
                 <p>No registered student found.</p>
                 <div className="create-student-button-group">
                   <button onClick={handleCreateStudent}>
-                    <BsPersonPlus style={{ fontSize: "2rem" }} />
+                    <BsPersonPlus
+                      style={{ fontSize: "2rem", color: "var(--text)" }}
+                    />
                     <span>Register Student</span>
                   </button>
                   <button onClick={handleCreateTemplate}>
-                    <IoCreateOutline style={{ fontSize: "2rem" }} />
+                    <IoCreateOutline
+                      style={{ fontSize: "2rem", color: "var(--text)" }}
+                    />
                     <span>Create Register Template</span>
                   </button>
                 </div>
@@ -433,7 +437,7 @@ const Students = () => {
                     </li>
                   </ul>
                   <p className="info-notice">
-                    <BsInfoCircleFill style={{ fontSize: "1.4rem" }} />
+                    <BsInfoCircleFill style={{ fontSize: "1rem" }} />
                     <span>Student_id value cannot be edited or changed.</span>
                   </p>
                 </div>

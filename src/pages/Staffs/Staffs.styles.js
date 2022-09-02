@@ -11,6 +11,7 @@ export const Wrapper = styled.div`
       align-items: center;
       justify-content: center;
     `};
+
   .saving-success-message {
     backdrop-filter: blur(3px);
     display: flex;
@@ -20,9 +21,9 @@ export const Wrapper = styled.div`
     width: clamp(200px, 40vw, 500px);
     margin: 10px auto 0;
     gap: 5px;
-    border: 1px solid green;
+    border: 1px solid var(--white);
     font-family: var(--hind);
-    color: green;
+    color: var(--white);
     background: rgba(0, 255, 0, 0.3);
     border-radius: 5px;
     font-family: var(--hind);
@@ -33,12 +34,12 @@ export const Wrapper = styled.div`
     align-items: center;
     justify-content: center;
     padding: 5px;
-    color: red;
+    color: var(--white);
     width: clamp(200px, 40vw, 500px);
     gap: 5px;
     background: rgba(255, 0, 0, 0.3);
     padding: 5px;
-    border: 1px solid red;
+    border: 1px solid var(--white);
     border-radius: 5px;
     font-family: var(--hind);
     margin: 10px auto 0;
@@ -66,7 +67,6 @@ export const Content = styled.div`
     position: absolute;
     bottom: 0;
     top: 0;
-    box-shadow: 0 10px 20px var(--dark-gray);
     border-radius: 10px;
     scrollbar-color: var(--primary-color);
     overflow-y: scroll;
@@ -76,6 +76,7 @@ export const Content = styled.div`
       width: 20px;
       height: 20px;
       border-radius: 10px;
+      background-color: var(--whitesmoke);
       background-color: var(--whitesmoke);
     }
     ::-webkit-scrollbar-track {
@@ -245,7 +246,7 @@ export const Content = styled.div`
     padding: 5px;
     color: var(--primary-color);
     align-items: center;
-    background-color: var(--whitesmoke);
+    backdrop-filter: invert(0.3);
     border-radius: 10px;
     display: flex;
     gap: 5px;
@@ -293,10 +294,10 @@ export const Content = styled.div`
   }
 
   .instructions-panel {
-    background: var(--white);
+    background: var(--background);
     border-radius: 10px;
     margin: 30px 10px;
-    border: 1px solid var(--light-gray);
+    border: 1px solid var(--dark-mid-gray);
     padding: 10px;
 
     ul {
@@ -325,7 +326,7 @@ export const Content = styled.div`
 
       span {
         font-family: var(--hind);
-        color: var(--dark-gray);
+        color: var(--whitesmoke);
         font-size: 0.9rem;
       }
     }

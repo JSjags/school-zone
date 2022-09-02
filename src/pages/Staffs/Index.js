@@ -432,7 +432,7 @@ const Staffs = () => {
                     </li>
                   </ul>
                   <p className="info-notice">
-                    <BsInfoCircleFill style={{ fontSize: "1.4rem" }} />
+                    <BsInfoCircleFill style={{ fontSize: "1rem" }} />
                     <span>staff_id value cannot be edited or changed.</span>
                   </p>
                 </div>

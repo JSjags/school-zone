@@ -3,7 +3,7 @@ import styled, { css } from "styled-components";
 export const Wrapper = styled.div`
   flex: 1;
   height: 100%;
-  background: var(--whitesmoke);
+  background: var(--background);
   ${(props) =>
     props.isSuccess === false &&
     css`
@@ -21,9 +21,9 @@ export const Wrapper = styled.div`
     width: clamp(200px, 40vw, 500px);
     margin: 10px auto 0;
     gap: 5px;
-    border: 1px solid green;
+    border: 1px solid var(--white);
     font-family: var(--hind);
-    color: green;
+    color: var(--white);
     background: rgba(0, 255, 0, 0.3);
     border-radius: 5px;
     font-family: var(--hind);
@@ -34,12 +34,12 @@ export const Wrapper = styled.div`
     align-items: center;
     justify-content: center;
     padding: 5px;
-    color: red;
+    color: var(--white);
     width: clamp(200px, 40vw, 500px);
     gap: 5px;
     background: rgba(255, 0, 0, 0.3);
     padding: 5px;
-    border: 1px solid red;
+    border: 1px solid var(--white);
     border-radius: 5px;
     font-family: var(--hind);
     margin: 10px auto 0;
@@ -72,7 +72,7 @@ export const Content = styled.div`
     border-radius: 10px;
     scrollbar-color: var(--primary-color);
     overflow-y: scroll;
-    border: 1px solid var(--light-gray);
+    border: 1px solid var(--dark-mid-gray);
 
     ::-webkit-scrollbar {
       width: 20px;
@@ -153,9 +153,9 @@ export const Content = styled.div`
 
   main {
     flex: 1;
-    background: blue;
     border-radius: 10px;
-    background: white;
+    background: var(--background);
+    border: 1px solid var(--dark-mid-gray);
     min-height: 100vh;
     position: relative;
   }
@@ -176,6 +176,7 @@ export const Content = styled.div`
     }
     p {
       font-weight: 500;
+      color: var(--text);
     }
     .create-student-button-group {
       width: 100%;
@@ -198,14 +199,16 @@ export const Content = styled.div`
         border-radius: 10px;
         font-weight: 500;
         font-size: 1rem;
-        background: var(--white);
+        background: var(--background);
         font-family: var(--hind);
         cursor: pointer;
-        box-shadow: 0 5px 10px var(--dark-mid-gray);
+        box-shadow: 0 5px 10px var(--dark-gray);
+        border: 1px solid var(--dark-mid-gray);
         transition: all 300ms ease;
 
         span {
           white-space: nowrap;
+          color: var(--text);
         }
 
         :hover {
@@ -213,7 +216,7 @@ export const Content = styled.div`
           transform: scale(1.1);
           box-shadow: -5px -5px var(--light-tint), 5px 5px var(--dark-tint);
           background: var(--primary-color);
-          color: white;
+          color: var(--text);
           letter-spacing: 2px;
           font-size: 1.1rem;
           -webkit-text-stroke: 0.5px var(--primary-color-active);
@@ -245,7 +248,7 @@ export const Content = styled.div`
     padding: 5px;
     color: var(--primary-color);
     align-items: center;
-    background-color: var(--whitesmoke);
+    backdrop-filter: invert(0.3);
     border-radius: 10px;
     display: flex;
     gap: 5px;
@@ -270,15 +273,16 @@ export const Content = styled.div`
       border-radius: 5px;
       border: none;
       align-items: center;
-      background: white;
-      border: 1px solid var(--light-gray);
+      background: var(--background);
+      color: var(--text);
+      border: 1px solid var(--dark-mid-gray);
       cursor: pointer;
       transition: all 300ms ease;
 
       :hover {
-        background-color: white;
-        color: var(--primary-color);
-        box-shadow: 0 4px 10px var(--primary-color);
+        background-color: var(--primary-color);
+        color: var(--white);
+        box-shadow: 0 4px 10px var(--dark-gray);
         border: 1px solid transparent;
         transform: scale(1.05);
       }
@@ -292,10 +296,10 @@ export const Content = styled.div`
   }
 
   .instructions-panel {
-    background: var(--white);
+    background: var(--background);
     border-radius: 10px;
     margin: 30px 10px;
-    border: 1px solid var(--light-gray);
+    border: 1px solid var(--dark-mid-gray);
     padding: 10px;
 
     ul {
@@ -306,6 +310,7 @@ export const Content = styled.div`
       list-style-position: inside;
       span {
         font-family: var(--hind);
+        color: var(--text);
       }
     }
     li::marker {
@@ -323,7 +328,7 @@ export const Content = styled.div`
 
       span {
         font-family: var(--hind);
-        color: var(--dark-gray);
+        color: var(--whitesmoke);
         font-size: 0.9rem;
       }
     }

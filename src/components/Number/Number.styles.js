@@ -44,7 +44,7 @@ export const NumberWrapper = styled.input`
     background: transparent;
   }
 
-  ::-webkit-inner-spin-button:increment {
+  ::-webkit-inner-spin-button {
     appearance: none;
   }
 `;

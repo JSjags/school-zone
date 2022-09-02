@@ -10,21 +10,44 @@ export const Content = styled.div`
   top: 0;
 
   aside {
-    background-color: var(--primary-color);
+    display: block;
+    background: var(--primary-color);
     border-radius: 5px;
     width: 100%;
     height: calc(100vh - 20px);
     position: -webkit-sticky;
     position: sticky;
     top: 10px;
+    scrollbar-color: var(--primary-color);
     overflow: hidden;
-    display: flex;
+    overflow-y: scroll;
     flex-direction: column;
 
+    ::-webkit-scrollbar {
+      width: 5px;
+      height: 5px;
+      /* border-radius: 20px; */
+      background: var(--background);
+    }
+    ::-webkit-scrollbar-track {
+      background: var(--background);
+      border-radius: 0 0 10px 0;
+    }
+    ::-webkit-scrollbar-thumb {
+      border-radius: 10px;
+      height: 5px;
+      background: var(--secondary-color);
+    }
+    ::-webkit-scrollbar-corner {
+      appearance: none;
+    }
+
     .aside-header {
-      height: 200px;
+      height: clamp(200px, 20%, 250px);
       border-radius: 5px;
-      position: relative;
+      position: sticky;
+      box-shadow: 0 6px 6px var(--dark-gray);
+      top: 0;
     }
 
     .aside-bg-cont {
@@ -140,15 +163,15 @@ export const Content = styled.div`
   }
   #lower-section {
     display: flex;
-    flex: 1;
     flex-direction: column;
-    justify-content: space-between;
     padding-bottom: 10px;
+    border-radius: 0 0 5px 5px;
+    box-shadow: 0 0 0 300px var(--background);
   }
-  aside #menu {
+  #menu {
     color: var(--white);
-    font-family: var(--garamond);
-    font-size: 1.2rem;
+    font-family: var(--hind);
+    font-size: 1rem;
     gap: 10px;
     display: flex;
     flex-direction: column;
@@ -156,6 +179,7 @@ export const Content = styled.div`
 
     a {
       color: white;
+      height: clamp(40px, calc(40px + 1vh), 50px);
       text-decoration: none;
       display: flex;
       align-items: center;
@@ -220,6 +244,12 @@ export const Content = styled.div`
         inset 1px 1px var(--light-gray);
       transition: all 200ms ease;
     }
+  }
+  .section-heading {
+    color: var(--translucent-white);
+    padding: 10px 0 0 10px;
+    font-weight: lighter;
+    font-family: var(--garamond);
   }
 
   @keyframes background {

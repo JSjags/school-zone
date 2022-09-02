@@ -19,39 +19,51 @@ import Finance from "./pages/Finance/Index";
 import Profile from "./pages/Profile/Index";
 import Settings from "./pages/Settings/Index";
 
+import { GlobalStyles } from "./pages/Global.styles";
+
+import { ThemeProvider } from "styled-components";
+import { darkTheme, lightTheme } from "./pages/Global.styles";
+
 import "./App.css";
+import { getTheme } from "./utils";
 
 const queryClient = new QueryClient();
 
 function App() {
   const location = useLocation();
   const isLoggedIn = useSelector((state) => state.schoolAuth.isLoggedIn);
+  const settings = useSelector((state) => state.schoolData.data.settings);
 
   return (
-    <Wrapper isLoggedIn={isLoggedIn}>
-      <QueryClientProvider client={queryClient}>
-        <Header />
-        <AnimatePresence exitBeforeEnter>
-          <Routes location={location} key={location.pathname}>
-            <Route path="/" element={<Home />}>
-              <Route path="home" element={<Home />} />
-            </Route>
-            <Route path="/about" element={<About />} />
-            <Route path="/contact" element={<Contact />} />
-            <Route path="/services" element={<Services />} />
-            <Route path="/signup" element={<Signup />} />
-            <Route path="/login" element={<Login />} />
-            <Route path="/schooldashboard" element={<SchoolDashboard />} />
-            <Route path="/schooldashboard/students" element={<Students />} />
-            <Route path="/schooldashboard/staffs" element={<Staffs />} />
-            <Route path="/schooldashboard/finance" element={<Finance />} />
-            <Route path="/schooldashboard/profile" element={<Profile />} />
-            <Route path="/schooldashboard/settings" element={<Settings />} />
-          </Routes>
-        </AnimatePresence>
-        {/* <ReactQueryDevtools initialIsOpen={false} /> */}
-      </QueryClientProvider>
-    </Wrapper>
+    <ThemeProvider
+      theme={getTheme(settings?.theme) === "Light" ? lightTheme : darkTheme}
+    >
+      <GlobalStyles />
+      <Wrapper isLoggedIn={isLoggedIn}>
+        <QueryClientProvider client={queryClient}>
+          <Header />
+          <AnimatePresence exitBeforeEnter>
+            <Routes location={location} key={location.pathname}>
+              <Route path="/" element={<Home />}>
+                <Route path="home" element={<Home />} />
+              </Route>
+              <Route path="/about" element={<About />} />
+              <Route path="/contact" element={<Contact />} />
+              <Route path="/services" element={<Services />} />
+              <Route path="/signup" element={<Signup />} />
+              <Route path="/login" element={<Login />} />
+              <Route path="/schooldashboard" element={<SchoolDashboard />} />
+              <Route path="/schooldashboard/students" element={<Students />} />
+              <Route path="/schooldashboard/staffs" element={<Staffs />} />
+              <Route path="/schooldashboard/finance" element={<Finance />} />
+              <Route path="/schooldashboard/profile" element={<Profile />} />
+              <Route path="/schooldashboard/settings" element={<Settings />} />
+            </Routes>
+          </AnimatePresence>
+          {/* <ReactQueryDevtools initialIsOpen={false} /> */}
+        </QueryClientProvider>
+      </Wrapper>
+    </ThemeProvider>
   );
 }
 

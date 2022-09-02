@@ -6,6 +6,7 @@ export const lightTheme = {
   toggleBorder: "#FFF",
   background: "#363537",
   translucentEffect: "rgba(255, 255, 255, 0.7)",
+  transparent: "rgba(255, 255, 255, 0)",
   garamond: "'EB Garamond', serif",
   hind: "'Hind Madurai', sans-serif",
   primaryColor: "#f46e16",
@@ -21,13 +22,16 @@ export const lightTheme = {
   darkMidGray: "#bababa",
   secondaryDarkMidGray: "rgba(0, 149, 12, 0.5)",
   white: "white",
+  red: "rgba(255, 0, 0, 1)",
+  green: "#00af00",
   lightGray: " rgba(0, 0, 0, 0.3)",
   lightestGray: "rgba(0, 0, 0, 0.1)",
   whiteSmoke: "rgba(0, 0, 0, 0.05)",
   systemFont:
     "-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif",
-  darkGray: "rgba(0, 0, 0, 0.7)",
+  darkGray: "rgba(0, 0, 0, 0.4)",
   textShadow: "-1px -1px var(--light-tint), 1px 1px var(--dark-tint)",
+  sideBarHeadingColor: "#8f4102",
 };
 
 export const darkTheme = {
@@ -36,11 +40,12 @@ export const darkTheme = {
   toggleBorder: "#6B8096",
   background: "#999",
   translucentEffect: "rgba(0, 0, 0, 0.7)",
+  transparent: "rgba(255, 255, 255, 0)",
   garamond: "'EB Garamond', serif",
   hind: "'Hind Madurai', sans-serif",
   primaryColor: "#f46e16",
-  primaryColorHover: "#fef2eb",
-  primaryColorActive: "#fbd0b5",
+  primaryColorHover: "rgba(0, 0, 0, 0.7)",
+  primaryColorActive: "#fdae7d",
   secondaryColor: "#63b231",
   darkSecondaryColor: " #8ad259",
   lightTint: "#54f6f6",
@@ -55,10 +60,12 @@ export const darkTheme = {
   lightestGray: "rgba(0, 0, 0, 0.1)",
   whiteSmoke: "#888888",
   red: "rgba(255, 0, 0, 1)",
+  green: "rgba(0, 255, 0, 1)",
   systemFont:
     "-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif",
   darkGray: "rgba(0, 0, 0, 0.7)",
   textShadow: "-1px -1px var(--light-tint), 1px 1px var(--dark-tint)",
+  sideBarHeadingColor: "#8f4102",
 };
 
 export const GlobalStyles = createGlobalStyle`
@@ -81,6 +88,8 @@ export const GlobalStyles = createGlobalStyle`
         --secondary-dark-mid-gray:${({ theme }) => theme.secondaryDarkMidGray};
         --white: ${({ theme }) => theme.white};
         --red: ${({ theme }) => theme.red};
+        --transparenet: ${({ theme }) => theme.transparenet};
+        --green: ${({ theme }) => theme.green};
         --light-gray: ${({ theme }) => theme.lightGray};
         --lightest-gray: ${({ theme }) => theme.lightestGray}
         --whitesmoke: ${({ theme }) => theme.whiteSmoke};
@@ -88,6 +97,7 @@ export const GlobalStyles = createGlobalStyle`
         --dark-gray: ${({ theme }) => theme.darkGray};
         --translucent-white: ${({ theme }) => theme.translucentEffect};
         --text-shadow: ${({ theme }) => theme.textShadow};
+        --sidebar-heading-color: ${({ theme }) => theme.sideBarHeadingColor};
 
     }
     * {
