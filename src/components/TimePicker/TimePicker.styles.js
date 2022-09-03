@@ -9,13 +9,13 @@ export const TimePickerWrapper = styled.input`
   caret-color: var(--primary-color);
   outline-color: var(--primary-color);
   font-family: var(--hind);
-  backdrop-filter: blur(5px);
+  background: var(--translucent-white);
+  backdrop-filter: blur(5px) invert(0.3);
   height: 40px;
   outline-offset: 2px;
   outline-width: 3px;
   cursor: pointer;
   width: clamp(240px, 100%, 500px);
-  background: whitesmoke;
   margin-top: 15px;
   margin-bottom: 5px;
   transition: all 200ms ease-in-out;
@@ -25,6 +25,6 @@ export const TimePickerWrapper = styled.input`
   }
 
   :focus {
-    background: transparent;
+    background: var(--background);
   }
 `;

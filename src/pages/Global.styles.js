@@ -23,6 +23,7 @@ export const lightTheme = {
   secondaryDarkMidGray: "rgba(0, 149, 12, 0.5)",
   white: "white",
   red: "rgba(255, 0, 0, 1)",
+  lightRed: "rgba(255, 0, 0, 0.3)",
   green: "#00af00",
   lightGray: " rgba(0, 0, 0, 0.3)",
   lightestGray: "rgba(0, 0, 0, 0.1)",
@@ -32,6 +33,7 @@ export const lightTheme = {
   darkGray: "rgba(0, 0, 0, 0.4)",
   textShadow: "-1px -1px var(--light-tint), 1px 1px var(--dark-tint)",
   sideBarHeadingColor: "#8f4102",
+  filter: "invert(0)",
 };
 
 export const darkTheme = {
@@ -60,12 +62,14 @@ export const darkTheme = {
   lightestGray: "rgba(0, 0, 0, 0.1)",
   whiteSmoke: "#888888",
   red: "rgba(255, 0, 0, 1)",
+  lightRed: "rgba(255, 0, 0, 0.3)",
   green: "rgba(0, 255, 0, 1)",
   systemFont:
     "-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif",
   darkGray: "rgba(0, 0, 0, 0.7)",
   textShadow: "-1px -1px var(--light-tint), 1px 1px var(--dark-tint)",
   sideBarHeadingColor: "#8f4102",
+  filter: "invert(100%)",
 };
 
 export const GlobalStyles = createGlobalStyle`
@@ -88,7 +92,8 @@ export const GlobalStyles = createGlobalStyle`
         --secondary-dark-mid-gray:${({ theme }) => theme.secondaryDarkMidGray};
         --white: ${({ theme }) => theme.white};
         --red: ${({ theme }) => theme.red};
-        --transparenet: ${({ theme }) => theme.transparenet};
+        --light-red: ${({ theme }) => theme.lightRed};
+        --transparent: ${({ theme }) => theme.transparent};
         --green: ${({ theme }) => theme.green};
         --light-gray: ${({ theme }) => theme.lightGray};
         --lightest-gray: ${({ theme }) => theme.lightestGray}
@@ -98,6 +103,7 @@ export const GlobalStyles = createGlobalStyle`
         --translucent-white: ${({ theme }) => theme.translucentEffect};
         --text-shadow: ${({ theme }) => theme.textShadow};
         --sidebar-heading-color: ${({ theme }) => theme.sideBarHeadingColor};
+        --filter: ${({ theme }) => theme.filter};
 
     }
     * {
@@ -148,7 +154,7 @@ export const GlobalStyles = createGlobalStyle`
       border-radius: 5px;
       padding: 10px 20px;
       width: 100%;
-      background: var(--white);
+      background: var(--background);
       font-family: var(--hind);
       border: 2px solid var(--secondary-color);
       color: var(--secondary-color);
@@ -172,7 +178,7 @@ export const GlobalStyles = createGlobalStyle`
       border-radius: 5px;
       padding: 10px 20px;
       width: 100%;
-      background: var(--white);
+      background: var(--background);
       font-family: var(--hind);
       border: 2px solid var(--primary-color);
       color: var(--primary-color);
@@ -196,9 +202,9 @@ export const GlobalStyles = createGlobalStyle`
       border-radius: 5px;
       padding: 10px 20px;
       width: 100%;
-      background: var(--white);
+      background: var(--background);
       font-family: var(--hind);
-      color: var(--deep-gray);
+      color: var(--text);
       font-weight: 500;
       transition: all 200ms ease;
       width: 100%;
@@ -221,7 +227,7 @@ export const GlobalStyles = createGlobalStyle`
       border: none;
       border-radius: 5px;
       padding: 10px 20px;
-      box-shadow: 0 5px 10px var(--dark-mid-gray);
+      box-shadow: 0 5px 10px var(--dark-gray);
       width: 100%;
       background: var(--white);
       font-family: var(--hind);

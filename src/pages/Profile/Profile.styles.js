@@ -222,12 +222,12 @@ export const Content = styled.div`
         justify-content: center;
         align-items: center;
         gap: 5px;
-        background-color: whitesmoke;
-        border: none;
+        background-color: var(--background);
+        border: 1px solid var(--dark-mid-gray);
+        color: var(--text);
         font-family: var(--hind);
         font-size: 1rem;
         padding: 10px 20px;
-        color: var(--deep-gray);
         border-radius: 20px;
         transition: all 300ms ease-in-out;
         cursor: pointer;

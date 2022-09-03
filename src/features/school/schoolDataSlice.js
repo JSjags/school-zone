@@ -4,10 +4,13 @@ import schoolService from "./schoolService";
 const initialState = {
   data: {},
   isLoading: false,
-  isSuccess: false,
-  isError: false,
-  message: null,
   isSettingsLoading: false,
+  isSuccess: false,
+  isSettingsSuccess: false,
+  isError: false,
+  isSettingsError: true,
+  message: null,
+  settingsMessage: null,
 };
 
 export const fetchSchoolData = createAsyncThunk(
@@ -93,14 +96,24 @@ export const schoolDataSlice = createSlice({
         state.isError = true;
         state.isSuccess = false;
         state.message = action.payload;
+      })
+      .addCase(fetchSchoolSettings.pending, (state) => {
+        state.isSettingsLoading = true;
+        state.isSettingsError = false;
+        state.isSettingsSuccess = false;
+      })
+      .addCase(fetchSchoolSettings.fulfilled, (state, action) => {
+        state.data = { ...state.data, settings: action.payload.data };
+        state.isSettingsLoading = false;
+        state.isSettingsError = false;
+        state.isSettingsSuccess = true;
+      })
+      .addCase(fetchSchoolSettings.rejected, (state, action) => {
+        state.isSettingsLoading = false;
+        state.isSettingsSuccess = false;
+        state.isSettingsError = true;
+        state.settingsMessage = action.payload;
       });
-    builder.addCase(fetchSchoolSettings.fulfilled, (state, action) => {
-      state.settings = action.payload;
-      state.isSettingsLoading = false;
-      state.isError = false;
-      state.isSuccess = true;
-      state.message = "successful";
-    });
   },
 });
 

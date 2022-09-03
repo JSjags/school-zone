@@ -13,6 +13,8 @@ export const Content = styled.div`
   font-size: 1rem;
   gap: 20px;
   display: flex;
+  position: relative;
+  z-index: 10;
 
   #code-box {
     display: flex;
@@ -20,10 +22,11 @@ export const Content = styled.div`
     height: 40px;
     gap: 5px;
     flex: 25%;
-    background: whitesmoke;
     border-radius: 5px;
+    backdrop-filter: invert(0.3);
     padding: 0 8px 0 10px;
     position: relative;
+    background: var(--translucent-white);
     cursor: pointer;
 
     :hover {
@@ -40,6 +43,9 @@ export const Content = styled.div`
       padding: 0;
       cursor: pointer;
       outline: none;
+      background: var(--translucent-white);
+      backdrop-filter: invert(0.5);
+      border: 1px solid transparent;
 
       :hover {
         box-shadow: none;
@@ -67,43 +73,26 @@ export const Content = styled.div`
   #country-options {
     position: absolute;
     bottom: -210px;
+    z-index: 100000;
     left: 0;
     width: fit-content;
     height: 200px;
     border-radius: 5px;
     overflow-y: scroll;
-    background-color: white;
+    background-color: var(--background);
     box-shadow: 0 7px 10px rgba(0, 0, 0, 0.4);
 
     ::-webkit-scrollbar {
-      width: 1.4vw;
-      height: 3.3vh;
+      width: 6px;
+      height: 6px;
     }
     ::-webkit-scrollbar-track {
-      background-color: whitesmoke;
+      background-color: var(--background);
       border-radius: 5px;
     }
     ::-webkit-scrollbar-thumb {
       border-radius: 5px;
-      background: var(--primary-color);
-    }
-    ::-webkit-scrollbar-button:single-button:decrement {
-      background: url("https://th.bing.com/th/id/R.d88a26f4961929012f52d92dedff3512?rik=9lXgpy6CP5uufw&pid=ImgRaw&r=0"),
-        rgba(0, 0, 0, 0.3);
-      border-radius: 0 5px 5px 5px;
-      padding: 1px;
-      background-size: 7px;
-      background-repeat: no-repeat;
-      background-position: center;
-    }
-    ::-webkit-scrollbar-button:single-button:increment {
-      background: url("https://cdn.onlinewebfonts.com/svg/img_68483.png"),
-        rgba(0, 0, 0, 0.3);
-      border-radius: 5px 5px 5px 0;
-      padding: 1px;
-      background-size: 7px;
-      background-repeat: no-repeat;
-      background-position: center;
+      background: var(--secondary-color);
     }
 
     .country-flag {

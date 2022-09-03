@@ -32,11 +32,15 @@ const queryClient = new QueryClient();
 function App() {
   const location = useLocation();
   const isLoggedIn = useSelector((state) => state.schoolAuth.isLoggedIn);
-  const settings = useSelector((state) => state.schoolData.data.settings);
+  const { data: schoolData } = useSelector((state) => state.schoolData);
 
   return (
     <ThemeProvider
-      theme={getTheme(settings?.theme) === "Light" ? lightTheme : darkTheme}
+      theme={
+        getTheme(schoolData?.settings?.theme) === "Light"
+          ? lightTheme
+          : darkTheme
+      }
     >
       <GlobalStyles />
       <Wrapper isLoggedIn={isLoggedIn}>

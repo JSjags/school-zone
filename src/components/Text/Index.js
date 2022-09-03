@@ -4,13 +4,19 @@ import { TextWrapper } from "./Text.styles";
 const Text = ({ value, setFormData, name }) => {
   const [text, setText] = useState("");
   const handleChange = (e) => {
-    setFormData((prev) => ({
-      ...prev,
-      [e.target.name]: {
-        value: e.target.value,
-        type: prev[e.target.name].type,
-      },
-    }));
+    setFormData((prev) => {
+      if (name === "schoolSlug" || name === "deletePhrase") {
+        return e.target.value;
+      } else {
+        return {
+          ...prev,
+          [e.target.name]: {
+            value: e.target.value,
+            type: prev[e.target.name].type,
+          },
+        };
+      }
+    });
   };
 
   return (

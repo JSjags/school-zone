@@ -18,12 +18,14 @@ export const TextWrapper = styled.input`
   margin-bottom: 5px;
   transition: all 200ms ease-in-out;
   backdrop-filter: blur(5px);
+  color: var(--text);
+  background: var(--translucent-white);
 
   :hover {
-    box-shadow: 0 5px 8px rgba(0, 0, 0, 0.3);
+    box-shadow: 0 5px 8px var(--dark-gray);
   }
 
   :focus {
-    background: var(--white);
+    background: var(--background);
   }
 `;

@@ -82,7 +82,6 @@ export const OptionsContent = styled.div`
     ${({ name, value }) =>
       name === "view" || name === "filter" || name === "theme"
         ? css`
-            /* margin: 10px; */
             border: 1px solid var(--dark-mid-gray);
             width: calc(${value.length}ch + 45px);
             background: var(--background);
@@ -91,7 +90,8 @@ export const OptionsContent = styled.div`
             width: clamp(240px, 100%, 500px);
             margin-top: 15px;
             margin-bottom: 5px;
-            background: var(--whitesmoke);
+            background: var(--translucent-white);
+            backdrop-filter: invert(0.3);
           `}
     transition: all 200ms ease-in-out;
     text-transform: capitalize;
@@ -102,7 +102,7 @@ export const OptionsContent = styled.div`
       box-shadow: 0 5px 8px var(--dark-gray);
     }
     :focus {
-      backdrop-filter: invert(0.3);
+      background: var(--background);
     }
   }
 `;

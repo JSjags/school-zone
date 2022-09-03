@@ -77,14 +77,16 @@ function PhoneNumber({
                     ? {
                         position: "absolute",
                         top: "50%",
-                        right: 10,
+                        right: "5px",
+                        color: "var(--text)",
                         transition: "all 200ms ease-in-out",
                         transform: "translateY(-50%) rotate(-90deg)",
                       }
                     : {
                         position: "absolute",
                         top: "50%",
-                        right: 10,
+                        color: "var(--text)",
+                        right: "5px",
                         transition: "all 200ms ease-in-out",
                         transform: "translateY(-50%)",
                       }

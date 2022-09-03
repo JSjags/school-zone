@@ -54,6 +54,7 @@ export const Content = styled.div`
     display: flex;
     flex-direction: column;
     gap: 10px;
+    position: relative;
   }
   .section-header {
     padding-left: 40px;
@@ -87,12 +88,13 @@ export const Content = styled.div`
       font-size: clamp(1rem, 2vw, 1.2rem);
       white-space: nowrap;
       font-weight: 400;
+      flex: 1;
     }
 
     display: flex;
     flex-wrap: wrap;
     align-items: center;
-    gap: 40px;
+    gap: 40px 10px;
     justify-content: space-between;
     padding: 0 10px;
     background: var(--background);
@@ -104,5 +106,85 @@ export const Content = styled.div`
     color: var(--text);
     padding: 0 10px 10px;
     font-family: var(--hind);
+  }
+  .toast-item {
+    display: grid;
+  }
+  .page-results-warning {
+    width: fit-content;
+    padding: 5px 10px;
+    background: var(--red);
+    color: var(--white);
+    border-radius: 5px;
+    font-family: var(--hind);
+    display: flex;
+    gap: 5px;
+    align-items: center;
+    justify-self: right;
+  }
+  .settings-error {
+    width: fit-content;
+    padding: 5px 10px;
+    background: var(--red);
+    color: var(--white);
+    border-radius: 5px;
+    font-family: var(--hind);
+    display: flex;
+    gap: 5px;
+    align-items: center;
+    justify-self: right;
+  }
+  .settings-success {
+    width: fit-content;
+    padding: 5px 10px;
+    background: var(--green);
+    color: var(--white);
+    border-radius: 5px;
+    font-family: var(--hind);
+    display: flex;
+    gap: 5px;
+    align-items: center;
+    justify-self: right;
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    box-shadow: 0 3px 10px var(--dark-gray);
+  }
+  .save-change-button {
+    border: 1px solid var(--dark-mid-gray);
+    background: var(--body);
+    width: fit-content;
+    padding: 10px;
+    box-shadow: 0 3px 10px var(--dark-gray);
+    color: var(--text);
+    border-radius: 5px;
+    font-family: var(--hind);
+    display: flex;
+    gap: 5px;
+    align-items: center;
+    justify-self: right;
+    cursor: pointer;
+    transition: background, border, color, filter 300ms linear;
+    position: relative;
+
+    :hover {
+      background: var(--primary-color);
+      border: 1px solid var(--transparent);
+      color: var(--white);
+    }
+  }
+  .save-change-button:disabled {
+    filter: grayscale(0.5);
+    cursor: not-allowed;
+    pointer-events: none;
+  }
+  .url-sample {
+    font-family: var(--hind);
+    border-radius: 5px 5px 10px 0;
+    padding: 5px 10px;
+    backdrop-filter: invert(0.3);
+    color: var(--text);
+    font-size: clamp(0.6em, calc(0.8em + 0.5vw), 0.8em);
   }
 `;

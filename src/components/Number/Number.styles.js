@@ -37,11 +37,11 @@ export const NumberWrapper = styled.input`
         `}
 
   :hover {
-    box-shadow: 0 5px 8px rgba(0, 0, 0, 0.3);
+    box-shadow: 0 5px 8px var(--dark-gray);
   }
 
   :focus {
-    background: transparent;
+    background: var(--background);
   }
 
   ::-webkit-inner-spin-button {

@@ -10,13 +10,14 @@ export const ImagePickerWrapper = styled.div`
     border-radius: 5px;
     font-family: var(--hind);
     cursor: pointer;
-    background: whitesmoke;
+    background: var(--background);
     margin-top: 15px;
     margin-bottom: 5px;
     transition: all 200ms ease-in-out;
+    box-shadow: 0 5px 8px var(--dark-gray);
 
     :hover {
-      box-shadow: 0 5px 8px rgba(0, 0, 0, 0.3);
+      box-shadow: 0 5px 8px var(--dark-gray);
     }
   }
 `;
@@ -29,16 +30,16 @@ export const ImagePickerContent = styled.div`
     border: none;
     border-radius: 5px;
     font-family: var(--hind);
-    color: var(--dark-gray);
     cursor: pointer;
-    background: whitesmoke;
+    background: var(--background);
+    color: var(--text);
     margin-top: 15px;
     margin-bottom: 5px;
     transition: all 200ms ease-in-out;
     width: clamp(240px, 100%, 500px);
 
     :hover {
-      box-shadow: 0 5px 8px rgba(0, 0, 0, 0.3);
+      box-shadow: 0 5px 8px var(--dark-gray);
     }
 
     span {

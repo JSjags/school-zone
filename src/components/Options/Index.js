@@ -7,7 +7,7 @@ import axios from "axios";
 
 import { fetchSchoolSettings } from "../../features/school/schoolDataSlice";
 
-const Options = ({ options, value, formData, setFormData, name }) => {
+const Options = ({ options, value, setShowMessage, setFormData, name }) => {
   const dispatch = useDispatch();
 
   const { id: schoolId, token: schoolToken } = useSelector(
@@ -16,6 +16,10 @@ const Options = ({ options, value, formData, setFormData, name }) => {
 
   const OptionsRef = useRef();
   const [isOpen, setIsOpen] = useState(false);
+
+  const toggleMenu = () => {
+    setIsOpen(!isOpen);
+  };
 
   const updateSettings = async (object) => {
     const serverResponse = await axios({
@@ -26,13 +30,14 @@ const Options = ({ options, value, formData, setFormData, name }) => {
         Authorization: `Bearer ${schoolToken}`,
       },
     });
-    console.log(serverResponse);
-    serverResponse.data.message === "successful" &&
+    if (serverResponse.data.message === "successful") {
       dispatch(fetchSchoolSettings(schoolToken));
-  };
-
-  const toggleMenu = () => {
-    setIsOpen(!isOpen);
+      setShowMessage(true);
+      setTimeout(() => setShowMessage(false), 3000);
+    } else {
+      setShowMessage(true);
+      setTimeout(() => setShowMessage(false), 3000);
+    }
   };
 
   const handleChange = (e) => {

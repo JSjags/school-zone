@@ -22,30 +22,35 @@ export const Wrapper = styled.div`
   input {
     font-family: var(--hind);
     cursor: pointer;
+    background: var(--translucent-white);
+    backdrop-filter: invert(0.3);
   }
   ul {
-    background-color: whitesmoke;
+    background: var(--background);
     border-radius: 5px;
     overflow: hidden;
     margin-top: -20px;
     margin-bottom: 20px;
-    box-shadow: 0 7px 10px rgba(0, 0, 0, 0.3);
+    box-shadow: 0 7px 10px var(--dark-gray);
 
     li {
       font-family: var(--hind);
       list-style-type: none;
       padding: 10px;
       transition: all 200ms ease-in-out;
+      cursor: pointer;
+      color: var(--text);
 
       :hover {
         background: var(--primary-color);
-        color: white;
+        color: var(--white);
       }
     }
   }
   #institution-list {
     margin-top: 20px;
     position: absolute;
+    z-index: 10;
     width: 100%;
   }
 `;

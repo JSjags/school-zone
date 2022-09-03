@@ -71,6 +71,8 @@ function InstitutionLevel({
             isOpen
               ? {
                   position: "absolute",
+                  zIndex: 10,
+                  color: "var(--text)",
                   top: "50%",
                   right: 10,
                   transition: "all 200ms ease-in-out",
@@ -78,8 +80,10 @@ function InstitutionLevel({
                 }
               : {
                   position: "absolute",
+                  zIndex: 10,
                   top: "50%",
                   right: 10,
+                  color: "var(--text)",
                   transition: "all 200ms ease-in-out",
                   transform: "translateY(-50%)",
                 }

@@ -35,7 +35,10 @@ import {
   closeEditProfileModal,
   showForm,
 } from "../../features/config/configData";
-import { fetchSchoolData } from "../../features/school/schoolDataSlice";
+import {
+  fetchSchoolData,
+  fetchSchoolSettings,
+} from "../../features/school/schoolDataSlice";
 
 import {
   ChangeAvatarContent,
@@ -44,6 +47,8 @@ import {
   ChangePasswordWrapper,
   CreateProfileContent,
   CreateProfileWrapper,
+  CreateSlugContent,
+  CreateSlugWrapper,
   CreateTemplateContent,
   CreateTemplateWrapper,
   DeleteModalContent,
@@ -78,6 +83,8 @@ import TimePicker from "../TimePicker/Index";
 import { useMemo } from "react";
 import { useLayoutEffect } from "react";
 
+import createSlug from "../../assets/create-slug.svg";
+import deleteSlug from "../../assets/delete-slug.svg";
 // Form types and modals
 
 // Edit Profile
@@ -3508,6 +3515,7 @@ const DeleteModal = () => {
       .map((r) => r[0]);
 
     try {
+      // eslint-disable-next-line array-callback-return
       const storageRefArr = filteredData.map((item) => {
         for (const key in item) {
           if (imagePickerFields.includes(key)) {
@@ -3636,6 +3644,294 @@ const DeleteModal = () => {
   );
 };
 
+// Create School Slug
+const CreateSlug = () => {
+  const [isLoading, setIsLoading] = useState(false);
+  const [isError, setIsError] = useState(false);
+  const [isSuccess, setIsSuccess] = useState(false);
+
+  const [schoolSlug, setSchoolSlug] = useState("");
+
+  const dispatch = useDispatch();
+
+  const { id: schoolId } = useSelector((state) => state.schoolAuth);
+  const { token: schoolToken } = useSelector((state) => state.schoolAuth);
+  const { theme } = useSelector((state) => state.schoolData.data.settings);
+
+  const handleClick = async () => {
+    setIsLoading(true);
+    setIsError(false);
+    setIsSuccess(false);
+
+    try {
+      const serverResponse = await axios({
+        url: `/api/schools/${schoolId}/schoolslug`,
+        method: "put",
+        data: { type: "create", schoolSlug },
+        headers: {
+          Authorization: "Bearer " + schoolToken,
+        },
+      });
+      if (serverResponse.status !== 200 && serverResponse.statusText !== "OK") {
+        throw new Error("Could not create school slug");
+      }
+
+      setIsLoading(false);
+      setIsError(false);
+      setIsSuccess(true);
+      dispatch(fetchSchoolData(schoolToken));
+      setTimeout(() => dispatch(closeEditProfileModal()), 3000);
+    } catch (error) {
+      setIsLoading(false);
+      setIsError(true);
+      setIsSuccess(false);
+    }
+  };
+
+  const [validityObject, setValidityObject] = useState({
+    minLength: false,
+    maxLength: false,
+    specialChars: false,
+    lowerCase: false,
+  });
+
+  const checkValidity = (str) => {
+    // specialChars regex pattern
+    const regex = /\W|_/g;
+
+    // check min length of slug
+    str
+      .trim()
+      .split("")
+      .filter((char) => char !== " ")
+      .join("").length < 8
+      ? setValidityObject((prev) => ({ ...prev, minLength: false }))
+      : setValidityObject((prev) => ({ ...prev, minLength: true }));
+
+    // check max length of slug
+    str
+      .trim()
+      .split("")
+      .filter((char) => char !== " ")
+      .join("").length > 8 &&
+    str
+      .trim()
+      .split("")
+      .filter((char) => char !== " ")
+      .join("").length < 30
+      ? setValidityObject((prev) => ({ ...prev, maxLength: true }))
+      : setValidityObject((prev) => ({ ...prev, maxLength: false }));
+
+    // check special chars
+    str.trim().length > 0 && !regex.test(str)
+      ? setValidityObject((prev) => ({ ...prev, specialChars: true }))
+      : setValidityObject((prev) => ({ ...prev, specialChars: false }));
+
+    // check character case
+    str.trim().length > 0 && str.toLowerCase() === str
+      ? setValidityObject((prev) => ({ ...prev, lowerCase: true }))
+      : setValidityObject((prev) => ({ ...prev, lowerCase: false }));
+  };
+
+  useEffect(() => {
+    checkValidity(schoolSlug);
+  }, [schoolSlug]);
+
+  return (
+    <CreateSlugWrapper>
+      {isSuccess && (
+        <SuccessMessageWrapper>
+          <SuccessMessageContent>
+            <div className="success-message">
+              <p>
+                <FcApproval
+                  style={{
+                    fontSize: "5rem",
+                    paddingTop: "-5px",
+                  }}
+                />
+                <span>School slug created successfully.</span>
+              </p>
+            </div>
+          </SuccessMessageContent>
+        </SuccessMessageWrapper>
+      )}
+      {!isSuccess && (
+        <CreateSlugContent currentTheme={theme}>
+          <h2>Create School Slug</h2>
+          {isError && (
+            <div id="registration-error-message">
+              <p className="error-message">
+                <BiErrorCircle
+                  style={{ fontSize: "1.4rem", paddingTop: "-5px" }}
+                />
+                <span>
+                  Sorry, we couldn't create school slug at the moment, please
+                  try again later.
+                </span>
+              </p>
+            </div>
+          )}
+          <p>
+            Input a unique value in the text field below and leave the rest to
+            us.
+          </p>
+          <img src={createSlug} alt="create-slug" className="create-slug" />
+          <div className="input-field">
+            <Text
+              value={schoolSlug}
+              setFormData={setSchoolSlug}
+              name="schoolSlug"
+            />
+            <div className="confirmation-icon"></div>
+          </div>
+          <ul className="info">
+            <li className={validityObject.minLength ? "valid" : undefined}>
+              Slug cannot be less than 8(eight) characters.
+            </li>
+            <li className={validityObject.maxLength ? "valid" : undefined}>
+              Slug cannot be more than 30(thirty) characters.
+            </li>
+            <li className={validityObject.specialChars ? "valid" : undefined}>
+              Slug must not include any special characters such as any of the
+              following [- , _ / : ; . etc].
+            </li>
+            <li className={validityObject.lowerCase ? "valid" : undefined}>
+              Slug must be inputed in lowercase, or else it will be formated.
+            </li>
+          </ul>
+          {!isLoading &&
+            Object.values(validityObject).every((value) => value === true) && (
+              <button className="primary-btn" onClick={handleClick}>
+                Create Slug
+              </button>
+            )}
+          {isLoading && (
+            <Spinner
+              style={{
+                width: "100%",
+              }}
+            />
+          )}
+        </CreateSlugContent>
+      )}
+    </CreateSlugWrapper>
+  );
+};
+
+// Delete School Slug
+const DeleteSlug = () => {
+  const [isLoading, setIsLoading] = useState(false);
+  const [isError, setIsError] = useState(false);
+  const [isSuccess, setIsSuccess] = useState(false);
+
+  const [deletePhrase, setDeletePhrase] = useState("");
+
+  const dispatch = useDispatch();
+
+  const { data: schoolData } = useSelector((state) => state.schoolData);
+  const { id: schoolId } = useSelector((state) => state.schoolAuth);
+  const { token: schoolToken } = useSelector((state) => state.schoolAuth);
+  const { theme } = useSelector((state) => state.schoolData.data.settings);
+
+  const handleClick = async () => {
+    setIsLoading(true);
+    setIsError(false);
+    setIsSuccess(false);
+
+    try {
+      const serverResponse = await axios({
+        url: `/api/schools/${schoolId}/schoolslug`,
+        method: "put",
+        data: { type: "delete", schoolSlug: schoolData.schoolSlug },
+        headers: {
+          Authorization: "Bearer " + schoolToken,
+        },
+      });
+      if (serverResponse.status !== 200 && serverResponse.statusText !== "OK") {
+        throw new Error("Could not create school slug");
+      }
+
+      setIsLoading(false);
+      setIsError(false);
+      setIsSuccess(true);
+      dispatch(fetchSchoolData(schoolToken));
+      setTimeout(() => dispatch(closeEditProfileModal()), 3000);
+    } catch (error) {
+      setIsLoading(false);
+      setIsError(true);
+      setIsSuccess(false);
+    }
+  };
+
+  return (
+    <CreateSlugWrapper>
+      {isSuccess && (
+        <SuccessMessageWrapper>
+          <SuccessMessageContent>
+            <div className="success-message">
+              <p>
+                <FcApproval
+                  style={{
+                    fontSize: "5rem",
+                    paddingTop: "-5px",
+                  }}
+                />
+                <span>School slug deleted successfully.</span>
+              </p>
+            </div>
+          </SuccessMessageContent>
+        </SuccessMessageWrapper>
+      )}
+      {!isSuccess && (
+        <CreateSlugContent currentTheme={theme}>
+          <h2>Delete School Slug</h2>
+          {isError && (
+            <div id="registration-error-message">
+              <p>
+                <BiErrorCircle
+                  style={{ fontSize: "1.4rem", paddingTop: "-5px" }}
+                />
+                <span>
+                  Sorry, we couldn't delete school slug at the moment, please
+                  try again later.
+                </span>
+              </p>
+            </div>
+          )}
+          <p>
+            Are you sure you want to delete your school slug and terminate your
+            school's endpoint?
+          </p>
+          <img src={deleteSlug} alt="create-slug" className="create-slug" />
+          <p>
+            Input the following text in quotes "
+            <span className="delete-phrase">{schoolData.name}</span>" to confirm
+            your decision.
+          </p>
+          <Text
+            value={deletePhrase}
+            setFormData={setDeletePhrase}
+            name="deletePhrase"
+          />
+          {!isLoading && deletePhrase === schoolData.name && (
+            <button className="primary-btn delete-slug" onClick={handleClick}>
+              Delete Slug
+            </button>
+          )}
+          {isLoading && (
+            <Spinner
+              style={{
+                width: "100%",
+              }}
+            />
+          )}
+        </CreateSlugContent>
+      )}
+    </CreateSlugWrapper>
+  );
+};
+
 // Saving Changes
 const Saving = () => {
   return (
@@ -3716,6 +4012,8 @@ const Form = () => {
       {formToShow === "studentProfile" && <StudentProfile />}
       {formToShow === "staffProfile" && <StaffProfile />}
       {formToShow === "financialStatement" && <FinancialStatement />}
+      {formToShow === "createSlug" && <CreateSlug />}
+      {formToShow === "deleteSlug" && <DeleteSlug />}
       {formToShow === "deleteModal" && <DeleteModal />}
       {formToShow === "saving" && <Saving />}
     </>

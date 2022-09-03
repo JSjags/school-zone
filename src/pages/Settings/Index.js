@@ -1,13 +1,19 @@
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { useNavigate } from "react-router";
+import axios from "axios";
 
 import { resetSchoolAuth } from "../../features/school/schoolAuthSlice";
 import {
   fetchSchoolData,
+  fetchSchoolSettings,
   resetSchoolData,
 } from "../../features/school/schoolDataSlice";
-import { setCurrentPage, setSettings } from "../../features/config/configData";
+import {
+  openEditProfileModal,
+  setCurrentPage,
+  showForm,
+} from "../../features/config/configData";
 
 import { Wrapper, Content } from "./Settings.styles";
 
@@ -15,19 +21,23 @@ import PageHeader from "../../components/PageHeader/Index";
 import Options from "../../components/Options/Index";
 import Number from "../../components/Number/Index";
 import Switch from "../../components/Switch/Index";
+import Spinner from "../../components/Spinner/Index";
+import EditModal from "../../components/EditModal/Index";
 
 import { BsBrush } from "react-icons/bs";
 import { TbWorld } from "react-icons/tb";
+import { RiErrorWarningLine, RiSave3Fill } from "react-icons/ri";
 import { MdOutlineAssignmentReturn } from "react-icons/md";
+
 import { LoadingContainer } from "../SchoolDashboard/SchoolDashboard.styles";
-import Spinner from "../../components/Spinner/Index";
-import EditModal from "../../components/EditModal/Index";
 
 const Settings = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const themeOptions = useRef("Light Dark Default");
+  const themeOptions = useRef("Light Dark Auto");
+  const paginationResultsRef = useRef();
+  const saveChangeRef = useRef();
 
   const { isEditProfileModalOpen } = useSelector((state) => state.config);
   const { id: schoolId, token: schoolToken } = useSelector(
@@ -37,11 +47,38 @@ const Settings = () => {
     data: schoolData,
     isLoading,
     isSuccess,
-    isError,
     message,
   } = useSelector((state) => state.schoolData);
+  const { isSettingsLoading, isSettingsSuccess, isSettingsError } = useSelector(
+    (state) => state.schoolData
+  );
 
-  const [settingsData, setSettingsData] = useState({});
+  const [settingsData, setSettingsData] = useState({
+    theme: "Light",
+    paginationResults: 12,
+    schoolSlug: false,
+  });
+  const [showMessage, setShowMessage] = useState(false);
+
+  const updateSettings = async (object) => {
+    if (saveChangeRef.current) saveChangeRef.current.disabled = true;
+    const serverResponse = await axios({
+      url: `/api/schools/${schoolId}/settings`,
+      method: "put",
+      data: object,
+      headers: {
+        Authorization: `Bearer ${schoolToken}`,
+      },
+    });
+    if (serverResponse.data.message === "successful") {
+      dispatch(fetchSchoolSettings(schoolToken));
+      setShowMessage(true);
+      setTimeout(() => setShowMessage(false), 3000);
+    } else {
+      setShowMessage(true);
+      setTimeout(() => setShowMessage(false), 3000);
+    }
+  };
 
   useEffect(() => {
     if (message !== null && message.includes("jwt expired")) {
@@ -64,31 +101,29 @@ const Settings = () => {
     dispatch(setCurrentPage("settings"));
   }, [dispatch]);
 
-  const themeCallback = useCallback(() => {
-    if (!schoolData.settings)
-      return setSettingsData({
+  useEffect(() => {
+    if (!schoolData?.settings)
+      setSettingsData({
         theme: "Light",
         paginationResults: 12,
         schoolSlug: false,
       });
 
-    return setSettingsData(JSON.parse(JSON.stringify(schoolData.settings)));
+    if (schoolData?.settings)
+      setSettingsData(JSON.parse(JSON.stringify(schoolData.settings)));
+
+    paginationResultsRef.current = schoolData?.settings?.paginationResults;
   }, [schoolData.settings]);
+
+  useEffect(() => {
+    if (settingsData?.schoolSlug && !schoolData?.schoolSlug) {
+      dispatch(openEditProfileModal());
+      dispatch(showForm("createSlug"));
+    }
+  }, [dispatch, schoolData?.schoolSlug, settingsData?.schoolSlug]);
 
   return (
     <Wrapper>
-      {/* {savingSuccess && (
-        <div className="saving-success-message">
-          <AiOutlineFileDone style={{ fontSize: "1.4rem" }} />
-          <p>Changes saved successsfully.</p>
-        </div>
-      )}
-      {savingError && (
-        <div className="saving-error-message">
-          <BiError style={{ fontSize: "1.4rem", paddingTop: "-5px" }} />
-          <p>Changes not saved, try again later.</p>
-        </div>
-      )} */}
       {isEditProfileModalOpen && <EditModal />}
       {isLoading && (
         <LoadingContainer>
@@ -100,6 +135,19 @@ const Settings = () => {
           <main>
             <PageHeader title="Settings" />
             <section className="settings-section">
+              {isSettingsLoading && <Spinner />}
+              {!isSettingsLoading && isSettingsSuccess && showMessage && (
+                <div className="settings-success">
+                  <RiSave3Fill />
+                  <p>Settings saved successfully.</p>
+                </div>
+              )}
+              {!isSettingsLoading && isSettingsError && showMessage && (
+                <div className="settings-error">
+                  <RiErrorWarningLine />
+                  <p>Settings not saved.</p>
+                </div>
+              )}
               <h2 className="section-header">General</h2>
               <div className="setting-item">
                 <div className="setting-icon">
@@ -109,9 +157,9 @@ const Settings = () => {
                   <div className="setting-title">
                     <h3>Set SchoolZone Theme</h3>
                     <Options
-                      ref={themeCallback}
                       options={themeOptions.current}
                       value={settingsData.theme}
+                      setShowMessage={setShowMessage}
                       formData={settingsData}
                       setFormData={setSettingsData}
                       name={"theme"}
@@ -141,6 +189,35 @@ const Settings = () => {
                   </p>
                 </div>
               </div>
+              <div className="toast-item">
+                {settingsData.paginationResults > 30 && (
+                  <div className="page-results-warning">
+                    <RiErrorWarningLine />
+                    <p>Page results cannot be set more than 30.</p>
+                  </div>
+                )}
+                {settingsData.paginationResults < 10 && (
+                  <div className="page-results-warning">
+                    <RiErrorWarningLine />
+                    <p>Page results cannot be set less than 10.</p>
+                  </div>
+                )}
+                {settingsData.paginationResults >= 10 &&
+                  settingsData.paginationResults <= 30 &&
+                  settingsData.paginationResults !==
+                    paginationResultsRef.current && (
+                    <button
+                      ref={saveChangeRef}
+                      className="save-change-button"
+                      onClick={() => {
+                        updateSettings(settingsData);
+                      }}
+                    >
+                      <RiSave3Fill />
+                      <span>Save Change</span>
+                    </button>
+                  )}
+              </div>
             </section>
             <section className="settings-section">
               <h2 className="section-header">Personalization</h2>
@@ -161,6 +238,12 @@ const Settings = () => {
                     Create URL endpoint for students and staffs to login by
                     generating a custom slug.
                   </p>
+                  {schoolData?.schoolSlug && (
+                    <p className="url-sample">
+                      {schoolData.name} URL endpoint:
+                      https://schoolzone.com/myschool/{schoolData.schoolSlug}
+                    </p>
+                  )}
                 </div>
               </div>
             </section>

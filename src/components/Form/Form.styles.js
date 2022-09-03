@@ -1,4 +1,5 @@
 import styled, { css } from "styled-components";
+import { getTheme } from "../../utils";
 import { defaultAvatarUrl } from "../SideBar/Index";
 
 export const EditProfileWrapper = styled.div`
@@ -12,12 +13,11 @@ export const EditProfileContent = styled.div`
   flex-direction: column;
   gap: 10px;
   justify-content: center;
-  background: var(--white);
+  background: var(--background);
   padding: 20px;
   border-radius: 10px;
 
   h2 {
-    color: var(--primary-color);
     font-family: var(--garamond);
     position: relative;
 
@@ -34,12 +34,12 @@ export const EditProfileContent = styled.div`
     }
   }
   p {
-    color: var(--deep-gray);
+    color: var(--text);
     font-family: var(--hind);
   }
   hr {
     border: none;
-    border-bottom: 2px solid var(--deep-gray);
+    border-bottom: 2px solid var(--text);
     margin-top: -10px;
     border-radius: 1px;
   }
@@ -56,7 +56,6 @@ export const EditProfileContent = styled.div`
       gap: 10px;
 
       label {
-        color: var(--primary-color);
         font-family: var(--garamond);
         font-size: 1.2rem;
       }
@@ -67,25 +66,28 @@ export const EditProfileContent = styled.div`
         border: none;
         border-radius: 5px;
         font-family: var(--hind);
-        background: whitesmoke;
+        color: var(--text);
+        background: var(--translucent-white);
+        backdrop-filter: invert(0.3);
+        caret-color: var(--primary-color);
         outline-color: var(--primary-color);
         outline-width: 2px;
         outline-offset: 2px;
         transition: all 300ms ease;
 
         :hover {
-          box-shadow: 0 5px 7px var(--light-gray);
+          box-shadow: 0 5px 7px var(--dark-gray);
         }
 
         :focus {
-          background: var(--white);
+          background: var(--background);
         }
       }
       .error {
         display: flex;
         align-items: center;
         line-height: 0.8em;
-        color: red;
+        color: var(--red);
         gap: 2px;
         font-size: 0.8em;
         margin-bottom: 25px;
@@ -123,7 +125,7 @@ export const ChangeAvatarContent = styled.div`
   flex-direction: column;
   gap: 10px;
   justify-content: center;
-  background: var(--white);
+  background: var(--background);
   padding: 20px;
   border-radius: 10px;
 
@@ -145,12 +147,12 @@ export const ChangeAvatarContent = styled.div`
     }
   }
   p {
-    color: var(--dark-gray);
+    color: var(--text);
     font-family: var(--hind);
   }
   hr {
     border: none;
-    border-bottom: 2px solid var(--dark-gray);
+    border-bottom: 2px solid var(--dark-mid-gray);
     margin-top: -10px;
     border-radius: 1px;
   }
@@ -178,25 +180,26 @@ export const ChangeAvatarContent = styled.div`
         border: none;
         border-radius: 5px;
         font-family: var(--hind);
-        background: whitesmoke;
+        background: var(--translucent-white);
+        backdrop-filter: invert(0.3);
         outline-color: var(--primary-color);
         outline-width: 2px;
         outline-offset: 2px;
         transition: all 300ms ease;
 
         :hover {
-          box-shadow: 0 5px 7px var(--light-gray);
+          box-shadow: 0 5px 7px var(--dark-gray);
         }
 
         :focus {
-          background: var(--white);
+          background: var(--background);
         }
       }
       .error {
         display: flex;
         align-items: center;
         line-height: 0.8em;
-        color: red;
+        color: var(--red);
         gap: 2px;
         font-size: 0.8em;
         margin-bottom: 25px;
@@ -210,14 +213,14 @@ export const ChangeAvatarContent = styled.div`
       width: 100%;
       background: var(--primary-color);
       font-family: var(--hind);
-      color: white;
+      color: var(--white);
       transition: all 200ms ease;
       cursor: pointer;
 
       :hover {
         box-shadow: -5px -5px var(--light-tint), 5px 5px var(--dark-tint);
         background: var(--primary-color);
-        color: white;
+        color: var(--white);
       }
     }
   }
@@ -231,7 +234,7 @@ export const ChangeAvatarContent = styled.div`
     .avatar-img-cont {
       width: 250px;
       height: 250px;
-      box-shadow: 0 5px 12px var(--light-gray);
+      box-shadow: 0 5px 12px var(--dark-gray);
       border-radius: 50%;
       overflow: hidden;
       position: relative;
@@ -239,7 +242,7 @@ export const ChangeAvatarContent = styled.div`
     .cover-photo-cont {
       width: 320px;
       height: 180px;
-      box-shadow: 0 5px 12px var(--light-gray);
+      box-shadow: 0 5px 12px var(--dark-gray);
       border-radius: 10px;
       overflow: hidden;
       position: relative;
@@ -323,13 +326,13 @@ export const ChangeAvatarContent = styled.div`
   .error-message {
     width: 100%;
     padding: 5px;
-    border: 2px solid red;
+    border: 2px solid var(--red);
     border-radius: 5px;
     margin-bottom: 20px;
-    background: rgba(255, 0, 0, 0.3);
+    background: var(--light-red);
 
     p {
-      color: red;
+      color: var(--red);
       display: flex;
       align-items: center;
       gap: 3px;
@@ -341,7 +344,7 @@ export const ChangeAvatarContent = styled.div`
   }
 
   .info {
-    color: var(--dark-gray);
+    color: var(--text);
     display: flex;
     gap: 3px;
     align-items: center;
@@ -352,6 +355,7 @@ export const ChangeAvatarContent = styled.div`
     }
   }
 `;
+
 export const ChangePasswordWrapper = styled.div`
   width: 100%;
   display: flex;
@@ -363,13 +367,11 @@ export const ChangePasswordContent = styled.div`
   flex-direction: column;
   gap: 10px;
   justify-content: center;
-  background: var(--white);
+  background: var(--background);
   padding: 20px;
   border-radius: 10px;
 
   h2 {
-    color: var(--primary-color);
-    font-family: var(--garamond);
     position: relative;
 
     :after {
@@ -385,12 +387,12 @@ export const ChangePasswordContent = styled.div`
     }
   }
   p {
-    color: var(--dark-gray);
+    color: var(--text);
     font-family: var(--hind);
   }
   hr {
     border: none;
-    border-bottom: 2px solid var(--dark-gray);
+    border-bottom: 2px solid var(--dark-mid-gray);
     margin-top: -10px;
     border-radius: 1px;
   }
@@ -421,18 +423,20 @@ export const ChangePasswordContent = styled.div`
         border: none;
         border-radius: 5px;
         font-family: var(--hind);
-        background: whitesmoke;
+        background: var(--translucent-white);
+        backdrop-filter: invert(0.3);
+        color: var(--text);
         outline-color: var(--primary-color);
         outline-width: 2px;
         outline-offset: 2px;
         transition: all 300ms ease;
 
         :hover {
-          box-shadow: 0 5px 7px var(--light-gray);
+          box-shadow: 0 5px 7px var(--dark-gray);
         }
 
         :focus {
-          background: var(--white);
+          background: var(--background);
         }
       }
       .error {
@@ -440,7 +444,7 @@ export const ChangePasswordContent = styled.div`
         display: flex;
         align-items: center;
         line-height: 0.8em;
-        color: red;
+        color: var(--red);
         gap: 2px;
         font-size: 0.8em;
 
@@ -457,20 +461,20 @@ export const ChangePasswordContent = styled.div`
       width: 100%;
       background: var(--primary-color);
       font-family: var(--hind);
-      color: white;
+      color: var(--white);
       transition: all 200ms ease;
       cursor: pointer;
 
       :hover {
         box-shadow: -5px -5px var(--light-tint), 5px 5px var(--dark-tint);
         background: var(--primary-color);
-        color: white;
+        color: var(--white);
       }
     }
   }
 
   .info {
-    color: var(--dark-gray);
+    color: var(--text);
     display: flex;
     gap: 3px;
     margin-bottom: 0;
@@ -484,12 +488,12 @@ export const ChangePasswordContent = styled.div`
   .error-message {
     width: 300px;
     padding: 5px;
-    border: 2px solid red;
+    border: 2px solid var(--red);
     border-radius: 5px;
-    background: rgba(255, 0, 0, 0.3);
+    background: var(--light-red);
 
     p {
-      color: red;
+      color: var(--red);
       display: flex;
       align-items: center;
       gap: 3px;
@@ -500,6 +504,7 @@ export const ChangePasswordContent = styled.div`
     }
   }
 `;
+
 export const SuccessMessageWrapper = styled.div`
   width: 100%;
   height: 90vh;
@@ -514,17 +519,17 @@ export const SuccessMessageContent = styled.div`
   flex-direction: column;
   gap: 20px;
   justify-content: center;
-  background: var(--white);
+  background: var(--background);
   border-radius: 10px;
 
   .success-message {
     padding: 10px;
-    border: 2px solid var(--secondary-color);
+    border: 2px solid var(--green);
     border-radius: 5px;
-    background: rgba(0, 255, 0, 0.3);
+    background: var(--light-green);
 
     p {
-      color: green;
+      color: var(--green);
       display: flex;
       flex-direction: column;
       align-items: center;
@@ -549,13 +554,11 @@ export const CreateProfileContent = styled.div`
   flex-direction: column;
   gap: 10px;
   justify-content: center;
-  background: var(--white);
+  background: var(--background);
   padding: 20px;
   border-radius: 10px;
 
   h2 {
-    color: var(--primary-color);
-    font-family: var(--garamond);
     position: relative;
 
     :after {
@@ -571,12 +574,12 @@ export const CreateProfileContent = styled.div`
     }
   }
   p {
-    color: var(--deep-gray);
+    color: var(--text);
     font-family: var(--hind);
   }
   hr {
     border: none;
-    border-bottom: 2px solid var(--deep-gray);
+    border-bottom: 2px solid var(--dark-mid-gray);
     margin-top: -10px;
     border-radius: 1px;
   }
@@ -604,25 +607,26 @@ export const CreateProfileContent = styled.div`
         border: none;
         border-radius: 5px;
         font-family: var(--hind);
-        background: whitesmoke;
+        background: var(--translucent-white);
+        backdrop-filter: invert(0.3);
         outline-color: var(--primary-color);
         outline-width: 2px;
         outline-offset: 2px;
         transition: all 300ms ease;
 
         :hover {
-          box-shadow: 0 5px 7px var(--light-gray);
+          box-shadow: 0 5px 7px var(--dark-gray);
         }
 
         :focus {
-          background: var(--white);
+          background: var(--background);
         }
       }
       .error {
         display: flex;
         align-items: center;
         line-height: 0.8em;
-        color: red;
+        color: var(--red);
         gap: 2px;
         font-size: 0.8em;
         margin-bottom: 25px;
@@ -636,14 +640,14 @@ export const CreateProfileContent = styled.div`
       width: 100%;
       background: var(--primary-color);
       font-family: var(--hind);
-      color: white;
+      color: var(--white);
       transition: all 200ms ease;
       cursor: pointer;
 
       :hover {
         box-shadow: -5px -5px var(--light-tint), 5px 5px var(--dark-tint);
         background: var(--primary-color);
-        color: white;
+        color: var(--white);
       }
     }
   }
@@ -666,12 +670,16 @@ export const CreateProfileContent = styled.div`
       margin-top: 30px;
 
       :nth-child(1) {
-        background-color: whitesmoke;
+        background-color: var(--translucent-white);
+        color: var(--text);
+        border: 1px solid var(--dark-mid-gray);
+        backdrop-filter: invert(0.3);
         transition: all 200ms ease;
 
         :hover {
-          background: var(--white);
-          box-shadow: 0 5px 7px var(--light-gray);
+          background: var(--background);
+          box-shadow: 0 5px 7px var(--dark-gray);
+          transform: scale(1.05);
         }
       }
       :nth-child(2) {
@@ -698,15 +706,13 @@ export const CreateTemplateContent = styled.div`
   display: grid;
   grid-template-columns: 1fr;
   gap: 10px;
-  background: var(--white);
+  background: var(--background);
   padding: 20px;
   border-radius: 10px;
   margin: 10px;
   width: 80vw;
 
   h2 {
-    color: var(--primary-color);
-    font-family: var(--garamond);
     position: relative;
 
     :after {
@@ -722,12 +728,12 @@ export const CreateTemplateContent = styled.div`
     }
   }
   p {
-    color: var(--deep-gray);
+    color: var(--text);
     font-family: var(--hind);
   }
   hr {
     border: none;
-    border-bottom: 2px solid var(--deep-gray);
+    border-bottom: 2px solid var(--dark-mid-gray);
     margin-top: -10px;
     border-radius: 1px;
   }
@@ -752,8 +758,6 @@ export const CreateTemplateContent = styled.div`
       gap: 20px;
 
       h3 {
-        color: var(--primary-color);
-        font-family: var(--garamond);
         position: absolute;
         top: 0;
 
@@ -782,9 +786,11 @@ export const CreateTemplateContent = styled.div`
       height: fit-content;
       border-radius: 5px;
       border: none;
-      background: whitesmoke;
+      background: var(--translucent-white);
+      backdrop-filter: invert(0.3);
       padding: 10px;
       font-size: 1rem;
+      color: var(--text);
       font-family: var(--hind);
       outline-color: var(--primary-color);
       outline-width: 2px;
@@ -792,11 +798,11 @@ export const CreateTemplateContent = styled.div`
       transition: all 300ms ease;
 
       :hover {
-        box-shadow: 0 5px 7px var(--light-gray);
+        box-shadow: 0 5px 7px var(--dark-gray);
       }
 
       :focus {
-        background: var(--white);
+        background: var(--background);
       }
     }
   }
@@ -824,8 +830,6 @@ export const CreateTemplateContent = styled.div`
     position: relative;
 
     h3 {
-      color: var(--primary-color);
-      font-family: var(--garamond);
       position: absolute;
       top: 0;
 
@@ -884,7 +888,8 @@ export const CreateTemplateContent = styled.div`
     width: 100%;
     height: fit-content;
     padding: 10px 5px;
-    background: whitesmoke;
+    background: var(--translucent-white);
+    backdrop-filter: invert(0.3);
     gap: 5px;
     border-radius: 5px;
     position: relative;
@@ -907,7 +912,8 @@ export const CreateTemplateContent = styled.div`
       border: none;
       border-radius: 5px;
       font-family: var(--hind);
-      background: whitesmoke;
+      background: var(--transparent);
+      color: var(--text);
       outline-color: var(--primary-color);
       outline-width: 2px;
       outline-offset: 2px;
@@ -922,23 +928,26 @@ export const CreateTemplateContent = styled.div`
     }
     .delete-field {
       position: absolute;
-      background: red;
-      color: white;
+      background: var(--background);
+      color: var(--white);
       top: 0;
       padding: 10px;
       right: 0;
-      transform: translateX(90%);
       border-radius: 5px;
       height: 100%;
       cursor: pointer;
+      transform: translateX(0);
+      border: 1px solid var(--dark-mid-gray);
     }
     :hover .delete-field {
+      background: var(--red);
       transform: translateX(0);
+      border: 1px solid var(--transparent);
     }
   }
 
   .success {
-    color: green;
+    color: var(--green);
     display: inline-block;
     display: flex;
     align-items: center;
@@ -946,15 +955,15 @@ export const CreateTemplateContent = styled.div`
     font-family: var(--garamond);
     position: absolute;
     top: 30px;
-    background: rgba(0, 255, 0, 0.3);
+    background: var(--light-green);
     padding: 5px;
     border-radius: 5px;
-    border: 1px solid green;
+    border: 1px solid var(--green);
     font-family: var(--hind);
     margin-bottom: 10px;
   }
   .errors {
-    color: red;
+    color: var(--red);
     display: inline-block;
     display: flex;
     align-items: center;
@@ -962,10 +971,10 @@ export const CreateTemplateContent = styled.div`
     font-family: var(--garamond);
     position: absolute;
     top: 30px;
-    background: rgba(255, 0, 0, 0.3);
+    background: var(--light-red);
     padding: 5px;
     border-radius: 5px;
-    border: 1px solid red;
+    border: 1px solid var(--red);
     font-family: var(--hind);
     margin-bottom: 10px;
   }
@@ -984,7 +993,7 @@ export const CreateTemplateContent = styled.div`
     height: fit-content;
     background: var(--primary-color);
     font-family: var(--hind);
-    color: white;
+    color: var(--white);
     transition: all 200ms ease;
     cursor: pointer;
 
@@ -1033,7 +1042,7 @@ export const StudentRegistrationContent = styled.div`
   width: calc(100% - 20px);
   max-width: 1080px;
   min-height: 50vh;
-  background: var(--white);
+  background: var(--background);
   border-radius: 10px;
   position: relative;
   font-family: var(--hind);
@@ -1049,6 +1058,7 @@ export const StudentRegistrationContent = styled.div`
     img {
       width: 20%;
       margin-top: clamp(30px, 10%, 40px);
+      border-radius: 10%;
     }
     div {
       width: 100%;
@@ -1066,6 +1076,7 @@ export const StudentRegistrationContent = styled.div`
       p {
         font-size: clamp(1rem, 2vw, 1.2rem);
         text-align: center;
+        color: var(--text);
       }
     }
   }
@@ -1109,13 +1120,13 @@ export const StudentRegistrationContent = styled.div`
   }
 
   #registration-error-message {
-    color: red;
+    color: var(--red);
     gap: 5px;
     font-family: var(--garamond);
-    background: rgba(255, 0, 0, 0.3);
+    background: var(--light-red);
     padding: 5px;
     border-radius: 5px;
-    border: 1px solid red;
+    border: 1px solid var(--red);
     font-family: var(--hind);
     margin: 0 5% 10px;
 
@@ -1159,7 +1170,7 @@ export const StudentRegistrationContent = styled.div`
       #passport-title {
         background: var(--primary-color);
         width: 90%;
-        color: white;
+        color: var(--white);
         text-align: center;
         margin-bottom: 0;
         border-radius: 5px 5px 0 0;
@@ -1178,16 +1189,16 @@ export const StudentRegistrationContent = styled.div`
           props.showCamera === true
             ? css`
                 border: none;
-                background: white;
+                background: var(--background);
               `
             : css`
-                border: 2px solid var(--lightest-gray);
+                border: 1px solid var(--dark-mid-gray);
               `};
         background-origin: border-box;
         background-size: cover;
         background-repeat: no-repeat;
         overflow: hidden;
-        border: 1px solid var(--lightest-gray);
+        border: 1px solid var(--dark-mid-gray);
       }
       img {
         background: var(--whitesmoke);
@@ -1217,8 +1228,8 @@ export const StudentRegistrationContent = styled.div`
     z-index: 10;
   }
   #canvas {
-    width: 426px;
-    height: 426px;
+    width: 100%;
+    height: 100%;
     ${(props) =>
       props.image === null
         ? css`
@@ -1237,7 +1248,10 @@ export const StudentRegistrationContent = styled.div`
   input {
     position: relative;
     z-index: 10;
-    background: var(--whitesmoke);
+    background: var(--translucent-white);
+    backdrop-filter: invert(0.3);
+    color: var(--text);
+    border: none;
   }
   #submit-btn {
     position: absolute;
@@ -1250,6 +1264,7 @@ export const StudentRegistrationContent = styled.div`
     align-items: flex-start;
     font-size: 0.8rem;
     padding: 0 0 10px 0;
+    color: var(--text);
 
     span {
       line-height: 0.8rem;
@@ -1257,7 +1272,8 @@ export const StudentRegistrationContent = styled.div`
   }
 
   img.watermark {
-    filter: opacity(0.1);
+    filter: opacity(0.02);
+    border-radius: 10%;
     z-index: 10;
     width: 50%;
     position: absolute;
@@ -1288,7 +1304,7 @@ export const RecordFinanceContent = styled.div`
   width: calc(100% - 20px);
   max-width: 1080px;
   min-height: 50vh;
-  background: var(--white);
+  background: var(--background);
   border-radius: 10px;
   position: relative;
   font-family: var(--hind);
@@ -1313,14 +1329,13 @@ export const RecordFinanceContent = styled.div`
 
       h2 {
         font-size: clamp(2rem, 3vw, 3rem);
-        font-family: var(--garamond);
-        color: var(--primary-color);
         text-transform: uppercase;
         text-align: center;
       }
       p {
         font-size: clamp(1rem, 2vw, 1.2rem);
         text-align: center;
+        color: var(--text);
       }
     }
   }
@@ -1364,13 +1379,13 @@ export const RecordFinanceContent = styled.div`
   }
 
   #registration-error-message {
-    color: red;
+    color: var(--red);
     gap: 5px;
     font-family: var(--garamond);
-    background: rgba(255, 0, 0, 0.3);
+    background: var(--light-red);
     padding: 5px;
     border-radius: 5px;
-    border: 1px solid red;
+    border: 1px solid var(--red);
     font-family: var(--hind);
     margin: 0 5% 10px;
 
@@ -1414,35 +1429,11 @@ export const RecordFinanceContent = styled.div`
       #passport-title {
         background: var(--primary-color);
         width: 90%;
-        color: white;
+        color: var(--white);
         text-align: center;
         margin-bottom: 0;
         border-radius: 5px 5px 0 0;
         padding: 5px 0;
-      }
-
-      .passport {
-        width: 90%;
-        min-height: 300px;
-        border-radius: 0 0 10px 10px;
-        position: relative;
-        z-index: 10;
-        backdrop-filter: blur(10px);
-        gap: clamp(10px, 2vh, 30px);
-        ${(props) =>
-          props.showCamera === true
-            ? css`
-                border: none;
-                background: white;
-              `
-            : css`
-                border: 2px solid var(--lightest-gray);
-              `};
-        background-origin: border-box;
-        background-size: cover;
-        background-repeat: no-repeat;
-        overflow: hidden;
-        border: 1px solid var(--lightest-gray);
       }
       img {
         background: var(--whitesmoke);
@@ -1465,7 +1456,9 @@ export const RecordFinanceContent = styled.div`
   input {
     position: relative;
     z-index: 10;
-    background: var(--whitesmoke);
+    color: var(--text);
+    background: var(--translucent-white);
+    backdrop-filter: invert(0.3);
   }
   #submit-btn {
     width: clamp(150px, 100%, 350px);
@@ -1476,6 +1469,7 @@ export const RecordFinanceContent = styled.div`
     align-items: center;
     font-size: 0.8rem;
     padding: 0 0 10px 0;
+    color: var(--text);
 
     span {
       line-height: 0.8rem;
@@ -1486,7 +1480,7 @@ export const RecordFinanceContent = styled.div`
   }
 
   img.watermark {
-    filter: opacity(0.07);
+    filter: opacity(0.02);
     z-index: 10;
     width: 50%;
     position: absolute;
@@ -1552,7 +1546,7 @@ export const StudentProfileWrapper = styled.div`
 export const StudentProfileContent = styled.div`
   width: clamp(200px, 40%, 600px);
   border-radius: 10px;
-  background: var(--white);
+  background: var(--background);
   padding: 10px 10px 80px;
   position: relative;
 
@@ -1578,7 +1572,7 @@ export const StudentProfileContent = styled.div`
     display: block;
     width: 100%;
     border-radius: 10px;
-    box-shadow: 0 3px 6px var(--light-gray);
+    box-shadow: 0 3px 6px var(--dark-gray);
     margin: 20px auto;
   }
   .student-details-cont {
@@ -1600,7 +1594,7 @@ export const StudentProfileContent = styled.div`
       font-size: clamp(1rem, calc(1rem + 0.5vw), 1.2rem);
       font-weight: 400;
       text-transform: capitalize;
-      color: var(--dark-gray);
+      color: var(--text);
     }
   }
   button.close-student-profile {
@@ -1623,6 +1617,7 @@ export const StudentProfileContent = styled.div`
     }
   }
 `;
+
 export const StaffProfileWrapper = styled.div`
   width: 100%;
   min-height: 80vh;
@@ -1632,7 +1627,7 @@ export const StaffProfileWrapper = styled.div`
 export const StaffProfileContent = styled.div`
   width: clamp(200px, 40%, 600px);
   border-radius: 10px;
-  background: var(--white);
+  background: var(--background);
   padding: 10px 10px 80px;
   position: relative;
 
@@ -1658,7 +1653,7 @@ export const StaffProfileContent = styled.div`
     display: block;
     width: 100%;
     border-radius: 10px;
-    box-shadow: 0 3px 6px var(--light-gray);
+    box-shadow: 0 3px 6px var(--dark-gray);
     margin: 20px auto;
   }
   .staff-details-cont {
@@ -1680,7 +1675,7 @@ export const StaffProfileContent = styled.div`
       font-size: clamp(1rem, calc(1rem + 0.5vw), 1.2rem);
       font-weight: 400;
       text-transform: capitalize;
-      color: var(--dark-gray);
+      color: var(--text);
     }
   }
   button.close-staff-profile {
@@ -1711,7 +1706,6 @@ export const DeleteModalWrapper = styled.div`
   top: 60px;
   overflow: scroll;
 `;
-
 export const DeleteModalContent = styled.div`
   width: clamp(240px, 90%, 500px);
   max-height: 400px;
@@ -1735,13 +1729,13 @@ export const DeleteModalContent = styled.div`
     margin-bottom: 20px;
   }
   #registration-error-message {
-    color: red;
+    color: var(--red);
     gap: 5px;
     font-family: var(--garamond);
-    background: rgba(255, 0, 0, 0.3);
+    background: var(-light-red);
     padding: 5px;
     border-radius: 5px;
-    border: 1px solid red;
+    border: 1px solid var(--red);
     font-family: var(--hind);
 
     p {
@@ -1750,5 +1744,96 @@ export const DeleteModalContent = styled.div`
       padding: 5px;
       gap: 5px;
     }
+  }
+`;
+
+export const CreateSlugWrapper = styled.div`
+  width: 100%;
+  min-height: 80vh;
+  display: flex;
+  justify-content: center;
+`;
+export const CreateSlugContent = styled.div`
+  width: clamp(240px, calc(100% - 10px), 500px);
+  height: fit-content;
+  background: var(--background);
+  border-radius: 10px;
+  box-shadow: 0 3px 10px var(--dark-gray);
+  padding: 10px;
+  margin-bottom: 20px;
+
+  .create-slug {
+    width: 70%;
+    margin: 20px auto;
+    display: block;
+  }
+
+  p {
+    color: var(--text);
+    font-family: var(--hind);
+    margin-top: 10px;
+    font-weight: 400;
+  }
+  .delete-phrase {
+    font-weight: 600;
+    color: var(--red);
+  }
+  .input-field {
+    width: 100%;
+    display: flex;
+    gap: 5px;
+  }
+  .confirmation-icon {
+    width: 50px;
+  }
+
+  .delete-slug {
+    margin-top: 20px;
+  }
+
+  .info {
+    padding: 10px 20px;
+    margin-bottom: 20px;
+
+    li {
+      color: var(--text);
+      font-family: var(--hind);
+      font-size: clamp(0.6em, 1vw, 0.8rem);
+      transition: all 200ms ease;
+
+      ::marker {
+        ${(props) =>
+          getTheme(props.currentTheme) === "Dark"
+            ? css`
+                content: "⬛ ";
+              `
+            : css`
+                content: "⬜ ";
+              `}
+        color: var(--primary-color);
+        font-size: 1rem;
+        line-height: 40px;
+      }
+    }
+    li.valid {
+      color: var(--green);
+      font-family: var(--hind);
+      font-size: clamp(0.6em, 1vw, 0.8rem);
+
+      ::marker {
+        content: "✅ ";
+        color: var(--primary-color);
+        font-size: 1rem;
+        line-height: 40px;
+      }
+    }
+  }
+  .error-message {
+    display: flex;
+    align-items: flex-start;
+    gap: 5px;
+    background: var(--red);
+    padding: 5px;
+    border-radius: 5px;
   }
 `;
