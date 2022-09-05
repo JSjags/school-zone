@@ -190,45 +190,45 @@ export const Content = styled.div`
   .revenue {
     overflow: hidden;
     background: url(https://cdn2.iconfinder.com/data/icons/wsd-business-2/64/wsd-business-01-512.png),
-      #00d600;
+      var(--lime);
     position: relative;
     background-repeat: no-repeat;
     background-size: clamp(200px, 50%, 500px);
     background-position: 80% 20%;
 
     h3 {
-      background: white;
+      background: var(--white);
       padding: 5px 10px;
-      color: #00d600;
+      color: var(--lime);
       border-radius: 100000px;
       width: fit-content;
       margin: 10px 0;
     }
 
     .statement-id {
-      color: #00d600;
+      color: var(--lime);
     }
   }
   .expense {
     overflow: hidden;
     background: url(https://cdn1.iconfinder.com/data/icons/materia-arrows-symbols-vol-4/24/018_163_arrow_chart_low-512.png),
-      red;
+      var(--red);
     position: relative;
     background-repeat: no-repeat;
     background-size: clamp(200px, 50%, 500px);
     background-position: 90% 60%;
 
     h3 {
-      background: white;
+      background: var(--white);
       padding: 5px 10px;
-      color: red;
+      color: var(--red);
       border-radius: 100000px;
       width: fit-content;
       margin: 10px 0;
     }
 
     .statement-id {
-      color: red;
+      color: var(--red);
     }
   }
   .amount {
@@ -257,7 +257,7 @@ export const Content = styled.div`
   }
   .desc-title {
     font-family: var(--garamond);
-    color: white;
+    color: var(--white);
     font-weight: 500;
     text-decoration: underline;
     text-decoration-color: var(--primary-color);
@@ -267,11 +267,11 @@ export const Content = styled.div`
   }
   .desc-body {
     font-family: var(--hind);
-    color: white;
+    color: var(--white);
   }
 
   .statement-id {
-    color: #00d600;
+    color: var(--lime);
     margin-top: 10px;
     background: var(--white);
     padding: 2px 5px;
@@ -429,7 +429,7 @@ export const Content = styled.div`
     }
 
     :hover button {
-      color: var(--white);
+      color: var(--background);
       background-color: var(--primary-color);
     }
     :hover {
@@ -449,7 +449,7 @@ export const Content = styled.div`
       align-self: flex-end;
       justify-self: right;
       background-color: var(--primary-color);
-      color: var(--white);
+      color: var(--text);
       font-family: var(--hind);
       padding: 5px 20px;
       border: none;
@@ -468,7 +468,7 @@ export const Content = styled.div`
     }
 
     :hover button {
-      color: var(--white);
+      color: var(--text);
       background-color: var(--primary-color);
     }
     :hover {
@@ -488,10 +488,10 @@ export const Content = styled.div`
     margin-bottom: 30px;
   }
   .total-revenue {
-    color: var(--secondary-color);
+    color: var(--lime);
   }
   .total-expenses {
-    color: red;
+    color: var(--red);
   }
   .total-revenue,
   .total-expenses,
@@ -518,9 +518,9 @@ export const Content = styled.div`
     }
   }
   .deficit {
-    color: red;
+    color: var(--red);
   }
   .surplus {
-    color: var(--secondary-color);
+    color: var(--lime);
   }
 `;

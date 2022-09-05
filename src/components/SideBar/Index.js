@@ -135,18 +135,18 @@ const SideBar = () => {
 
             <li className="section-heading">APPLICATIONS</li>
             <Link
-              to={"/*"}
-              className={currentPage === "calendar" ? "current" : ""}
+              to={"/schooldashboard/scheduler"}
+              className={currentPage === "scheduler" ? "current" : ""}
               onClick={handleNavClick}
             >
               <li>
                 <BsFillCalendarWeekFill style={{ fontSize: "1.5rem" }} />
-                <span>Calendar</span>
+                <span>Scheduler</span>
               </li>
             </Link>
             <Link
-              to={"/*"}
-              className={currentPage === "kanban" ? "current" : ""}
+              to={"/schooldashboard/editor"}
+              className={currentPage === "editor" ? "current" : ""}
               onClick={handleNavClick}
             >
               <li>
@@ -155,7 +155,7 @@ const SideBar = () => {
               </li>
             </Link>
             <Link
-              to={"/*"}
+              to={"/schooldashboard/kanban"}
               className={currentPage === "kanban" ? "current" : ""}
               onClick={handleNavClick}
             >

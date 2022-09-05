@@ -1,12 +1,15 @@
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import {
   openEditProfileModal,
   showForm,
 } from "../../features/config/configData";
+import { fetchSchoolSettings } from "../../features/school/schoolDataSlice";
 import { SwitchContent, SwitchWrapper } from "./Switch.styles";
 
 const Switch = ({ isOn, setIsOn, name, callback }) => {
   const dispatch = useDispatch();
+
+  const { token: schoolToken } = useSelector((state) => state.schoolAuth);
 
   const handleClick = () => {
     setIsOn((prev) => {
@@ -19,6 +22,7 @@ const Switch = ({ isOn, setIsOn, name, callback }) => {
         [name]: !prev[name],
       };
     });
+    dispatch(fetchSchoolSettings(schoolToken));
   };
   return (
     <SwitchWrapper as="div" onClick={handleClick} isOn={isOn}>

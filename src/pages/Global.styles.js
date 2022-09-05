@@ -13,7 +13,7 @@ export const lightTheme = {
   primaryColorHover: "#fef2eb",
   primaryColorActive: "#fbd0b5",
   secondaryColor: "#63b231",
-  darkSecondaryColor: " #8ad259",
+  darkSecondaryColor: " #478320",
   lightTint: "#54f6f6",
   darkTint: "#fb413f",
   deepGray: "rgba(0, 0, 0, 1)",
@@ -25,6 +25,7 @@ export const lightTheme = {
   red: "rgba(255, 0, 0, 1)",
   lightRed: "rgba(255, 0, 0, 0.3)",
   green: "#00af00",
+  lime: "#00d600",
   lightGray: " rgba(0, 0, 0, 0.3)",
   lightestGray: "rgba(0, 0, 0, 0.1)",
   whiteSmoke: "rgba(0, 0, 0, 0.05)",
@@ -49,7 +50,7 @@ export const darkTheme = {
   primaryColorHover: "rgba(0, 0, 0, 0.7)",
   primaryColorActive: "#fdae7d",
   secondaryColor: "#63b231",
-  darkSecondaryColor: " #8ad259",
+  darkSecondaryColor: "#478320",
   lightTint: "#54f6f6",
   darkTint: "#fb413f",
   deepGray: "rgba(0, 0, 0, 1)",
@@ -64,6 +65,7 @@ export const darkTheme = {
   red: "rgba(255, 0, 0, 1)",
   lightRed: "rgba(255, 0, 0, 0.3)",
   green: "rgba(0, 255, 0, 1)",
+  lime: "#00bb00",
   systemFont:
     "-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif",
   darkGray: "rgba(0, 0, 0, 0.7)",
@@ -95,6 +97,7 @@ export const GlobalStyles = createGlobalStyle`
         --light-red: ${({ theme }) => theme.lightRed};
         --transparent: ${({ theme }) => theme.transparent};
         --green: ${({ theme }) => theme.green};
+        --lime: ${({ theme }) => theme.lime};
         --light-gray: ${({ theme }) => theme.lightGray};
         --lightest-gray: ${({ theme }) => theme.lightestGray}
         --whitesmoke: ${({ theme }) => theme.whiteSmoke};
@@ -115,6 +118,170 @@ export const GlobalStyles = createGlobalStyle`
         position: relative;
         background: ${({ theme }) => theme.body};
     }
+
+    /* DEThemes Scheduler popup styles */
+    body .dx-field-item-help-text, body .dx-field-item-label-text {
+        color: var(--primary-color);
+    }
+    body .dx-texteditor-input {
+    font-family: var(--hind);
+    }
+    body .dx-scheduler-time-panel-cell.dx-scheduler-time-panel-current-time-cell {
+        color: var(--primary-color);
+    }
+    body .dx-scheduler-time-panel-cell.dx-scheduler-time-panel-current-time-cell::before {
+        background-color:var(--secondary-color);
+    }
+    body .dx-scheduler-date-time-indicator {
+      background-color:var(--secondary-color);
+    }
+    body .dx-scheduler-date-time-indicator::before {
+    color: var(--primary-color);
+    }
+    body .dx-popup-wrapper.dx-scheduler-appointment-tooltip-wrapper .dx-tooltip-appointment-item .dx-tooltip-appointment-item-content .dx-tooltip-appointment-item-content-subject, .dx-scheduler-overlay-panel .dx-tooltip-appointment-item .dx-tooltip-appointment-item-content .dx-tooltip-appointment-item-content-subject {
+        font-family: var(--hind);
+      }
+      body .dx-popup-wrapper.dx-scheduler-appointment-tooltip-wrapper .dx-tooltip-appointment-item .dx-tooltip-appointment-item-content .dx-tooltip-appointment-item-content-date, .dx-scheduler-overlay-panel .dx-tooltip-appointment-item .dx-tooltip-appointment-item-content .dx-tooltip-appointment-item-content-date {
+      font-family: var(--hind);
+    }
+    body .dx-scheduler-appointment-content > * {
+  font-family: var(--hind);
+}
+body .dx-scheduler-appointment-collector .dx-button-content span:last-child, .dx-scheduler-appointment-collector .dx-scheduler-appointment-collector-content span:last-child {
+  font-family: var(--hind);
+}
+body .dx-scheduler-appointment {
+    background-color: var(--secondary-color);
+  }
+  body .dx-scheduler-appointment-collector.dx-button, .dx-scheduler-appointment-collector.dx-button.dx-state-active, .dx-scheduler-appointment-collector.dx-button.dx-state-focused, .dx-scheduler-appointment-collector.dx-button.dx-state-hover {
+    background-color: var(--secondary-color);
+  }
+  body .dx-popup-wrapper.dx-scheduler-appointment-tooltip-wrapper .dx-tooltip-appointment-item .dx-tooltip-appointment-item-marker-body, .dx-scheduler-overlay-panel .dx-tooltip-appointment-item .dx-tooltip-appointment-item-marker-body {
+  background-color: var(--secondary-color);
+}
+body .dx-scheduler-appointment-collector.dx-button,
+body .dx-scheduler-appointment-collector.dx-button.dx-state-active,
+body .dx-scheduler-appointment-collector.dx-button.dx-state-focused,
+body .dx-scheduler-appointment-collector.dx-button.dx-state-hover {
+  background-color: var(--secondary-color);
+}
+body .dx-calendar-cell.dx-calendar-selected-date.dx-calendar-contoured-date,
+    body .dx-calendar-cell.dx-calendar-selected-date.dx-calendar-today.dx-calendar-contoured-date {
+      box-shadow: inset 0 0 0 1px #6c6c6c,
+        inset 0 0 0 1000px var(--primary-color);
+    }
+
+    body .dx-calendar-navigator .dx-calendar-caption-button.dx-button .dx-button-content {
+    color: var(--primary-color);
+}
+body .dx-icon-chevronright::before {
+    content: "\f010";
+    color: var(--primary-color);
+  }
+  body .dx-icon-chevronleft::before {
+    content: "\f012";
+    color: var(--primary-color);
+}
+body .dx-scheduler-header-panel-cell.dx-scheduler-header-panel-current-time-cell {
+    color: var(--primary-color);
+}
+body {
+  .dx-scheduler-header-panel-cell.dx-scheduler-header-panel-current-time-cell::before {
+    background-color: var(--primary-color);
+}
+}
+
+    body .dx-dropdowneditor-button-visible body .dx-texteditor-input {
+      font-family: var(--hind);
+      caret-color: var(--primary-color);
+    }
+    
+    body .dx-dropdowneditor-input-wrapper body .dx-texteditor-input {
+      font-family: var(--hind);
+      caret-color: var(--primary-color);
+    }
+    body .dx-dropdowneditor-button-visible body .dx-texteditor-input {
+      padding-right: 0;
+      font-family: var(--hind);
+      caret-color: var(--primary-color);
+    }
+    body .dx-dropdowneditor-input-wrapper body .dx-texteditor-input {
+      font-family: var(--hind);
+      caret-color: var(--primary-color);
+    }
+    body .dx-overlay-wrapper input, body.dx-overlay-wrapper textarea {
+      font-family: var(--hind);
+      caret-color: var(--primary-color);
+    }
+    body .dx-textarea .dx-texteditor-input {
+      font-family: var(--hind);
+      caret-color: var(--primary-color);
+    }
+    body .dx-texteditor.dx-state-hover {
+      border-color: var(--primary-color-active);
+  }
+    body .dx-texteditor.dx-state-active.dx-editor-outlined,
+    body .dx-texteditor.dx-state-active.dx-editor-underlined,
+    body .dx-texteditor.dx-state-active.dx-editor-filled,
+    body .dx-texteditor.dx-state-focused.dx-editor-filled,
+    body .dx-texteditor.dx-state-focused.dx-editor-outlined,
+    body .dx-texteditor.dx-state-focused.dx-editor-underlined {
+      border-color: var(--primary-color);
+    }
+    body .dx-button-text {
+      font-family: var(--hind);
+    }
+    body .dx-field-item-content .dx-field-item-content-location-bottom {
+      font-family: var(--hind);
+    }
+    body .dx-recurrence-repeat-end-label {
+      font-family: var(--hind);
+
+    }   
+    body .dx-radiobutton-icon-checked .dx-radiobutton-icon-dot {
+      background: var(--secondary-color);
+    }
+
+    body .dx-radiobutton.dx-state-hover .dx-radiobutton-icon::before {
+        border-color: var(--dark-secondary-color);
+    }
+
+    body .dx-switch-on-value .dx-switch-handle::before {
+        background-color: var(--secondary-color);
+    }
+    body .dx-switch.dx-state-hover .dx-switch-handle::before {
+        background-color: var(--secondary-color);
+    }
+    body .dx-switch.dx-state-hover .dx-switch-container {
+        border-color: var(--secondary-color);
+    }
+    body .dx-switch.dx-state-focused .dx-switch-handle::before {
+        background-color: var(--secondary-color);
+    }
+    body .dx-switch.dx-state-focused.dx-state-active .dx-switch-handle::before {
+        background-color: var(--secondary-color);
+    }
+    body .dx-switch.dx-state-focused .dx-switch-container {
+        border-color: var(--secondary-color);
+    }
+    body .dx-switch-handle::before {
+        background-color: var(--dark-secondary-color);
+    }
+
+    body .dx-scheduler-all-day-table-cell.dx-scheduler-focused-cell,
+    body .dx-scheduler-date-table-cell.dx-scheduler-focused-cell {
+      box-shadow: inset 0 0 0 1px var(--primary-color);
+    }
+    body .dx-scheduler-all-day-table-cell.dx-state-focused,
+    body .dx-scheduler-date-table-cell.dx-state-focused {
+      background-color: var(--primary-color-active);
+      opacity: 1;
+    }
+    body .dx-scheduler-all-day-table-cell.dx-state-hover.dx-state-focused,
+    body .dx-scheduler-date-table-cell.dx-state-hover.dx-state-focused {
+      background-color: var(--primary-color-active);
+    }
+
      h1, h2, h3, h4, h5, label {
         color: var(--primary-color);
         font-family: var(--garamond);

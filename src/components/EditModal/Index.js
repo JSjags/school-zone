@@ -1,5 +1,5 @@
 import { useSelector, useDispatch } from "react-redux";
-import { AiFillCloseCircle } from "react-icons/ai";
+import { FaTimes } from "react-icons/fa";
 import { Wrapper, Content } from "./EditModal.styles";
 
 import { closeEditProfileModal } from "../../features/config/configData";
@@ -17,8 +17,9 @@ const EditModal = () => {
   return (
     <Wrapper>
       <Content>
-        <div className="close-btn">
-          <AiFillCloseCircle
+        <div className="close-btn-cont">
+          <div
+            className="close-btn"
             style={{
               fontSize: "3rem",
               color: "var(--white)",
@@ -27,7 +28,16 @@ const EditModal = () => {
               transition: "all 200ms ease",
             }}
             onClick={handleEditProfileModal}
-          />
+          >
+            <FaTimes
+              style={{
+                fontSize: "clamp(1rem, calc(1rem + 1vw), 3rem)",
+                color: "var(--white)",
+                transition: "all 200ms ease",
+              }}
+              onClick={handleEditProfileModal}
+            />
+          </div>
         </div>
         <Form />
       </Content>

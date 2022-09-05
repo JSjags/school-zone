@@ -45,6 +45,27 @@ export const Content = styled.div`
       color: var(--text);
     }
   }
+
+  #testit {
+    .dx-scheduler-time-panel-cell div {
+      font-family: var(--hind);
+    }
+    .dx-scheduler-work-space-all-day-collapsed .dx-scheduler-all-day-title {
+      font-family: var(--hind);
+    }
+    .dx-button-text {
+      font-family: var(--hind);
+    }
+    .dx-scheduler-appointment-popup .dx-popup-content {
+      padding-top: 0;
+      background: blue;
+      padding-bottom: 0;
+    }
+    span.dx-field-item-help-text,
+    span.dx-field-item-label-text {
+      color: var(--primary-color);
+    }
+  }
 `;
 
 export const LoadingContainer = styled.div`
@@ -61,29 +82,6 @@ export const LoadingContainer = styled.div`
   gap: 2rem;
   font-family: var(--hind);
   font-size: 1.2rem;
-
-  /* .button-group {
-    display: flex;
-    align-items: center;
-    gap: 40px;
-
-    button {
-      border: none;
-      padding: 0.5rem 1rem;
-      background: var(--dark-mid-gray);
-      font-size: 1rem;
-      border-radius: 1.5rem;
-      font-family: var(--hind);
-      cursor: pointer;
-      transition: all 300ms ease-in-out;
-
-      :hover {
-        box-shadow: -2px -2px var(--light-tint), 2px 2px var(--dark-tint);
-        background: var(--primary-color);
-        color: white;
-      }
-    }
-  } */
 `;
 export const ErrorContainer = styled.div`
   width: 100%;

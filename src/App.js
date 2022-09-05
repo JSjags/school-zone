@@ -1,3 +1,5 @@
+import "devextreme/dist/css/dx.common.css";
+import "devextreme/dist/css/dx.light.css";
 import { Routes, Route, useLocation } from "react-router-dom";
 import { QueryClient, QueryClientProvider } from "react-query";
 import { ReactQueryDevtools } from "react-query/devtools";
@@ -18,6 +20,9 @@ import Staffs from "./pages/Staffs/Index";
 import Finance from "./pages/Finance/Index";
 import Profile from "./pages/Profile/Index";
 import Settings from "./pages/Settings/Index";
+import Scheduler from "./pages/Scheduler/Index";
+import Kanban from "./pages/Kanban/Index";
+import Editor from "./pages/Editor/Index";
 
 import { GlobalStyles } from "./pages/Global.styles";
 
@@ -26,6 +31,7 @@ import { darkTheme, lightTheme } from "./pages/Global.styles";
 
 import "./App.css";
 import { getTheme } from "./utils";
+import { BsKanban } from "react-icons/bs";
 
 const queryClient = new QueryClient();
 
@@ -62,6 +68,12 @@ function App() {
               <Route path="/schooldashboard/finance" element={<Finance />} />
               <Route path="/schooldashboard/profile" element={<Profile />} />
               <Route path="/schooldashboard/settings" element={<Settings />} />
+              <Route
+                path="/schooldashboard/scheduler"
+                element={<Scheduler />}
+              />
+              <Route path="/schooldashboard/kanban" element={<Kanban />} />
+              <Route path="/schooldashboard/editor" element={<Editor />} />
             </Routes>
           </AnimatePresence>
           {/* <ReactQueryDevtools initialIsOpen={false} /> */}
