@@ -25,25 +25,15 @@ export const Content = styled.div`
     border-radius: 10px;
     background: var(--background);
     width: 0;
-    border: 1px solid var(--dark-mid-gray);
   }
 
-  .no-data {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    gap: 20px;
-    height: 100vh;
+  #editor {
+    border-color: var(--primary-color);
+    border-radius: 10px;
+  }
 
-    img {
-      width: 25%;
-    }
-    p {
-      font-family: var(--hind);
-      font-weight: 500;
-      color: var(--text);
-    }
+  .publish-btn {
+    margin-top: 30px;
   }
 `;
 
@@ -61,29 +51,6 @@ export const LoadingContainer = styled.div`
   gap: 2rem;
   font-family: var(--hind);
   font-size: 1.2rem;
-
-  /* .button-group {
-    display: flex;
-    align-items: center;
-    gap: 40px;
-
-    button {
-      border: none;
-      padding: 0.5rem 1rem;
-      background: var(--dark-mid-gray);
-      font-size: 1rem;
-      border-radius: 1.5rem;
-      font-family: var(--hind);
-      cursor: pointer;
-      transition: all 300ms ease-in-out;
-
-      :hover {
-        box-shadow: -2px -2px var(--light-tint), 2px 2px var(--dark-tint);
-        background: var(--primary-color);
-        color: white;
-      }
-    }
-  } */
 `;
 export const ErrorContainer = styled.div`
   width: 100%;

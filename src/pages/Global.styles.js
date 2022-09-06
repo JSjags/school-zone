@@ -139,33 +139,33 @@ export const GlobalStyles = createGlobalStyle`
     color: var(--primary-color);
     }
     body .dx-popup-wrapper.dx-scheduler-appointment-tooltip-wrapper .dx-tooltip-appointment-item .dx-tooltip-appointment-item-content .dx-tooltip-appointment-item-content-subject, .dx-scheduler-overlay-panel .dx-tooltip-appointment-item .dx-tooltip-appointment-item-content .dx-tooltip-appointment-item-content-subject {
-        font-family: var(--hind);
-      }
-      body .dx-popup-wrapper.dx-scheduler-appointment-tooltip-wrapper .dx-tooltip-appointment-item .dx-tooltip-appointment-item-content .dx-tooltip-appointment-item-content-date, .dx-scheduler-overlay-panel .dx-tooltip-appointment-item .dx-tooltip-appointment-item-content .dx-tooltip-appointment-item-content-date {
+      font-family: var(--hind);
+    }
+    body .dx-popup-wrapper.dx-scheduler-appointment-tooltip-wrapper .dx-tooltip-appointment-item .dx-tooltip-appointment-item-content .dx-tooltip-appointment-item-content-date, .dx-scheduler-overlay-panel .dx-tooltip-appointment-item .dx-tooltip-appointment-item-content .dx-tooltip-appointment-item-content-date {
       font-family: var(--hind);
     }
     body .dx-scheduler-appointment-content > * {
-  font-family: var(--hind);
-}
-body .dx-scheduler-appointment-collector .dx-button-content span:last-child, .dx-scheduler-appointment-collector .dx-scheduler-appointment-collector-content span:last-child {
-  font-family: var(--hind);
-}
-body .dx-scheduler-appointment {
-    background-color: var(--secondary-color);
-  }
-  body .dx-scheduler-appointment-collector.dx-button, .dx-scheduler-appointment-collector.dx-button.dx-state-active, .dx-scheduler-appointment-collector.dx-button.dx-state-focused, .dx-scheduler-appointment-collector.dx-button.dx-state-hover {
-    background-color: var(--secondary-color);
-  }
-  body .dx-popup-wrapper.dx-scheduler-appointment-tooltip-wrapper .dx-tooltip-appointment-item .dx-tooltip-appointment-item-marker-body, .dx-scheduler-overlay-panel .dx-tooltip-appointment-item .dx-tooltip-appointment-item-marker-body {
-  background-color: var(--secondary-color);
-}
-body .dx-scheduler-appointment-collector.dx-button,
-body .dx-scheduler-appointment-collector.dx-button.dx-state-active,
-body .dx-scheduler-appointment-collector.dx-button.dx-state-focused,
-body .dx-scheduler-appointment-collector.dx-button.dx-state-hover {
-  background-color: var(--secondary-color);
-}
-body .dx-calendar-cell.dx-calendar-selected-date.dx-calendar-contoured-date,
+      font-family: var(--hind);
+    }
+    body .dx-scheduler-appointment-collector .dx-button-content span:last-child, .dx-scheduler-appointment-collector .dx-scheduler-appointment-collector-content span:last-child {
+      font-family: var(--hind);
+    }
+    body .dx-scheduler-appointment {
+      background-color: var(--secondary-color);
+    }
+    body .dx-scheduler-appointment-collector.dx-button, .dx-scheduler-appointment-collector.dx-button.dx-state-active, .dx-scheduler-appointment-collector.dx-button.dx-state-focused, .dx-scheduler-appointment-collector.dx-button.dx-state-hover {
+      background-color: var(--secondary-color);
+    }
+    body .dx-popup-wrapper.dx-scheduler-appointment-tooltip-wrapper .dx-tooltip-appointment-item .dx-tooltip-appointment-item-marker-body, .dx-scheduler-overlay-panel .dx-tooltip-appointment-item .dx-tooltip-appointment-item-marker-body {
+      background-color: var(--secondary-color);
+    }
+    body .dx-scheduler-appointment-collector.dx-button,
+    body .dx-scheduler-appointment-collector.dx-button.dx-state-active,
+    body .dx-scheduler-appointment-collector.dx-button.dx-state-focused,
+    body .dx-scheduler-appointment-collector.dx-button.dx-state-hover {
+      background-color: var(--secondary-color);
+    }
+    body .dx-calendar-cell.dx-calendar-selected-date.dx-calendar-contoured-date,
     body .dx-calendar-cell.dx-calendar-selected-date.dx-calendar-today.dx-calendar-contoured-date {
       box-shadow: inset 0 0 0 1px #6c6c6c,
         inset 0 0 0 1000px var(--primary-color);
@@ -173,23 +173,33 @@ body .dx-calendar-cell.dx-calendar-selected-date.dx-calendar-contoured-date,
 
     body .dx-calendar-navigator .dx-calendar-caption-button.dx-button .dx-button-content {
     color: var(--primary-color);
-}
-body .dx-icon-chevronright::before {
-    content: "\f010";
-    color: var(--primary-color);
-  }
-  body .dx-icon-chevronleft::before {
-    content: "\f012";
-    color: var(--primary-color);
-}
-body .dx-scheduler-header-panel-cell.dx-scheduler-header-panel-current-time-cell {
-    color: var(--primary-color);
-}
-body {
-  .dx-scheduler-header-panel-cell.dx-scheduler-header-panel-current-time-cell::before {
-    background-color: var(--primary-color);
-}
-}
+    }
+    body .dx-dropdownlist-popup-wrapper .dx-list:not(.dx-list-select-decorator-enabled) .dx-list-item-content {
+      padding: 7px 9px;
+      font-family: var(--hind);
+    }
+    body .dx-timeview-hourarrow {
+      filter: hue-rotate(195deg);
+    }   
+    body .dx-timeview-minutearrow {
+      filter: hue-rotate(260deg);
+    }
+    body .dx-icon-chevronright::before {
+      content: "\f010";
+      color: var(--primary-color);
+    }
+    body .dx-icon-chevronleft::before {
+      content: "\f012";
+      color: var(--primary-color);
+    }
+    body .dx-scheduler-header-panel-cell.dx-scheduler-header-panel-current-time-cell {
+      color: var(--primary-color);
+    }
+    body {
+      .dx-scheduler-header-panel-cell.dx-scheduler-header-panel-current-time-cell::before {
+        background-color: var(--primary-color);
+      }
+    }
 
     body .dx-dropdowneditor-button-visible body .dx-texteditor-input {
       font-family: var(--hind);
@@ -280,6 +290,34 @@ body {
     body .dx-scheduler-all-day-table-cell.dx-state-hover.dx-state-focused,
     body .dx-scheduler-date-table-cell.dx-state-hover.dx-state-focused {
       background-color: var(--primary-color-active);
+    }
+
+    /* HTML Editor Styles */
+    
+    body .dx-tabpanel.dx-state-focused > .dx-tabpanel-tabs .dx-tab.dx-tab-selected {
+      -webkit-box-shadow: inset 0 1px var(--primary-color),
+        inset -1px 0 var(--primary-color), inset 1px 0 var(--primary-color);
+      box-shadow: inset 0 1px var(--primary-color),
+        inset -1px 0 var(--primary-color), inset 1px 0 var(--primary-color);
+    }
+    body .dx-htmleditor-add-image-popup > .dx-overlay-content > .dx-popup-content .dx-tabpanel.dx-state-focused .dx-tab.dx-tab-selected:first-child {
+      webkit-box-shadow: inset 0 1px var(--primary-color),
+        inset -1px 0 var(--primary-color), inset 1px 0 var(--primary-color);
+      box-shadow: inset 0 1px var(--primary-color),
+        inset -1px 0 var(--primary-color), inset 1px 0 var(--primary-color);
+    }
+    body .dx-tabpanel.dx-state-focused > .dx-tabpanel-tabs .dx-tab {
+      -webkit-box-shadow: inset 0 1px,inset 0 -1px var(--primary-color);
+      box-shadow: inset 0 1px,inset 0 -1px var(--primary-color)
+    }
+    body .dx-htmleditor-add-image-popup > .dx-overlay-content > .dx-popup-content .dx-tabpanel.dx-state-focused .dx-tab:first-child {
+      -webkit-box-shadow: inset 0 1px #4d4d4d,inset 0 0 #4d4d4d,inset 0 -1px var(--primary-color),inset 0 0 #4d4d4d;
+      box-shadow: inset 0 1px #4d4d4d,inset 0 0 #4d4d4d,inset 0 -1px var(--primary-color),inset 0 0 #4d4d4d;
+    }
+    body .dx-tabpanel.dx-state-focused > .dx-tabpanel-tabs .dx-tabs {
+    -webkit-box-shadow: inset 0 1px var(--primary-color);
+    webkit-box-shadow: inset 0 -1px var(--primary-color),inset 0 1px,inset -1px 0,inset 1px 0;
+      box-shadow: inset 0 -1px var(--primary-color),inset 0 1px,inset -1px 0,inset 1px 0;
     }
 
      h1, h2, h3, h4, h5, label {

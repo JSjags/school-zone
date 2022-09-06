@@ -243,9 +243,10 @@ const Scheduler = () => {
                 currentView={currentView}
                 defaultCurrentDate={new Date()}
                 onOptionChanged={onOptionChanged}
-                elementAttr={{ id: "testit" }}
+                elementAttr={{ id: "scheduler" }}
                 dataSource={customDataSource}
                 key={Math.trunc((Math.random() * 1000000000) / Math.random())}
+                in
               />
             </SchedulerTheme>
           </main>

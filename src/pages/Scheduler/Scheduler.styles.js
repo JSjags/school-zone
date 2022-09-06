@@ -46,7 +46,7 @@ export const Content = styled.div`
     }
   }
 
-  #testit {
+  #scheduler {
     .dx-scheduler-time-panel-cell div {
       font-family: var(--hind);
     }
@@ -64,6 +64,12 @@ export const Content = styled.div`
     span.dx-field-item-help-text,
     span.dx-field-item-label-text {
       color: var(--primary-color);
+    }
+    .dx-scheduler-work-space {
+      border-radius: 0 0 10px 10px;
+    }
+    .dx-scheduler-container {
+      border-radius: 0 0 10px 10px;
     }
   }
 `;
