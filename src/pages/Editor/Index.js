@@ -9,7 +9,12 @@ import {
   fetchSchoolData,
   resetSchoolData,
 } from "../../features/school/schoolDataSlice";
-import { setCurrentPage } from "../../features/config/configData";
+import {
+  closeEditProfileModal,
+  openEditProfileModal,
+  setCurrentPage,
+  showForm,
+} from "../../features/config/configData";
 
 import HtmlEditor, {
   Toolbar,
@@ -17,8 +22,6 @@ import HtmlEditor, {
   ImageUpload,
   Item,
 } from "devextreme-react/html-editor";
-import CheckBox from "devextreme-react/check-box";
-import SelectBox from "devextreme-react/select-box";
 
 import {
   Content,
@@ -34,6 +37,9 @@ import { useState } from "react";
 
 import { v4 as uuidv4 } from "uuid";
 import axios from "axios";
+import { useRef } from "react";
+import { AiOutlineFileDone } from "react-icons/ai";
+import EditModal from "../../components/EditModal/Index";
 
 const LightTheme = React.lazy(() =>
   import("../../DEThemes/SchedulerThemes/LightTheme")
@@ -60,36 +66,12 @@ const Editor = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const sizeValues = ["8pt", "10pt", "12pt", "14pt", "18pt", "24pt", "36pt"];
-  const fontValues = [
-    "Arial",
-    "Courier New",
-    "Georgia",
-    "Impact",
-    "Lucida Console",
-    "Tahoma",
-    "Times New Roman",
-    "Verdana",
-  ];
-  const headerValues = [false, 1, 2, 3, 4, 5];
-
-  const authToken = useSelector((state) => state.schoolAuth.token);
-
-  const { data, isLoading, isSuccess, isError, message } = useSelector(
-    (state) => state.schoolData
-  );
-
-  const dialogTabs = ["url", "file"];
-  const tabs = [
-    { name: "From This Device", value: ["file"] },
-    { name: "From the Web", value: ["url"] },
-    { name: "Both", value: ["file", "url"] },
-  ];
-  let markup = `
+  // Editor Settings Start Here
+  const markup = useRef(`
   <div>
       <h2>
           <img src="https://js.devexpress.com/Demos/WidgetsGallery/Content/Images/Widgets/HtmlEditor.svg" alt="HtmlEditor"/>
-          Rich Text Editor (HTML Editor)
+          SchoolZone Rich Text Editor (HTML Editor)
       </h2>
       <br>
       <p>DevExtreme JavaScript HTML Editor is a client-side WYSIWYG text editor that allows its users to format textual and visual content and store it as HTML or Markdown.</p>
@@ -139,13 +121,39 @@ const Editor = () => {
           </tr>
       </table>
   </div>
-`;
-  const [markupUpdate, setMarkupUpdate] = useState();
-
-  const [editorState, setEditorState] = useState({
-    isMultiline: true,
-    currentTab: tabs[2].value,
+`);
+  const [uploadInfo, setUploadInfo] = useState({
+    isLoading: false,
+    isSuccess: false,
+    isError: false,
+    message: null,
+    isValid: markup.current.length < 50 ? false : true,
   });
+
+  const sizeValues = ["8pt", "10pt", "12pt", "14pt", "18pt", "24pt", "36pt"];
+  const fontValues = [
+    "Arial",
+    "Courier New",
+    "Georgia",
+    "Impact",
+    "Lucida Console",
+    "Tahoma",
+    "Times New Roman",
+    "Verdana",
+  ];
+  const headerValues = [false, 1, 2, 3, 4, 5];
+  const dialogTabs = ["url", "file"];
+  // Editor Settings End Here
+  const [publishingError, setPublishingError] = useState(false);
+  const [publishingSuccess, setPublishingSuccess] = useState(false);
+  const { id: schoolId, token: schoolToken } = useSelector(
+    (state) => state.schoolAuth
+  );
+
+  const { isLoading, isSuccess, isError, message } = useSelector(
+    (state) => state.schoolData
+  );
+  const { isEditProfileModalOpen } = useSelector((state) => state.config);
 
   useEffect(() => {
     if (message !== null && message.includes("jwt expired")) {
@@ -161,8 +169,8 @@ const Editor = () => {
       navigate("/login");
     }
 
-    dispatch(fetchSchoolData(authToken));
-  }, [authToken, dispatch, navigate, message]);
+    dispatch(fetchSchoolData(schoolToken));
+  }, [schoolToken, dispatch, navigate, message]);
 
   useEffect(() => {
     dispatch(setCurrentPage("editor"));
@@ -180,6 +188,19 @@ const Editor = () => {
 
   return (
     <Wrapper isSuccess={isSuccess ? true : false}>
+      {publishingSuccess && (
+        <div className="publish-success-message">
+          <AiOutlineFileDone style={{ fontSize: "1.4rem" }} />
+          <p>{uploadInfo.message}</p>
+        </div>
+      )}
+      {publishingError && (
+        <div className="publish-error-message">
+          <BiError style={{ fontSize: "1.4rem", paddingTop: "-5px" }} />
+          <p>{uploadInfo.message}</p>
+        </div>
+      )}
+      {isEditProfileModalOpen && <EditModal />}
       {isLoading && (
         <LoadingContainer>
           <Spinner />
@@ -192,10 +213,16 @@ const Editor = () => {
             <EditorTheme>
               <div className="widget-container">
                 <HtmlEditor
-                  defaultValue={markup}
+                  defaultValue={markup.current}
                   valueType="html"
                   elementAttr={{ id: "editor" }}
-                  onValueChanged={(obj) => (markup = obj.value)}
+                  onValueChanged={(obj) => {
+                    markup.current = obj.value;
+                    obj.component.beginUpdate();
+                    obj.value.length < 50
+                      ? setUploadInfo((prev) => ({ ...prev, isValid: false }))
+                      : setUploadInfo((prev) => ({ ...prev, isValid: true }));
+                  }}
                 >
                   <MediaResizing enabled={true} />
                   <ImageUpload
@@ -258,57 +285,84 @@ const Editor = () => {
                   </Toolbar>
                 </HtmlEditor>
               </div>
-              <div>
-                <button
-                  className="primary-btn publish-btn"
-                  onClick={async () => {
-                    console.log(markup);
-                    const storageRef = ref(storage, `/articles/${uuidv4()}`);
+              <div className="button-holder">
+                {!uploadInfo.isLoading && uploadInfo.isValid && (
+                  <button
+                    className="primary-btn publish-btn"
+                    onClick={async () => {
+                      dispatch(openEditProfileModal());
+                      dispatch(showForm("publishing"));
 
-                    const uploadStringRef = await uploadString(
-                      storageRef,
-                      markup
-                    );
-                    const downloadUrl = await getDownloadURL(
-                      uploadStringRef.ref
-                    );
-                    const res = await axios({
-                      url: "/api/schools/:schoolId/articles",
-                      method: "POST",
-                      data: { articleURL: downloadUrl },
-                      headers: {
-                        "Content-Type": "application/json",
-                        Authorization: `Bearer ${authToken}`,
-                      },
-                    });
-                    console.log(res);
-                  }}
-                  type="button"
-                >
-                  Publish
-                </button>
+                      setUploadInfo((prev) => ({
+                        ...prev,
+                        isLoading: true,
+                        isError: false,
+                        isSuccess: false,
+                        message: null,
+                      }));
+                      const articleId = uuidv4();
+                      try {
+                        const storageRef = ref(
+                          storage,
+                          `/articles/${articleId}`
+                        );
+
+                        const uploadStringRef = await uploadString(
+                          storageRef,
+                          markup
+                        );
+                        const downloadUrl = await getDownloadURL(
+                          uploadStringRef.ref
+                        );
+                        const res = await axios({
+                          url: `/api/schools/${schoolId}/articles/${articleId}}`,
+                          method: "POST",
+                          data: { articleURL: downloadUrl },
+                          headers: {
+                            Authorization: `Bearer ${schoolToken}`,
+                          },
+                        });
+                        console.log(res.data.article);
+                        setUploadInfo((prev) => ({
+                          ...prev,
+                          isLoading: false,
+                          isError: false,
+                          isSuccess: true,
+                          message: "Article successfully uploaded",
+                        }));
+
+                        setPublishingSuccess(true);
+                        setTimeout(
+                          () => dispatch(closeEditProfileModal()),
+                          3000
+                        );
+                        setTimeout(() => setPublishingSuccess(false), 10000);
+                      } catch (error) {
+                        setUploadInfo((prev) => ({
+                          ...prev,
+                          isLoading: false,
+                          isError: true,
+                          isSuccess: false,
+                          message:
+                            "Couldn't upload article at the moment, please try again later.",
+                        }));
+
+                        setPublishingSuccess(true);
+                        setTimeout(
+                          () => dispatch(closeEditProfileModal()),
+                          3000
+                        );
+                        setTimeout(() => setPublishingError(false), 10000);
+                      }
+                    }}
+                    type="button"
+                  >
+                    Publish
+                  </button>
+                )}
+                {uploadInfo.isLoading && <Spinner />}
               </div>
             </EditorTheme>
-            {/* <div className="options">
-              <div className="caption">Options</div>
-              <div className="option">
-                <CheckBox
-                  text="Multiline toolbar"
-                  value={this.state.isMultiline}
-                  onValueChanged={this.multilineChanged}
-                />
-              </div>
-              <div className="option">
-                <div className="label">Image upload tabs:</div>
-                <SelectBox
-                  items={this.tabs}
-                  value={this.state.currentTab}
-                  valueExpr="value"
-                  displayExpr="name"
-                  onValueChanged={this.currentTabChanged}
-                />
-              </div>
-            </div> */}
           </main>
         </Content>
       )}

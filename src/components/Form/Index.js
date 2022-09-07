@@ -3933,14 +3933,14 @@ const DeleteSlug = () => {
 };
 
 // Saving Changes
-const Saving = () => {
+const Saving = ({ type }) => {
   return (
     <SavingWrapper>
       <SavingContent>
         <div>
           <Spinner />
         </div>
-        <p>Saving Changes</p>
+        <p>{type ? type : "Saving Changes"}</p>
       </SavingContent>
     </SavingWrapper>
   );
@@ -4016,6 +4016,7 @@ const Form = () => {
       {formToShow === "deleteSlug" && <DeleteSlug />}
       {formToShow === "deleteModal" && <DeleteModal />}
       {formToShow === "saving" && <Saving />}
+      {formToShow === "publishing" && <Saving type="Publishing" />}
     </>
   );
 };
