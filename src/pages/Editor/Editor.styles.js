@@ -8,7 +8,7 @@ export const Wrapper = styled.div`
     props.isSuccess === false &&
     css`
       display: flex;
-      align-items: center;
+      align-items: flex-start;
       justify-content: center;
     `};
 
@@ -63,15 +63,14 @@ export const Content = styled.div`
   #editor {
     border-color: var(--dark-mid-color);
     border-radius: 10px;
-    margin-bottom: 100px;
     min-height: 70vh;
   }
   .button-holder {
+    display: flex;
+    align-items: center;
     position: relative;
     min-height: 60px;
-  }
-  .publish-btn {
-    margin: 30px 0;
+    margin: 30px 0 0;
   }
 `;
 

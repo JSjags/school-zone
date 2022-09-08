@@ -40,6 +40,7 @@ import axios from "axios";
 import { useRef } from "react";
 import { AiOutlineFileDone } from "react-icons/ai";
 import EditModal from "../../components/EditModal/Index";
+import { useCallback } from "react";
 
 const LightTheme = React.lazy(() =>
   import("../../DEThemes/SchedulerThemes/LightTheme")
@@ -127,7 +128,7 @@ const Editor = () => {
     isSuccess: false,
     isError: false,
     message: null,
-    isValid: markup.current.length < 50 ? false : true,
+    isValid: markup.current.trim().length < 1 ? false : true,
   });
 
   const sizeValues = ["8pt", "10pt", "12pt", "14pt", "18pt", "24pt", "36pt"];
@@ -186,6 +187,8 @@ const Editor = () => {
     }
   };
 
+  const showMe = useRef();
+
   return (
     <Wrapper isSuccess={isSuccess ? true : false}>
       {publishingSuccess && (
@@ -217,12 +220,13 @@ const Editor = () => {
                   valueType="html"
                   elementAttr={{ id: "editor" }}
                   onValueChanged={(obj) => {
-                    markup.current = obj.value;
                     obj.component.beginUpdate();
-                    obj.value.length < 50
+                    markup.current = obj.value;
+                    obj.value.trim().length < 1
                       ? setUploadInfo((prev) => ({ ...prev, isValid: false }))
                       : setUploadInfo((prev) => ({ ...prev, isValid: true }));
                   }}
+                  ref={showMe}
                 >
                   <MediaResizing enabled={true} />
                   <ImageUpload
@@ -294,11 +298,12 @@ const Editor = () => {
                       dispatch(showForm("publishing"));
 
                       setUploadInfo((prev) => ({
-                        ...prev,
                         isLoading: true,
                         isError: false,
                         isSuccess: false,
                         message: null,
+                        isValid:
+                          markup.current.trim().length < 1 ? false : true,
                       }));
                       const articleId = uuidv4();
                       try {
@@ -322,16 +327,19 @@ const Editor = () => {
                             Authorization: `Bearer ${schoolToken}`,
                           },
                         });
-                        console.log(res.data.article);
+
+                        markup.current = "";
+                        setPublishingSuccess(true);
+                        dispatch(fetchSchoolData(schoolToken));
+
                         setUploadInfo((prev) => ({
-                          ...prev,
                           isLoading: false,
                           isError: false,
                           isSuccess: true,
-                          message: "Article successfully uploaded",
+                          message: "Article successfully published",
+                          isValid:
+                            markup.current.trim().length < 1 ? false : true,
                         }));
-
-                        setPublishingSuccess(true);
                         setTimeout(
                           () => dispatch(closeEditProfileModal()),
                           3000
@@ -345,9 +353,11 @@ const Editor = () => {
                           isSuccess: false,
                           message:
                             "Couldn't upload article at the moment, please try again later.",
+                          isValid:
+                            markup.current.trim().length < 1 ? false : true,
                         }));
 
-                        setPublishingSuccess(true);
+                        setPublishingError(true);
                         setTimeout(
                           () => dispatch(closeEditProfileModal()),
                           3000
