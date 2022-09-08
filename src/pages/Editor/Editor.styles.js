@@ -27,6 +27,7 @@ export const Wrapper = styled.div`
     background: rgba(0, 255, 0, 0.3);
     border-radius: 5px;
     font-family: var(--hind);
+    position: absolute;
   }
   .publish-error-message {
     backdrop-filter: blur(3px);
@@ -71,6 +72,41 @@ export const Content = styled.div`
     position: relative;
     min-height: 60px;
     margin: 30px 0 0;
+    padding: 0 20px;
+  }
+  .details {
+    margin: 20px;
+  }
+  .label {
+    font-weight: 700;
+    font-size: 1rem;
+    -webkit-transform: translateY(100px);
+    -ms-transform: translateY(100px);
+    display: block;
+    transform: translateY(10px);
+  }
+  .widget-container {
+    padding: 20px;
+  }
+  .instructions-panel {
+    background: var(--background);
+    border-radius: 10px;
+    padding: 10px;
+    width: 100%;
+
+    p.info-notice {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      color: var(--primary-color);
+      padding-left: 10px;
+
+      span {
+        font-family: var(--hind);
+        color: var(--whitesmoke);
+        font-size: 0.9rem;
+      }
+    }
   }
 `;
 

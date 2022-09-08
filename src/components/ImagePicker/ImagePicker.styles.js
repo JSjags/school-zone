@@ -1,4 +1,4 @@
-import styled from "styled-components";
+import styled, { css } from "styled-components";
 
 export const ImagePickerWrapper = styled.div`
   label {
@@ -48,7 +48,8 @@ export const ImagePickerContent = styled.div`
     }
   }
   img {
-    width: 100%;
+    width: clamp(240px, 100%, 500px);
+    display: block;
     border-radius: 5px;
     background: var(--whitesmoke);
     border-top: 20px solid var(--primary-color);

@@ -1,7 +1,12 @@
 import React, { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { useNavigate } from "react-router";
-import { getDownloadURL, ref, uploadString } from "firebase/storage";
+import {
+  getDownloadURL,
+  ref,
+  uploadBytes,
+  uploadString,
+} from "firebase/storage";
 
 import { storage } from "../../firebase/firebase.config";
 import { resetSchoolAuth } from "../../features/school/schoolAuthSlice";
@@ -41,6 +46,10 @@ import { useRef } from "react";
 import { AiOutlineFileDone } from "react-icons/ai";
 import EditModal from "../../components/EditModal/Index";
 import { useCallback } from "react";
+import Text from "../../components/Text/Index";
+import ImagePicker from "../../components/ImagePicker/Index";
+import TextArea from "../../components/TextArea/Index";
+import { BsInfoCircleFill } from "react-icons/bs";
 
 const LightTheme = React.lazy(() =>
   import("../../DEThemes/SchedulerThemes/LightTheme")
@@ -68,6 +77,13 @@ const Editor = () => {
   const navigate = useNavigate();
 
   // Editor Settings Start Here
+  const unwantedValues = [null, undefined, ""];
+  const [editorDetails, setEditorDetails] = useState({
+    title: "",
+    author: "",
+    cover: null,
+    summary: "",
+  });
   const markup = useRef(`
   <div>
       <h2>
@@ -156,6 +172,92 @@ const Editor = () => {
   );
   const { isEditProfileModalOpen } = useSelector((state) => state.config);
 
+  const handlePublish = async () => {
+    dispatch(openEditProfileModal());
+    dispatch(showForm("publishing"));
+
+    setUploadInfo((prev) => ({
+      isLoading: true,
+      isError: false,
+      isSuccess: false,
+      message: null,
+      isValid: markup.current.trim().length < 1 ? false : true,
+    }));
+    // generate article ID
+    const articleId = uuidv4();
+    try {
+      // storage refs for article and cover photo
+      const articleStorageRef = ref(storage, `/articles/${articleId}`);
+      const assetStorageRef = ref(storage, `/articlesAssets/${articleId}`);
+
+      // stored cover photo and article refs
+      const uploadStringRefArr = await Promise.all([
+        uploadString(articleStorageRef, markup),
+        uploadString(assetStorageRef, editorDetails.cover, "data_url"),
+      ]);
+
+      // download URL's for cover photo and article
+      const downloadUrl = await Promise.all([
+        getDownloadURL(uploadStringRefArr[0].ref),
+        getDownloadURL(uploadStringRefArr[1].ref),
+      ]);
+
+      // send article details to mongoDB
+      const res = await axios({
+        url: `/api/schools/${schoolId}/articles/${articleId}}`,
+        method: "POST",
+        data: {
+          articleURL: downloadUrl[0],
+          articleDetails: {
+            title: editorDetails.title,
+            author: editorDetails.author,
+            summary: editorDetails.summary,
+            cover: downloadUrl[1],
+            timeStamp: new Date(),
+          },
+        },
+        headers: {
+          Authorization: `Bearer ${schoolToken}`,
+        },
+      });
+
+      // Reset editor values only on success
+      markup.current = "";
+      setEditorDetails({
+        title: "",
+        author: "",
+        cover: null,
+        summary: "",
+      });
+      setPublishingSuccess(true);
+      dispatch(fetchSchoolData(schoolToken));
+
+      setUploadInfo((prev) => ({
+        isLoading: false,
+        isError: false,
+        isSuccess: true,
+        message: "Article successfully published",
+        isValid: markup.current.trim().length < 1 ? false : true,
+      }));
+      setTimeout(() => dispatch(closeEditProfileModal()), 3000);
+      setTimeout(() => setPublishingSuccess(false), 10000);
+    } catch (error) {
+      setUploadInfo((prev) => ({
+        ...prev,
+        isLoading: false,
+        isError: true,
+        isSuccess: false,
+        message:
+          "Couldn't upload article at the moment, please try again later.",
+        isValid: markup.current.trim().length < 1 ? false : true,
+      }));
+
+      setPublishingError(true);
+      setTimeout(() => dispatch(closeEditProfileModal()), 3000);
+      setTimeout(() => setPublishingError(false), 10000);
+    }
+  };
+
   useEffect(() => {
     if (message !== null && message.includes("jwt expired")) {
       localStorage.removeItem("schoolCredentials");
@@ -213,6 +315,41 @@ const Editor = () => {
         <Content>
           <main>
             <PageHeader title="Editor" />
+            <div className="details">
+              <div>
+                <label className="label">Title:</label>
+                <Text
+                  value={editorDetails.title}
+                  setFormData={setEditorDetails}
+                  name="title"
+                />
+              </div>
+              <div>
+                <label className="label">Author:</label>
+                <Text
+                  value={editorDetails.author}
+                  setFormData={setEditorDetails}
+                  name="author"
+                />
+              </div>
+              <div>
+                <label className="label">Summary:</label>
+                <TextArea
+                  value={editorDetails.summary}
+                  setFormData={setEditorDetails}
+                  name="summary"
+                />
+              </div>
+              <div>
+                <label className="label">Cover:</label>
+                <ImagePicker
+                  value={editorDetails.cover}
+                  formData={editorDetails}
+                  setFormData={setEditorDetails}
+                  name="cover"
+                />
+              </div>
+            </div>
             <EditorTheme>
               <div className="widget-container">
                 <HtmlEditor
@@ -290,87 +427,29 @@ const Editor = () => {
                 </HtmlEditor>
               </div>
               <div className="button-holder">
-                {!uploadInfo.isLoading && uploadInfo.isValid && (
-                  <button
-                    className="primary-btn publish-btn"
-                    onClick={async () => {
-                      dispatch(openEditProfileModal());
-                      dispatch(showForm("publishing"));
-
-                      setUploadInfo((prev) => ({
-                        isLoading: true,
-                        isError: false,
-                        isSuccess: false,
-                        message: null,
-                        isValid:
-                          markup.current.trim().length < 1 ? false : true,
-                      }));
-                      const articleId = uuidv4();
-                      try {
-                        const storageRef = ref(
-                          storage,
-                          `/articles/${articleId}`
-                        );
-
-                        const uploadStringRef = await uploadString(
-                          storageRef,
-                          markup
-                        );
-                        const downloadUrl = await getDownloadURL(
-                          uploadStringRef.ref
-                        );
-                        const res = await axios({
-                          url: `/api/schools/${schoolId}/articles/${articleId}}`,
-                          method: "POST",
-                          data: { articleURL: downloadUrl },
-                          headers: {
-                            Authorization: `Bearer ${schoolToken}`,
-                          },
-                        });
-
-                        markup.current = "";
-                        setPublishingSuccess(true);
-                        dispatch(fetchSchoolData(schoolToken));
-
-                        setUploadInfo((prev) => ({
-                          isLoading: false,
-                          isError: false,
-                          isSuccess: true,
-                          message: "Article successfully published",
-                          isValid:
-                            markup.current.trim().length < 1 ? false : true,
-                        }));
-                        setTimeout(
-                          () => dispatch(closeEditProfileModal()),
-                          3000
-                        );
-                        setTimeout(() => setPublishingSuccess(false), 10000);
-                      } catch (error) {
-                        setUploadInfo((prev) => ({
-                          ...prev,
-                          isLoading: false,
-                          isError: true,
-                          isSuccess: false,
-                          message:
-                            "Couldn't upload article at the moment, please try again later.",
-                          isValid:
-                            markup.current.trim().length < 1 ? false : true,
-                        }));
-
-                        setPublishingError(true);
-                        setTimeout(
-                          () => dispatch(closeEditProfileModal()),
-                          3000
-                        );
-                        setTimeout(() => setPublishingError(false), 10000);
-                      }
-                    }}
-                    type="button"
-                  >
-                    Publish
-                  </button>
-                )}
+                {!uploadInfo.isLoading &&
+                  uploadInfo.isValid &&
+                  Object.values(editorDetails).every(
+                    (val) => !unwantedValues.includes(val)
+                  ) && (
+                    <button
+                      className="primary-btn publish-btn"
+                      onClick={handlePublish}
+                      type="button"
+                    >
+                      Publish
+                    </button>
+                  )}
                 {uploadInfo.isLoading && <Spinner />}
+              </div>
+              <div className="instructions-panel">
+                <p className="info-notice">
+                  <BsInfoCircleFill style={{ fontSize: "1rem" }} />
+                  <span>
+                    Publish button will become visible if all fields are filled
+                    with valid data.
+                  </span>
+                </p>
               </div>
             </EditorTheme>
           </main>

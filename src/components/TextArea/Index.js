@@ -1,13 +1,11 @@
 import { useState } from "react";
-import { TextWrapper } from "./Text.styles";
+import { TextWrapper } from "./TextArea.styles";
 
-const Text = ({ value, setFormData, name }) => {
+const TextArea = ({ value, setFormData, name }) => {
   const [text, setText] = useState("");
   const handleChange = (e) => {
     setFormData((prev) => {
-      if (name === "schoolSlug" || name === "deletePhrase") {
-        return e.target.value;
-      } else if (name === "title" || name === "author") {
+      if (name === "summary") {
         return {
           ...prev,
           [name]: e.target.value,
@@ -39,4 +37,4 @@ const Text = ({ value, setFormData, name }) => {
   );
 };
 
-export default Text;
+export default TextArea;

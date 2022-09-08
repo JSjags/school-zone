@@ -16,10 +16,7 @@ const ImagePicker = ({ value, formData, setFormData, name }) => {
       imageRef.current.src = imgURL;
       setFormData((prev) => ({
         ...prev,
-        [e.target.name]: {
-          value: imgURL,
-          type: prev[e.target.name].type,
-        },
+        [e.target.name]: imgURL,
       }));
     };
 
@@ -29,7 +26,7 @@ const ImagePicker = ({ value, formData, setFormData, name }) => {
 
   return (
     <ImagePickerWrapper>
-      <ImagePickerContent>
+      <ImagePickerContent name={name}>
         <label htmlFor="file-picker" className="primary-white-btn">
           <BsImage />
           <span>Click to select image</span>
