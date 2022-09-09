@@ -28,22 +28,157 @@ export const Content = styled.div`
     border: 1px solid var(--dark-mid-gray);
   }
 
-  .no-data {
+  .create-kanban {
+    margin-top: 100px;
+    margin-bottom: 20px;
+    width: 100%;
     display: flex;
+    font-family: var(--hind);
     flex-direction: column;
     justify-content: center;
     align-items: center;
     gap: 20px;
-    height: 100vh;
 
     img {
       width: 25%;
     }
     p {
-      font-family: var(--hind);
       font-weight: 500;
       color: var(--text);
     }
+    .create-kanban-button-group {
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 5%;
+      flex-wrap: wrap;
+
+      button {
+        width: clamp(200px, 20vw, 230px);
+        height: clamp(130px, 5vh, 190px);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 5px;
+        border: none;
+        margin: 20px;
+        border-radius: 10px;
+        font-weight: 500;
+        font-size: clamp(0.8rem, calc(0.8rem + 0.1vw), 1rem);
+        background: var(--background);
+        color: var(--text);
+        font-family: var(--hind);
+        cursor: pointer;
+        box-shadow: 0 5px 10px var(--dark-gray);
+        border: 1px solid var(--dark-mid-gray);
+        transition: all 300ms ease;
+
+        span {
+          white-space: nowrap;
+        }
+
+        :hover {
+          background: var(--white);
+          transform: scale(1.05);
+          box-shadow: -5px -5px var(--light-tint), 5px 5px var(--dark-tint);
+          background: var(--primary-color);
+          color: white;
+          letter-spacing: 2px;
+          font-size: 1.1rem;
+          -webkit-text-stroke: 0.5px var(--primary-color-active);
+          text-shadow: 0 10px 3px rgba(0, 0, 0, 0.2);
+        }
+      }
+    }
+  }
+  .available-kanban {
+    padding: 20px;
+    background: var(--background);
+    border-radius: 10px;
+  }
+
+  /* Kanban Component Stylings */
+  #kanban {
+    white-space: nowrap;
+    margin-top: 50px;
+  }
+
+  .list {
+    border-radius: 8px;
+    margin: 5px;
+    background-color: rgba(192, 192, 192, 0.4);
+    display: inline-block;
+    vertical-align: top;
+    white-space: normal;
+  }
+
+  .list-title {
+    font-size: 16px;
+    padding: 10px;
+    padding-left: 30px;
+    margin-bottom: -10px;
+    font-weight: bold;
+    cursor: pointer;
+    font-family: var(--garamond);
+    font-weight: 600;
+    color: var(--primary-color) !important;
+    font-size: 1.2rem;
+  }
+
+  .scrollable-list {
+    height: 400px;
+    width: 260px;
+  }
+
+  .sortable-cards {
+    min-height: 380px;
+  }
+
+  .card {
+    position: relative;
+    background-color: white;
+    box-sizing: border-box;
+    width: 230px;
+    padding: 10px 20px;
+    margin: 10px;
+    cursor: pointer;
+    font-family: var(--hind);
+  }
+
+  .card-subject {
+    padding-bottom: 10px;
+  }
+
+  .card-assignee {
+    opacity: 0.6;
+  }
+
+  .card-priority {
+    position: absolute;
+    top: 10px;
+    bottom: 10px;
+    left: 5px;
+    width: 5px;
+    border-radius: 2px;
+    background: #86c285;
+  }
+
+  .priority-1 {
+    background: #adadad;
+  }
+
+  .priority-2 {
+    background: #86c285;
+  }
+
+  .priority-3 {
+    background: #edc578;
+  }
+
+  .priority-4 {
+    background: #ef7d59;
   }
 `;
 
@@ -61,29 +196,6 @@ export const LoadingContainer = styled.div`
   gap: 2rem;
   font-family: var(--hind);
   font-size: 1.2rem;
-
-  /* .button-group {
-    display: flex;
-    align-items: center;
-    gap: 40px;
-
-    button {
-      border: none;
-      padding: 0.5rem 1rem;
-      background: var(--dark-mid-gray);
-      font-size: 1rem;
-      border-radius: 1.5rem;
-      font-family: var(--hind);
-      cursor: pointer;
-      transition: all 300ms ease-in-out;
-
-      :hover {
-        box-shadow: -2px -2px var(--light-tint), 2px 2px var(--dark-tint);
-        background: var(--primary-color);
-        color: white;
-      }
-    }
-  } */
 `;
 export const ErrorContainer = styled.div`
   width: 100%;

@@ -885,12 +885,13 @@ export const CreateTemplateContent = styled.div`
   .form-group {
     display: flex;
     align-items: flex-end;
+    justify-content: flex-start;
     width: 100%;
     height: fit-content;
-    padding: 10px 5px;
+    padding: 10px 50px 10px 5px;
     background: var(--translucent-white);
     backdrop-filter: invert(0.3);
-    gap: 5px;
+    gap: 2px;
     border-radius: 5px;
     position: relative;
     overflow: hidden;
@@ -903,6 +904,14 @@ export const CreateTemplateContent = styled.div`
       font-size: 1.1rem;
       letter-spacing: -1px;
       text-transform: capitalize;
+      white-space: nowrap;
+      max-width: 60%;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .colon {
+      color: var(--primary-color);
+      font-family: var(--hind);
     }
     div {
       width: fit-content;
@@ -910,6 +919,8 @@ export const CreateTemplateContent = styled.div`
       align-items: center;
       font-size: 1rem;
       border: none;
+      flex: 1;
+      overflow: hidden;
       border-radius: 5px;
       font-family: var(--hind);
       background: var(--transparent);
@@ -924,6 +935,13 @@ export const CreateTemplateContent = styled.div`
       span {
         font-size: 1.1rem;
         font-weight: 500;
+        display: inline-block;
+        white-space: nowrap;
+        width: 100%;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        display: inline-block;
+        padding-left: 3px;
       }
     }
     .delete-field {
@@ -947,7 +965,7 @@ export const CreateTemplateContent = styled.div`
   }
 
   .success {
-    color: var(--green);
+    color: var(--text);
     display: inline-block;
     display: flex;
     align-items: center;
@@ -955,7 +973,7 @@ export const CreateTemplateContent = styled.div`
     font-family: var(--garamond);
     position: absolute;
     top: 30px;
-    background: var(--light-green);
+    background: var(--green);
     padding: 5px;
     border-radius: 5px;
     border: 1px solid var(--green);
@@ -963,7 +981,7 @@ export const CreateTemplateContent = styled.div`
     margin-bottom: 10px;
   }
   .errors {
-    color: var(--red);
+    color: var(--text);
     display: inline-block;
     display: flex;
     align-items: center;
@@ -971,7 +989,7 @@ export const CreateTemplateContent = styled.div`
     font-family: var(--garamond);
     position: absolute;
     top: 30px;
-    background: var(--light-red);
+    background: var(--red);
     padding: 5px;
     border-radius: 5px;
     border: 1px solid var(--red);
@@ -1026,6 +1044,7 @@ export const CreateTemplateContent = styled.div`
       width: 100%;
       height: 100%;
       background: var(--light-gray);
+      backdrop-filter: grayscale(1);
       cursor: not-allowed;
     }
   }
@@ -1461,7 +1480,7 @@ export const RecordFinanceContent = styled.div`
     backdrop-filter: invert(0.3);
   }
   #submit-btn {
-    width: clamp(150px, 100%, 350px);
+    width: 100%;
   }
   .info {
     display: flex;

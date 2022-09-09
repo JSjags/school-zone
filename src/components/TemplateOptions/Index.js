@@ -68,6 +68,8 @@ const TemplateOptions = ({
                   right: 10,
                   transition: "all 200ms ease-in-out",
                   transform: "translateY(-50%) rotate(-90deg)",
+                  zIndex: 1,
+                  color: "var(--text)",
                 }
               : {
                   position: "absolute",
@@ -75,6 +77,8 @@ const TemplateOptions = ({
                   right: 10,
                   transition: "all 200ms ease-in-out",
                   transform: "translateY(-50%)",
+                  zIndex: 1,
+                  color: "var(--text)",
                 }
           }
         />

@@ -1175,6 +1175,46 @@ const CreateFinance = () => {
   );
 };
 
+// Create Kanban
+const CreateKanban = () => {
+  const dispatch = useDispatch();
+  const { data: schoolData } = useSelector((state) => state.schoolData);
+
+  const handleCreateTemplate = () => {
+    dispatch(showForm("createKanbanTemplate"));
+  };
+  const handleCancel = () => {
+    dispatch(closeEditProfileModal());
+  };
+
+  return (
+    <CreateProfileWrapper>
+      <CreateProfileContent>
+        <h2>Record Revenue | Expense</h2>
+        <hr style={{ visibility: "hidden", marginBottom: "10px" }} />
+        {schoolData?.templates?.kanban === undefined && (
+          <>
+            <img
+              className="no-template-svg"
+              src={noTemplateFoundSvg}
+              alt="No Finance Template Found"
+            />
+            <p>
+              Sorry, we could not find any template for creating kanban items.
+              <br />
+              Would you like to create a template right now.
+            </p>
+            <div className="choice-buttons">
+              <button onClick={handleCancel}>No, maybe later</button>
+              <button onClick={handleCreateTemplate}>Yes, I would</button>
+            </div>
+          </>
+        )}
+      </CreateProfileContent>
+    </CreateProfileWrapper>
+  );
+};
+
 // Create  Student Template
 const CreateStudentTemplate = () => {
   const initialFormFields = {
@@ -2004,6 +2044,303 @@ const CreateFinanceTemplate = () => {
                 ) : (
                   <div className="form-group" key={index}>
                     <label>{field[1].name}:</label>
+                    <div>
+                      <span>
+                        {field[1].type[0].toUpperCase() +
+                          field[1].type.slice(1)}
+                      </span>
+                    </div>
+                    <div
+                      className="delete-field"
+                      onClick={() => handleTemplateDelete(field)}
+                    >
+                      <MdDeleteForever style={{ fontSize: "1.4rem" }} />
+                    </div>
+                  </div>
+                )
+              )}
+              {!isLoading && (
+                <button className="submit">
+                  <TbTemplate style={{ fontSize: "1.4rem", color: "white" }} />
+                  <span>Submit Template</span>
+                </button>
+              )}
+              {isLoading && (
+                <div className="loading">
+                  <Spinner />
+                </div>
+              )}
+            </form>
+          </div>
+        </div>
+      </CreateTemplateContent>
+    </CreateTemplateWrapper>
+  );
+};
+
+// Create Kanban Template
+const CreateKanbanTemplate = () => {
+  const initialFormFields = {
+    subject: {
+      name: "Subject",
+      type: "Text",
+    },
+    description: {
+      name: "Description",
+      type: "Text",
+    },
+    priorityLevel: {
+      name: "Priority Level",
+      type: "Options",
+      options: "1 2 3 4",
+    },
+    status: {
+      name: "Status",
+      type: "Options",
+      options: "Not-Started Need-Assistance In-Progress Deferred Completed",
+    },
+  };
+
+  const immutableData = ["Subject", "Description", "Priority Level", "Status"];
+
+  const dispatch = useDispatch();
+  const { data: schoolData } = useSelector((state) => state.schoolData);
+  const { id: schoolId, token: schoolToken } = useSelector(
+    (state) => state.schoolAuth
+  );
+
+  const [formFields, setFormFields] = useState(
+    schoolData.templates?.kanban
+      ? { ...schoolData.templates.kanban }
+      : initialFormFields
+  );
+  const [templateOption, setTemplateOption] = useState({
+    name: "",
+    type: "Select field type",
+    options: "",
+  });
+  const [errors, setErrors] = useState(null);
+  const [isLoading, setIsLoading] = useState(false);
+  const [isSuccess, setIsSuccess] = useState(false);
+  const [isError, setIsError] = useState(false);
+  const [templateMessage, setTemplateMessage] = useState(null);
+
+  const handleChange = (e) => {
+    setTemplateOption((prev) => ({ ...prev, [e.target.name]: e.target.value }));
+  };
+
+  const handleAddTemplate = (e) => {
+    if (
+      immutableData
+        .map((string) => string.toLowerCase())
+        .includes(templateOption.name.trim().toLowerCase())
+    ) {
+      return setErrors(
+        `${
+          templateOption.name.trim().charAt(0).toUpperCase() +
+          templateOption.name.trim().toLowerCase().slice(1)
+        } cannot be re-assigned.`
+      );
+    }
+    if (
+      templateOption.name.trim() === "" &&
+      templateOption.type === "Select field type"
+    ) {
+      return setErrors("Please enter valid field name and field type");
+    }
+    if (templateOption.name.trim() === "") {
+      return setErrors("Please enter valid field name");
+    }
+    if (templateOption.name.trim().length < 3) {
+      return setErrors("Field name cannot be less than 3 characters");
+    }
+    if (templateOption.type === "Select field type") {
+      return setErrors("Please select field type");
+    }
+    if (
+      templateOption.type === "Options" &&
+      templateOption.options.length < 1
+    ) {
+      return setErrors("Options field cannot be empty");
+    }
+    if (
+      templateOption.type === "Options" &&
+      templateOption.options.trim().split(" ").length < 2
+    ) {
+      return setErrors("Options values must be more than 1.");
+    }
+    setErrors(null);
+    setFormFields((prev) => ({
+      ...prev,
+      [templateOption.name
+        .split(" ")
+        .map((str, i) =>
+          i < 1 ? str.toLowerCase() : str[0].toUpperCase() + str.slice(1)
+        )
+        .join("")]: {
+        name: templateOption.name
+          .split(" ")
+          .map((str, i) => str[0].toUpperCase() + str.slice(1))
+          .join(" "),
+        type: templateOption.type,
+        ...(templateOption.options && {
+          [templateOption.options && "options"]:
+            templateOption.options && templateOption.options,
+        }),
+      },
+    }));
+    setTemplateOption({
+      name: "",
+      type: "Select field type",
+      options: "",
+    });
+  };
+
+  const handleTemplateDelete = (field) => {
+    let newFormFields = { ...formFields };
+    delete newFormFields[field[0]];
+    console.log(newFormFields);
+    setFormFields(newFormFields);
+  };
+
+  const handleTemplateSubmit = async (e) => {
+    e.preventDefault();
+    setErrors(null);
+    setTemplateOption({
+      name: "",
+      type: "Select field type",
+    });
+    setIsLoading(true);
+    setIsSuccess(false);
+    setIsError(false);
+    setTemplateMessage(null);
+    const response = await axios({
+      url: `/api/schools/${schoolId}/update`,
+      method: "put",
+      data: {
+        templateName: "kanban",
+        templateData: formFields,
+      },
+      headers: {
+        Authorization: `Bearer ${schoolToken}`,
+      },
+    });
+    if (response.status !== 200 && response.statusText !== "OK") {
+      setIsLoading(false);
+      setIsError(true);
+      return setTemplateMessage("Sorry, cannot save template at the moment.");
+    }
+    setIsLoading(false);
+    setIsError(false);
+    setIsSuccess(true);
+    setTemplateMessage("Template saved successfully.");
+    dispatch(fetchSchoolData(schoolToken));
+
+    return setTimeout(() => {
+      dispatch(closeEditProfileModal());
+    }, 3000);
+  };
+  const handleOptionsFormat = (e) => {
+    setTemplateOption((prev) => ({
+      ...prev,
+      options: e.target.value
+        .split(",")
+        .map((str) => str.trim().split(" ").join("-"))
+        .join(" "),
+    }));
+  };
+
+  return (
+    <CreateTemplateWrapper>
+      <CreateTemplateContent
+        errors={errors}
+        isSuccess={isSuccess}
+        isError={isError}
+      >
+        <h2>Create Kanban Card Item Template</h2>
+        <p>Set fields required for standard kanban item creation.</p>
+        <hr />
+        <div className="add-template-field-cont">
+          <div className="add-template-group">
+            <h3>Add template form</h3>
+            {errors && (
+              <p className="errors">
+                <BiErrorCircle style={{ fontSize: "1.2rem" }} />
+                <span>{errors}</span>
+              </p>
+            )}
+            <div className="field-values">
+              <input
+                onChange={handleChange}
+                name="name"
+                type="text"
+                value={templateOption.name}
+                placeholder="Field name"
+              />
+              <TemplateOptions
+                templateOption={templateOption}
+                setTemplateOption={setTemplateOption}
+                //   formData={formData}
+                errors={errors}
+                setErrors={setErrors}
+              />
+              {templateOption.type === "Options" && (
+                <div>
+                  <span className="nb">
+                    <BsInfoCircleFill />
+                    <span>Input must be a comma(,) seperated list.</span>
+                  </span>
+                  <input
+                    onChange={handleChange}
+                    onBlur={handleOptionsFormat}
+                    name="options"
+                    type="text"
+                    value={templateOption.options}
+                    placeholder="Field options"
+                  />
+                </div>
+              )}
+            </div>
+            <button onClick={handleAddTemplate}>
+              <MdPlaylistAdd style={{ fontSize: "1.4rem", color: "white" }} />
+              <span>Add field</span>
+            </button>
+          </div>
+          <div className="template-creator">
+            <form onSubmit={handleTemplateSubmit} className="templates">
+              <h3>Required fields</h3>
+              {templateMessage && (
+                <p className={isError ? "errors" : "success"}>
+                  {isError ? (
+                    <BiErrorCircle style={{ fontSize: "1.2rem" }} />
+                  ) : (
+                    <IoIosCloudDone style={{ fontSize: "1.2rem" }} />
+                  )}
+                  <span>{templateMessage}</span>
+                </p>
+              )}
+              {Object.entries(formFields).map((field, index) =>
+                immutableData.includes(field[1].name) ? (
+                  <div className="form-group immutable" key={field[1].name}>
+                    <label>{field[1].name}</label>
+                    <span className="colon">:</span>
+                    <div>
+                      <span>
+                        {field[1].type[0].toUpperCase() +
+                          field[1].type.slice(1)}
+                      </span>
+                    </div>
+                    <div
+                      className="delete-field"
+                      onClick={() => handleTemplateDelete(field)}
+                    >
+                      <MdDeleteForever style={{ fontSize: "1.4rem" }} />
+                    </div>
+                  </div>
+                ) : (
+                  <div className="form-group" key={field[1].name}>
+                    <label>{field[1].name}</label>
+                    <span className="colon">:</span>
                     <div>
                       <span>
                         {field[1].type[0].toUpperCase() +
@@ -3107,6 +3444,260 @@ const RecordFinance = () => {
   );
 };
 
+// Record Financial Data
+const AddKanban = () => {
+  const dispatch = useDispatch();
+
+  const [isLoading, setIsLoading] = useState(false);
+  const [isError, setIsError] = useState(false);
+  const [isSuccess, setIsSuccess] = useState(false);
+
+  const [formData, setFormData] = useState({});
+
+  const staffRegPageRef = useRef();
+
+  const avatarURL = useSelector((state) => state.schoolData.data.avatar_image);
+  const { data: schoolData } = useSelector((state) => state.schoolData);
+  const { id: schoolId, token: schoolToken } = useSelector(
+    (state) => state.schoolAuth
+  );
+
+  const invalidValues = ["", null, undefined];
+
+  const statementId = uuidv4();
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    console.log(formData);
+
+    setIsLoading(true);
+    setIsError(false);
+    setIsSuccess(false);
+
+    const dataToFirebase = {};
+    const dataToMongoDB = {};
+
+    Object.entries(formData).forEach((entry) => {
+      if (entry[1].type === "Image Picker") {
+        return (dataToFirebase[entry[0]] = entry[1].value);
+      }
+      return (dataToMongoDB[entry[0]] = entry[1].value);
+    });
+
+    try {
+      // get downloadURL(s) from firebase storage for uploaded images
+      const storageRefArr = Object.entries(dataToFirebase).map((data, i) =>
+        ref(
+          storage,
+          `${schoolData.name.split(" ").join("-")}-${schoolData._id}/kanban/${
+            Object.keys(dataToFirebase)[i]
+          }`
+        )
+      );
+
+      // Upload data to firebase storage
+      const uploadResultArr = await Promise.all(
+        Object.entries(dataToFirebase).map((data, i) => {
+          if (Object.values(dataToFirebase)[i].startsWith("data:")) {
+            return uploadString(storageRefArr[i], data[1], "data_url");
+          }
+          return uploadBytes(storageRefArr[i], data[1]);
+        })
+      );
+      const downloadUrlArr = await Promise.all(
+        uploadResultArr.map((result) => getDownloadURL(result.ref))
+      );
+
+      // Update data to be sent to mongo db
+      downloadUrlArr.forEach(
+        (url, i) => (dataToMongoDB[Object.keys(dataToFirebase)[i]] = url)
+      );
+
+      dataToMongoDB.statement_id = statementId;
+
+      const data = await axios({
+        url: `/api/schools/${schoolId}/kanban`,
+        method: "POST",
+        data: dataToMongoDB,
+        headers: {
+          Authorization: `Bearer ${schoolToken}`,
+        },
+      });
+      if (
+        data.status === 200 &&
+        data.statusText === "OK" &&
+        data.data.data.acknowledged === true
+      ) {
+        setIsLoading(false);
+        setIsError(false);
+        setIsSuccess(true);
+        dispatch(fetchSchoolData(schoolToken));
+        window.scrollTo({ top: 0, behavior: "smooth" });
+        setTimeout(() => dispatch(closeEditProfileModal()), 3000);
+      }
+    } catch (error) {
+      setIsLoading(false);
+      setIsSuccess(false);
+      setIsError(true);
+      staffRegPageRef.current.scrollIntoView();
+    }
+  };
+
+  useEffect(() => {
+    (async () => {
+      Object.entries(schoolData.templates.kanban).forEach((arr) => {
+        setFormData((prevState) => ({
+          ...prevState,
+          [arr[0]]: {
+            value: "",
+            type: arr[1].type,
+          },
+        }));
+      });
+    })();
+  }, [schoolData.templates.kanban]);
+
+  return (
+    <>
+      {isSuccess && (
+        <SuccessMessageWrapper>
+          <SuccessMessageContent>
+            <div className="success-message">
+              <p>
+                <FcApproval
+                  style={{
+                    fontSize: "5rem",
+                    paddingTop: "-5px",
+                  }}
+                />
+                <span>Kanban card successfully created.</span>
+              </p>
+            </div>
+          </SuccessMessageContent>
+        </SuccessMessageWrapper>
+      )}
+      {!isSuccess && (
+        <RecordFinanceWrapper>
+          <RecordFinanceContent ref={staffRegPageRef}>
+            <div className="reg-header">
+              <img src={avatarURL} alt="" />
+              <div>
+                <h2>{schoolData.name}</h2>
+                <p>{schoolData.address}</p>
+                <p>{schoolData.country}</p>
+              </div>
+            </div>
+            <hr />
+            <h2 className="reg-title">Create Kanban Item</h2>
+            {isError && (
+              <div id="registration-error-message">
+                <p>
+                  <BiErrorCircle
+                    style={{ fontSize: "1.4rem", paddingTop: "-5px" }}
+                  />
+                  <span>Sorry, we couldn't create kanban item.</span>
+                </p>
+              </div>
+            )}
+            <div className="reg-form">
+              <form onSubmit={(e) => handleSubmit(e)}>
+                {Object.entries(schoolData.templates.kanban).map((val, i) => (
+                  <div key={i} className="field-container">
+                    <label>{val[1].name}:</label>
+                    {(() => {
+                      switch (val[1].type) {
+                        case "Text":
+                          return (
+                            <Text
+                              value={formData[val[0]]?.value}
+                              setFormData={setFormData}
+                              name={val[0]}
+                            />
+                          );
+                        case "Number":
+                          return (
+                            <Number
+                              value={formData[val[0]]?.value}
+                              setFormData={setFormData}
+                              name={val[0]}
+                            />
+                          );
+                        case "Options":
+                          return (
+                            <Options
+                              options={val[1].options}
+                              value={formData[val[0]]?.value}
+                              setFormData={setFormData}
+                              name={val[0]}
+                            />
+                          );
+                        case "Date Picker":
+                          return (
+                            <DatePicker
+                              value={formData[val[0]]?.value}
+                              setFormData={setFormData}
+                              formData={formData}
+                              name={val[0]}
+                            />
+                          );
+                        case "Time Picker":
+                          return (
+                            <TimePicker
+                              value={formData[val[0]]?.value}
+                              setFormData={setFormData}
+                              formData={formData}
+                              name={val[0]}
+                            />
+                          );
+                        case "Image Picker":
+                          return (
+                            <ImagePicker
+                              value={formData[val[0]]?.value}
+                              setFormData={setFormData}
+                              formData={formData}
+                              name={val[0]}
+                            />
+                          );
+                        default:
+                          return null;
+                      }
+                    })()}
+                  </div>
+                ))}
+                <p className="info">
+                  <BsInfoCircleFill style={{ fontSize: "1rem" }} />
+                  <span>
+                    No field should be left empty, unwanted fields can be filled
+                    with "null" or hyphen(s) or any character of your choice.
+                  </span>
+                </p>
+                {Object.entries(formData).every(
+                  (value) => !invalidValues.includes(value[1].value)
+                ) &&
+                  !isLoading && (
+                    <button className="primary-btn" id="submit-btn">
+                      Submit
+                    </button>
+                  )}
+                {isLoading && (
+                  <Spinner
+                    style={{ position: "absolute", bottom: 0, width: "100%" }}
+                  />
+                )}
+              </form>
+            </div>
+            <img
+              src={avatarURL}
+              alt="school-logo-watermark"
+              className="watermark"
+            />
+          </RecordFinanceContent>
+        </RecordFinanceWrapper>
+      )}
+    </>
+  );
+};
+
 // Financial Statement View
 const FinancialStatement = () => {
   const dispatch = useDispatch();
@@ -4003,12 +4594,15 @@ const Form = () => {
       {formToShow === "createStudent" && <CreateStudent />}
       {formToShow === "createStaff" && <CreateStaff />}
       {formToShow === "createFinance" && <CreateFinance />}
+      {formToShow === "createKanban" && <CreateKanban />}
       {formToShow === "createStudentTemplate" && <CreateStudentTemplate />}
       {formToShow === "createStaffTemplate" && <CreateStaffTemplate />}
       {formToShow === "createFinanceTemplate" && <CreateFinanceTemplate />}
+      {formToShow === "createKanbanTemplate" && <CreateKanbanTemplate />}
       {formToShow === "studentRegistration" && <StudentRegistration />}
       {formToShow === "staffRegistration" && <StaffRegistration />}
       {formToShow === "recordFinance" && <RecordFinance />}
+      {formToShow === "addKanban" && <AddKanban />}
       {formToShow === "studentProfile" && <StudentProfile />}
       {formToShow === "staffProfile" && <StaffProfile />}
       {formToShow === "financialStatement" && <FinancialStatement />}

@@ -14,10 +14,15 @@ const ImagePicker = ({ value, formData, setFormData, name }) => {
     reader.onload = () => {
       const imgURL = reader.result;
       imageRef.current.src = imgURL;
-      setFormData((prev) => ({
-        ...prev,
-        [e.target.name]: imgURL,
-      }));
+      name === "cover"
+        ? setFormData((prev) => ({
+            ...prev,
+            [e.target.name]: imgURL,
+          }))
+        : setFormData((prev) => ({
+            ...prev,
+            [e.target.name]: { value: imgURL, type: "Image Picker" },
+          }));
     };
 
     reader.readAsDataURL(file);

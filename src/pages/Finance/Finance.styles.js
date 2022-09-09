@@ -43,6 +43,7 @@ export const Content = styled.div`
     }
     p {
       font-weight: 500;
+      color: var(--text);
     }
     .create-finance-button-group {
       width: 100%;
@@ -53,7 +54,7 @@ export const Content = styled.div`
       flex-wrap: wrap;
 
       button {
-        width: clamp(200px, 10vw, 215px);
+        width: clamp(200px, 20vw, 230px);
         height: clamp(130px, 5vh, 190px);
         display: flex;
         flex-direction: column;
@@ -64,12 +65,13 @@ export const Content = styled.div`
         margin: 20px;
         border-radius: 10px;
         font-weight: 500;
-        font-size: 1rem;
+        font-size: clamp(0.8rem, calc(0.8rem + 0.1vw), 1rem);
         background: var(--background);
         color: var(--text);
         font-family: var(--hind);
         cursor: pointer;
-        box-shadow: 0 5px 10px var(--dark-mid-gray);
+        box-shadow: 0 5px 10px var(--dark-gray);
+        border: 1px solid var(--dark-mid-gray);
         transition: all 300ms ease;
 
         span {

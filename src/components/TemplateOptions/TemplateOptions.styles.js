@@ -30,13 +30,14 @@ export const Wrapper = styled.div`
     overflow: hidden;
     margin-top: -20px;
     margin-bottom: 20px;
-    box-shadow: 0 7px 10px rgba(0, 0, 0, 0.3);
+    box-shadow: 0 7px 10px var(--dark-gray);
 
     li {
       font-family: var(--hind);
       list-style-type: none;
       padding: 10px;
       transition: all 200ms ease-in-out;
+      color: var(--text);
 
       :hover {
         background: var(--primary-color);
@@ -49,6 +50,7 @@ export const Wrapper = styled.div`
     position: absolute;
     width: 100%;
     z-index: 10;
+    background: var(--background);
   }
 `;
 
