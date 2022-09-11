@@ -26,6 +26,7 @@ export const lightTheme = {
   lightRed: "rgba(255, 0, 0, 0.3)",
   green: "#00af00",
   lime: "#00d600",
+  orange: "orange",
   lightGray: " rgba(0, 0, 0, 0.3)",
   lightestGray: "rgba(0, 0, 0, 0.1)",
   whiteSmoke: "rgba(0, 0, 0, 0.05)",
@@ -66,6 +67,7 @@ export const darkTheme = {
   lightRed: "rgba(255, 0, 0, 0.3)",
   green: "rgba(0, 255, 0, 1)",
   lime: "#00bb00",
+  orange: "orange",
   systemFont:
     "-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif",
   darkGray: "rgba(0, 0, 0, 0.7)",
@@ -98,6 +100,7 @@ export const GlobalStyles = createGlobalStyle`
         --transparent: ${({ theme }) => theme.transparent};
         --green: ${({ theme }) => theme.green};
         --lime: ${({ theme }) => theme.lime};
+        --orange: ${({ theme }) => theme.orange};
         --light-gray: ${({ theme }) => theme.lightGray};
         --lightest-gray: ${({ theme }) => theme.lightestGray}
         --whitesmoke: ${({ theme }) => theme.whiteSmoke};

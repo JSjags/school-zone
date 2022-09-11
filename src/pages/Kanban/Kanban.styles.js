@@ -108,7 +108,7 @@ export const Content = styled.div`
   .list {
     border-radius: 8px;
     margin: 5px;
-    background-color: rgba(192, 192, 192, 0.4);
+    background-color: var(--translucent-white);
     display: inline-block;
     vertical-align: top;
     white-space: normal;
@@ -162,23 +162,23 @@ export const Content = styled.div`
     left: 5px;
     width: 5px;
     border-radius: 2px;
-    background: #86c285;
+    background: var(--whitesmoke);
   }
 
   .priority-1 {
-    background: #adadad;
+    background: var(--dark-mid-gray);
   }
 
   .priority-2 {
-    background: #86c285;
+    background: var(--lime);
   }
 
   .priority-3 {
-    background: #edc578;
+    background: var(--orange);
   }
 
   .priority-4 {
-    background: #ef7d59;
+    background: var(--red);
   }
 `;
 

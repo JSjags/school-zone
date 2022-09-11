@@ -959,3 +959,91 @@ div.e-content.e-dropdownbase .e-list-item.e-active {
   padding: 5px;
   margin-top: 10px;
 }
+
+#kanban {
+  white-space: nowrap;
+}
+
+.list {
+  border-radius: 8px;
+  margin: 5px;
+  background-color: var(--translucent-white);
+  backdrop-filter: invert(0.5);
+  display: inline-block;
+  vertical-align: top;
+  white-space: normal;
+}
+.list.dx-sortable-source.dx-sortable-source-hidden {
+  border-radius: 8px;
+  margin: 5px;
+  background-color: var(--red) !important;
+  display: inline-block;
+  vertical-align: top;
+  white-space: normal;
+}
+
+.list-title {
+  font-size: 16px;
+  padding: 10px;
+  padding-left: 30px;
+  margin-bottom: -10px;
+  font-weight: bold;
+  cursor: pointer;
+  font-family: var(--garamond) !important;
+  color: var(--primary-color) !important;
+  font-size: 1.2rem;
+}
+
+.scrollable-list {
+  height: 400px;
+  width: 260px;
+}
+
+.sortable-cards {
+  min-height: 380px;
+}
+
+.card {
+  position: relative;
+  background-color: white;
+  box-sizing: border-box;
+  width: 230px;
+  padding: 10px 20px;
+  margin: 10px;
+  cursor: pointer;
+  font-family: var(--hind);
+}
+
+.card-subject {
+  padding-bottom: 10px;
+}
+
+.card-assignee {
+  opacity: 0.6;
+}
+
+.card-priority {
+  position: absolute;
+  top: 10px;
+  bottom: 10px;
+  left: 5px;
+  width: 5px;
+  border-radius: 2px;
+  background: var(--translucent-white);
+}
+
+.priority-1 {
+  background: var(--dark-mid-gray);
+}
+
+.priority-2 {
+  background: var(--lime);
+}
+
+.priority-3 {
+  background: var(--orange);
+}
+
+.priority-4 {
+  background: var(--red);
+}

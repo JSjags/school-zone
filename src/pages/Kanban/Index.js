@@ -1,6 +1,13 @@
-import React, { useCallback, useEffect, useRef, useState } from "react";
+import React, {
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { useNavigate } from "react-router";
+import { v4 as uuidv4 } from "uuid";
 
 import ScrollView from "devextreme-react/scroll-view";
 import Sortable from "devextreme-react/sortable";
@@ -37,7 +44,8 @@ import noKanbanSvg from "../../assets/no-kanban.svg";
 import Button from "../../components/Button/Index";
 import { TbListDetails } from "react-icons/tb";
 import Options from "../../components/Options/Index";
-import { useLayoutEffect } from "react";
+import { tasks as taskList, employees } from "./dummyData";
+import { RiContactsBookLine } from "react-icons/ri";
 
 const LightTheme = React.lazy(() =>
   import("../../DEThemes/SchedulerThemes/LightTheme")
@@ -48,7 +56,7 @@ const DarkTheme = React.lazy(() =>
 
 const DETheme = ({ children }) => {
   const CHOSEN_THEME =
-    useSelector((state) => state.schoolData.data.settings.theme) ?? "Light";
+    useSelector((state) => state.schoolData.data.settings?.theme) ?? "Light";
   return (
     <>
       <React.Suspense fallback={<></>}>
@@ -60,7 +68,15 @@ const DETheme = ({ children }) => {
   );
 };
 
-const Card = ({ task }) => {
+const statuses = [
+  "Not Started",
+  "Need Assistance",
+  "In Progress",
+  "Deferred",
+  "Completed",
+];
+
+function Card({ task }) {
   return (
     <div className="card dx-card dx-theme-text-color dx-theme-background-color">
       <div className={`card-priority priority-${task.priorityLevel}`}></div>
@@ -68,16 +84,9 @@ const Card = ({ task }) => {
       <div className="card-assignee">{task.description}</div>
     </div>
   );
-};
+}
 
-const List = ({
-  title,
-  index,
-  tasks,
-  employeesMap,
-  onTaskDragStart,
-  onTaskDrop,
-}) => {
+function List({ title, index, tasks, onTaskDragStart, onTaskDrop }) {
   return (
     <div className="list">
       <div className="list-title dx-theme-text-color">{title}</div>
@@ -95,32 +104,17 @@ const List = ({
           onAdd={onTaskDrop}
         >
           {tasks.map((task) => (
-            <Card key={task.Task_ID} task={task}></Card>
+            <Card key={task.statement_id + uuidv4()} task={task}></Card>
           ))}
         </Sortable>
       </ScrollView>
     </div>
   );
-};
+}
 
-const Kanban = () => {
+function Kanban(props) {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-
-  const statuses = useRef([
-    "Not Started",
-    "Need Assistance",
-    "In Progress",
-    "Deferred",
-    "Completed",
-  ]);
-
-  const [lists, setLists] = useState([]);
-
-  const [kanbanState, setKanbanState] = useState({
-    statuses,
-    lists,
-  });
 
   const {
     data: schoolData,
@@ -129,22 +123,27 @@ const Kanban = () => {
     isError,
     message,
   } = useSelector((state) => state.schoolData);
-  const { kanban } = useSelector((state) => state.schoolData.data);
+  const { kanban: tasks } = useSelector((state) => state.schoolData.data);
   const { isEditProfileModalOpen } = useSelector((state) => state.config);
+  const authToken = useSelector((state) => state.schoolAuth.token);
 
-  const createList = useCallback(() => {
-    if (kanbanState.lists.length) return;
-    statuses.current.forEach((status) => {
-      lists.push(
-        kanban.filter(
+  const lists = useMemo(() => {
+    if (tasks === undefined) return [];
+    const Lists = [];
+    statuses.forEach((status) => {
+      Lists.push(
+        tasks.filter(
           (task) => task.status.trim().split("- ").join(" ") === status
         )
       );
     });
-    console.log(kanbanState);
-  }, [kanban]);
+    return Lists;
+  }, [tasks]);
 
-  const authToken = useSelector((state) => state.schoolAuth.token);
+  const [kanbanState, setKanbanState] = useState({
+    statuses,
+    lists,
+  });
 
   const handleCreateKanban = () => {
     window.scrollTo({
@@ -170,6 +169,90 @@ const Kanban = () => {
     dispatch(showForm("addKanban"));
   };
 
+  const redirect = (location) => {
+    if (location === "home") {
+      localStorage.removeItem("schoolCredentials");
+      return navigate("/");
+    } else {
+      localStorage.removeItem("schoolCredentials");
+      return navigate("/login");
+    }
+  };
+
+  function onListReorder(e) {
+    setKanbanState({
+      lists: reorder(
+        kanbanState.lists,
+        kanbanState.lists[e.fromIndex],
+        e.fromIndex,
+        e.toIndex
+      ),
+      statuses: reorder(
+        kanbanState.statuses,
+        kanbanState.statuses[e.fromIndex],
+        e.fromIndex,
+        e.toIndex
+      ),
+    });
+  }
+
+  function onTaskDragStart(e) {
+    e.itemData = kanbanState.lists[e.fromData][e.fromIndex];
+  }
+
+  function onTaskDrop(e) {
+    console.log(e);
+    updateTask(e.fromData, e.itemData, e.fromIndex, -1);
+    updateTask(e.toData, e.itemData, -1, e.toIndex);
+  }
+
+  function reorder(items, item, fromIndex, toIndex) {
+    // let result = items;
+    // if (fromIndex >= 0) {
+    //   result.splice(fromIndex, 1);
+    // }
+
+    // if (toIndex >= 0) {
+    //   result = [...items.slice(0, toIndex), item, ...items.slice(toIndex)];
+    // }
+
+    // return result;
+
+    let result = items;
+    if (fromIndex >= 0) {
+      result = [...items.slice(0, fromIndex), ...items.slice(fromIndex + 1)];
+    }
+
+    if (toIndex >= 0) {
+      result = [...items.slice(0, toIndex), item, ...items.slice(toIndex)];
+    }
+
+    return result;
+  }
+
+  function updateTask(listIndex, itemData, fromIndex, toIndex) {
+    const lists = kanbanState.lists.slice();
+    console.log("before", lists);
+
+    lists[listIndex] = reorder(lists[listIndex], itemData, fromIndex, toIndex);
+
+    console.log("after", lists);
+    setKanbanState((prev) => ({
+      ...prev,
+      lists,
+    }));
+  }
+
+  // Get kanban list from database and update client kanban list
+  // useEffect(() => {
+  //   if (lists === undefined) return;
+  //   setKanbanState((prev) => ({
+  //     ...prev,
+  //     lists,
+  //   }));
+  //   console.log("running");
+  // }, [lists]);
+
   useEffect(() => {
     if (message !== null && message.includes("jwt expired")) {
       localStorage.removeItem("schoolCredentials");
@@ -191,65 +274,6 @@ const Kanban = () => {
     dispatch(setCurrentPage("schooldashboard"));
   }, [dispatch]);
 
-  const redirect = (location) => {
-    if (location === "home") {
-      localStorage.removeItem("schoolCredentials");
-      return navigate("/");
-    } else {
-      localStorage.removeItem("schoolCredentials");
-      return navigate("/login");
-    }
-  };
-
-  const reorder = (items, item, fromIndex, toIndex) => {
-    let result = items;
-    if (fromIndex >= 0) {
-      result = [...items.slice(0, fromIndex), ...items.slice(fromIndex + 1)];
-    }
-
-    if (toIndex >= 0) {
-      result = [...items.slice(0, toIndex), item, ...items.slice(toIndex)];
-    }
-
-    return result;
-  };
-
-  const updateTask = (listIndex, itemData, fromIndex, toIndex) => {
-    const lists = kanbanState.lists.slice();
-
-    lists[listIndex] = reorder(lists[listIndex], itemData, fromIndex, toIndex);
-
-    setKanbanState({
-      lists,
-    });
-  };
-
-  const onListReorder = (e) => {
-    setKanbanState({
-      lists: reorder(
-        kanbanState.lists,
-        kanbanState.lists[e.fromIndex],
-        e.fromIndex,
-        e.toIndex
-      ),
-      statuses: reorder(
-        kanbanState.statuses,
-        kanbanState.statuses[e.fromIndex],
-        e.fromIndex,
-        e.toIndex
-      ),
-    });
-  };
-
-  const onTaskDragStart = (e) => {
-    e.itemData = kanbanState.lists[e.fromData][e.fromIndex];
-  };
-
-  const onTaskDrop = (e) => {
-    updateTask(e.fromData, e.itemData, e.fromIndex, -1);
-    updateTask(e.toData, e.itemData, -1, e.toIndex);
-  };
-
   return (
     <Wrapper isSuccess={isSuccess ? true : false}>
       {isEditProfileModalOpen && <EditModal />}
@@ -262,7 +286,7 @@ const Kanban = () => {
         <Content>
           <main>
             <PageHeader title="Kanban" />
-            {kanban === undefined && (
+            {tasks === undefined && (
               <div className="create-kanban">
                 <img alt="add-student" src={noKanbanSvg}></img>
                 <p>No Kanban data found.</p>
@@ -278,77 +302,45 @@ const Kanban = () => {
                 </div>
               </div>
             )}
-            {!isLoading && kanban && kanban.length && (
-              <>
-                <div className="available-kanban">
-                  <Button callback={handleNewKanbanCard}>
-                    <BiBookAdd style={{ fontSize: "1.4rem" }} />
-                    <span>Add kanban Card</span>
-                  </Button>
+            {!isLoading && tasks && tasks.length && (
+              <div className="available-kanban">
+                <Button onClick={handleNewKanbanCard}>
+                  <BiBookAdd style={{ fontSize: "1.4rem" }} />
+                  <span>Add kanban Card</span>
+                </Button>
 
-                  <DETheme>
-                    <div id="kanban" ref={createList}>
-                      <ScrollView
-                        className="scrollable-board"
-                        direction="horizontal"
-                        showScrollbar="always"
+                <DETheme>
+                  <div id="kanban">
+                    <ScrollView
+                      className="scrollable-board"
+                      direction="horizontal"
+                      showScrollbar="always"
+                    >
+                      <Sortable
+                        className="sortable-lists"
+                        itemOrientation="horizontal"
+                        handle=".list-title"
+                        onReorder={onListReorder}
                       >
-                        <Sortable
-                          className="sortable-lists"
-                          itemOrientation="horizontal"
-                          handle=".list-title"
-                          onReorder={onListReorder}
-                        >
-                          {kanbanState.lists.map((tasks, listIndex) => {
-                            const status = kanbanState.statuses[listIndex];
-                            console.log(status);
-                            return (
-                              <List
-                                key={status}
-                                title={status}
-                                index={listIndex}
-                                tasks={tasks}
-                                onTaskDragStart={onTaskDragStart}
-                                onTaskDrop={onTaskDrop}
-                              ></List>
-                            );
-                          })}
-                        </Sortable>
-                      </ScrollView>
-                    </div>
-                  </DETheme>
-                </div>
-              </>
+                        {kanbanState.lists.map((tasks, listIndex) => {
+                          const status = kanbanState.statuses[listIndex];
+                          return (
+                            <List
+                              key={status}
+                              title={status}
+                              index={listIndex}
+                              tasks={tasks}
+                              onTaskDragStart={onTaskDragStart}
+                              onTaskDrop={onTaskDrop}
+                            ></List>
+                          );
+                        })}
+                      </Sortable>
+                    </ScrollView>
+                  </div>
+                </DETheme>
+              </div>
             )}
-            {/* {schoolData.kanban?.items.length && <div id="kanban">
-              <ScrollView
-                className="scrollable-board"
-                direction="horizontal"
-                showScrollbar="always"
-              >
-                <Sortable
-                  className="sortable-lists"
-                  itemOrientation="horizontal"
-                  handle=".list-title"
-                  onReorder={this.onListReorder}
-                >
-                  {this.state.lists.map((tasks, listIndex) => {
-                    const status = this.state.statuses[listIndex];
-                    return (
-                      <List
-                        key={status}
-                        title={status}
-                        index={listIndex}
-                        tasks={tasks}
-                        employeesMap={this.state.employeesMap}
-                        onTaskDragStart={this.onTaskDragStart}
-                        onTaskDrop={this.onTaskDrop}
-                      ></List>
-                    );
-                  })}
-                </Sortable>
-              </ScrollView>
-            </div>} */}
           </main>
         </Content>
       )}
@@ -373,6 +365,6 @@ const Kanban = () => {
       )}
     </Wrapper>
   );
-};
+}
 
 export default Kanban;
