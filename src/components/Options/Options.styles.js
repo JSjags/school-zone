@@ -9,7 +9,7 @@ export const OptionsWrapper = styled.div`
   outline-offset: 2px;
   outline-width: 3px;
   ${({ name, value }) =>
-    name === "view" || name === "filter" || name === "theme"
+    name === "view" || name === "filter" || name === "theme" || name === "posts"
       ? css`
           width: calc(${value.length}ch + 55px);
           /* padding-top: 10px; */
@@ -26,7 +26,10 @@ export const OptionsWrapper = styled.div`
     position: absolute;
     z-index: 1000;
     ${({ name, value }) =>
-      name === "view" || name === "filter" || name === "theme"
+      name === "view" ||
+      name === "filter" ||
+      name === "theme" ||
+      name === "posts"
         ? css`
             width: max-content;
             top: 70px;
@@ -80,7 +83,10 @@ export const OptionsContent = styled.div`
     outline-width: 3px;
     cursor: pointer;
     ${({ name, value }) =>
-      name === "view" || name === "filter" || name === "theme"
+      name === "view" ||
+      name === "filter" ||
+      name === "theme" ||
+      name === "posts"
         ? css`
             border: 1px solid var(--dark-mid-gray);
             width: calc(${value.length}ch + 45px);

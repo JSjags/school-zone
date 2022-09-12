@@ -23,6 +23,7 @@ import Settings from "./pages/Settings/Index";
 import Scheduler from "./pages/Scheduler/Index";
 import Kanban from "./pages/Kanban/Index";
 import Editor from "./pages/Editor/Index";
+import Posts from "./pages/Posts/Index";
 
 import { GlobalStyles } from "./pages/Global.styles";
 
@@ -31,7 +32,6 @@ import { darkTheme, lightTheme } from "./pages/Global.styles";
 
 import "./App.css";
 import { getTheme } from "./utils";
-import { BsKanban } from "react-icons/bs";
 
 const queryClient = new QueryClient();
 
@@ -66,6 +66,7 @@ function App() {
               <Route path="/schooldashboard/students" element={<Students />} />
               <Route path="/schooldashboard/staffs" element={<Staffs />} />
               <Route path="/schooldashboard/finance" element={<Finance />} />
+              <Route path="/schooldashboard/posts" element={<Posts />} />
               <Route path="/schooldashboard/profile" element={<Profile />} />
               <Route path="/schooldashboard/settings" element={<Settings />} />
               <Route

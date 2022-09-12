@@ -2,10 +2,11 @@ import axios from "axios";
 
 const baseUrl = "/api/schools";
 
-const fetchSchoolData = async (authToken) => {
+const fetchSchoolData = async (authToken, page) => {
+  const targetEndpoint = page === "posts" ? "posts" : "info";
   const response = await axios({
     method: "get",
-    url: `${baseUrl}/info`,
+    url: `${baseUrl}/${targetEndpoint}`,
     headers: {
       Authorization: `Bearer ${authToken}`,
     },

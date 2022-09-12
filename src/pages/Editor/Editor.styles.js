@@ -62,9 +62,22 @@ export const Content = styled.div`
   }
 
   #editor {
-    border-color: var(--dark-mid-color);
+    border-color: var(--dark-mid-gray);
     border-radius: 10px;
     min-height: 70vh;
+  }
+  .dx-htmleditor-content {
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
+    line-height: 1.42;
+    width: 100%;
+    outline: 0;
+    overflow-y: auto;
+    /* background: var(--translucent-white); */
+    padding: 12px 15px;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+    color: var(--text);
   }
   .button-holder {
     display: flex;
@@ -103,7 +116,8 @@ export const Content = styled.div`
 
       span {
         font-family: var(--hind);
-        color: var(--whitesmoke);
+        color: var(--text);
+        filter: invert(80%);
         font-size: 0.9rem;
       }
     }

@@ -17,7 +17,7 @@ export const TextWrapper = styled.input`
   margin-top: 15px;
   margin-bottom: 5px;
   transition: all 200ms ease-in-out;
-  backdrop-filter: blur(5px);
+  backdrop-filter: blur(5px) invert(0.1);
   color: var(--text);
   background: var(--translucent-white);
 

@@ -42,13 +42,17 @@ const Options = ({ options, value, setShowMessage, setFormData, name }) => {
 
   const handleChange = (e) => {
     setFormData((prev) => {
-      if (name === "view" || name === "filter" || name === "theme") {
+      if (
+        name === "view" ||
+        name === "filter" ||
+        name === "theme" ||
+        name === "posts"
+      ) {
         const newObject = {
           ...prev,
           [name]: !e.target.value ? e.target.textContent : e.target.value,
         };
-        console.log(newObject);
-        updateSettings(newObject);
+        name === "theme" && updateSettings(newObject);
         return newObject;
       }
       return {

@@ -17,10 +17,10 @@ export const fetchSchoolData = createAsyncThunk(
   "schoolData/fetchSchoolData",
   async (authToken, thunkAPI) => {
     try {
-      const controller = thunkAPI.getState().schoolData.controller;
+      const currentPage = thunkAPI.getState().config.currentPage;
       const schoolData = await schoolService.fetchSchoolData(
         authToken,
-        controller
+        currentPage
       );
       return await thunkAPI.fulfillWithValue(schoolData);
     } catch (error) {
@@ -52,13 +52,6 @@ export const fetchSchoolSettings = createAsyncThunk(
     }
   }
 );
-// export const cancelFetchSchoolData = createAsyncThunk(
-//   "schoolData/cancelFetchSchoolData",
-//   async () => {
-//     controller.abort();
-//   }
-// );
-
 export const schoolDataSlice = createSlice({
   name: "schoolData",
   initialState,

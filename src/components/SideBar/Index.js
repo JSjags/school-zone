@@ -5,6 +5,7 @@ import { useSelector } from "react-redux";
 import { Content } from "./SideBar.styles";
 import { FaIdCardAlt, FaRegMoneyBillAlt } from "react-icons/fa";
 import { RiProfileFill } from "react-icons/ri";
+import { HiOutlineNewspaper } from "react-icons/hi";
 import { IoCreateOutline } from "react-icons/io5";
 import { BsFillCalendarWeekFill, BsKanban } from "react-icons/bs";
 import { MdSettings, MdSpaceDashboard, MdPeopleAlt } from "react-icons/md";
@@ -63,7 +64,9 @@ const SideBar = () => {
         </div>
         <section id="lower-section">
           <ul id="menu">
+            {/* General header */}
             <li className="section-heading">GENERAL</li>
+
             <Link
               to={"/schooldashboard"}
               className={currentPage === "schooldashboard" ? "current" : ""}
@@ -105,6 +108,16 @@ const SideBar = () => {
               </li>
             </Link>
             <Link
+              to={"/schooldashboard/posts"}
+              onClick={handleNavClick}
+              className={currentPage === "posts" ? "current" : ""}
+            >
+              <li>
+                <HiOutlineNewspaper style={{ fontSize: "1.6rem" }} />
+                <span>Posts</span>
+              </li>
+            </Link>
+            <Link
               to={"/schooldashboard/profile"}
               onClick={handleNavClick}
               className={currentPage === "profile" ? "current" : ""}
@@ -125,15 +138,9 @@ const SideBar = () => {
               </li>
             </Link>
 
-            {/* <div className="school-address">
-            <MdLocationPin style={{ color: "white", fontSize: "1.5rem" }} />
-            <div id="address-cont">
-              <h3 id="country">{data.country}</h3>
-              <p id="address">{data.address}</p>
-            </div>
-          </div> */}
-
+            {/* Applications header */}
             <li className="section-heading">APPLICATIONS</li>
+
             <Link
               to={"/schooldashboard/scheduler"}
               className={currentPage === "scheduler" ? "current" : ""}
