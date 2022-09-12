@@ -37,15 +37,14 @@ import PageHeader from "../../components/PageHeader/Index";
 import EditModal from "../../components/EditModal/Index";
 import Spinner from "../../components/Spinner/Index";
 import noDataSvg from "../../assets/no-data.svg";
-import { BsPersonPlus } from "react-icons/bs";
+import { BsInfoCircleFill, BsPersonPlus } from "react-icons/bs";
 import { IoCreateOutline } from "react-icons/io5";
 
 import noKanbanSvg from "../../assets/no-kanban.svg";
 import Button from "../../components/Button/Index";
 import { TbListDetails } from "react-icons/tb";
 import Options from "../../components/Options/Index";
-import { tasks as taskList, employees } from "./dummyData";
-import { RiContactsBookLine } from "react-icons/ri";
+import axios from "axios";
 
 const LightTheme = React.lazy(() =>
   import("../../DEThemes/SchedulerThemes/LightTheme")
@@ -68,25 +67,44 @@ const DETheme = ({ children }) => {
   );
 };
 
-const statuses = [
-  "Not Started",
-  "Need Assistance",
-  "In Progress",
-  "Deferred",
-  "Completed",
-];
-
-function Card({ task }) {
+// Kanban task card component
+function Card({ task, taskId, kanbanLists, setKanbanState }) {
+  const handleDelete = (id) => {
+    const alteredLists = kanbanLists;
+    alteredLists.forEach((list) => {
+      list.forEach((task, i) => {
+        if (task.statement_id === taskId) {
+          list.splice(i, 1);
+        }
+      });
+    });
+    setKanbanState((prevState) => ({
+      ...prevState,
+      lists: alteredLists,
+    }));
+  };
   return (
     <div className="card dx-card dx-theme-text-color dx-theme-background-color">
       <div className={`card-priority priority-${task.priorityLevel}`}></div>
       <div className="card-subject">{task.subject}</div>
       <div className="card-assignee">{task.description}</div>
+      <div className="card-delete" onClick={() => handleDelete(taskId)}>
+        ❌
+      </div>
     </div>
   );
 }
 
-function List({ title, index, tasks, onTaskDragStart, onTaskDrop }) {
+// Kanban list component
+function List({
+  title,
+  index,
+  tasks,
+  onTaskDragStart,
+  onTaskDrop,
+  kanbanLists,
+  setKanbanState,
+}) {
   return (
     <div className="list">
       <div className="list-title dx-theme-text-color">{title}</div>
@@ -104,13 +122,28 @@ function List({ title, index, tasks, onTaskDragStart, onTaskDrop }) {
           onAdd={onTaskDrop}
         >
           {tasks.map((task) => (
-            <Card key={task.statement_id + uuidv4()} task={task}></Card>
+            <Card
+              key={task.statement_id}
+              taskId={task.statement_id}
+              task={task}
+              kanbanLists={kanbanLists}
+              setKanbanState={setKanbanState}
+            ></Card>
           ))}
         </Sortable>
       </ScrollView>
     </div>
   );
 }
+
+// Initial statuses array if school has none
+const statuses = [
+  "Not Started",
+  "Deferred",
+  "Need Assistance",
+  "In Progress",
+  "Completed",
+];
 
 function Kanban(props) {
   const dispatch = useDispatch();
@@ -123,14 +156,20 @@ function Kanban(props) {
     isError,
     message,
   } = useSelector((state) => state.schoolData);
-  const { kanban: tasks } = useSelector((state) => state.schoolData.data);
+  const { id: schoolId, token: schoolToken } = useSelector(
+    (state) => state.schoolAuth
+  );
+  const { kanban: tasks, kanbanListOrder } = useSelector(
+    (state) => state.schoolData.data
+  );
   const { isEditProfileModalOpen } = useSelector((state) => state.config);
   const authToken = useSelector((state) => state.schoolAuth.token);
 
   const lists = useMemo(() => {
     if (tasks === undefined) return [];
     const Lists = [];
-    statuses.forEach((status) => {
+    const newStatuses = kanbanListOrder ? kanbanListOrder : statuses;
+    newStatuses.forEach((status) => {
       Lists.push(
         tasks.filter(
           (task) => task.status.trim().split("- ").join(" ") === status
@@ -138,7 +177,7 @@ function Kanban(props) {
       );
     });
     return Lists;
-  }, [tasks]);
+  }, [tasks, kanbanListOrder]);
 
   const [kanbanState, setKanbanState] = useState({
     statuses,
@@ -179,20 +218,32 @@ function Kanban(props) {
     }
   };
 
+  function reorder(items, item, fromIndex, toIndex) {
+    let result = JSON.parse(JSON.stringify(items));
+
+    result.splice(fromIndex, 1);
+    result.splice(toIndex, 0, item);
+    console.log(items);
+
+    return result;
+  }
+
   function onListReorder(e) {
+    const lists = reorder(
+      kanbanState.lists,
+      kanbanState.lists[e.fromIndex],
+      e.fromIndex,
+      e.toIndex
+    );
+    const statuses = reorder(
+      kanbanState.statuses,
+      kanbanState.statuses[e.fromIndex],
+      e.fromIndex,
+      e.toIndex
+    );
     setKanbanState({
-      lists: reorder(
-        kanbanState.lists,
-        kanbanState.lists[e.fromIndex],
-        e.fromIndex,
-        e.toIndex
-      ),
-      statuses: reorder(
-        kanbanState.statuses,
-        kanbanState.statuses[e.fromIndex],
-        e.fromIndex,
-        e.toIndex
-      ),
+      lists,
+      statuses,
     });
   }
 
@@ -201,26 +252,13 @@ function Kanban(props) {
   }
 
   function onTaskDrop(e) {
-    console.log(e);
     updateTask(e.fromData, e.itemData, e.fromIndex, -1);
     updateTask(e.toData, e.itemData, -1, e.toIndex);
   }
-
-  function reorder(items, item, fromIndex, toIndex) {
-    // let result = items;
-    // if (fromIndex >= 0) {
-    //   result.splice(fromIndex, 1);
-    // }
-
-    // if (toIndex >= 0) {
-    //   result = [...items.slice(0, toIndex), item, ...items.slice(toIndex)];
-    // }
-
-    // return result;
-
+  function taskReorder(items, item, fromIndex, toIndex) {
     let result = items;
     if (fromIndex >= 0) {
-      result = [...items.slice(0, fromIndex), ...items.slice(fromIndex + 1)];
+      result.splice(fromIndex, 1);
     }
 
     if (toIndex >= 0) {
@@ -232,11 +270,14 @@ function Kanban(props) {
 
   function updateTask(listIndex, itemData, fromIndex, toIndex) {
     const lists = kanbanState.lists.slice();
-    console.log("before", lists);
 
-    lists[listIndex] = reorder(lists[listIndex], itemData, fromIndex, toIndex);
+    lists[listIndex] = taskReorder(
+      lists[listIndex],
+      itemData,
+      fromIndex,
+      toIndex
+    );
 
-    console.log("after", lists);
     setKanbanState((prev) => ({
       ...prev,
       lists,
@@ -244,15 +285,66 @@ function Kanban(props) {
   }
 
   // Get kanban list from database and update client kanban list
-  // useEffect(() => {
-  //   if (lists === undefined) return;
-  //   setKanbanState((prev) => ({
-  //     ...prev,
-  //     lists,
-  //   }));
-  //   console.log("running");
-  // }, [lists]);
+  useEffect(() => {
+    if (lists === undefined) return;
+    setKanbanState((prev) => ({
+      ...prev,
+      lists,
+    }));
+  }, [lists]);
 
+  // Update kanban list and list order in database
+  useEffect(() => {
+    const abortController = new AbortController();
+    const signal = abortController.signal;
+
+    if (kanbanState.lists.length < 1 || kanbanState.statuses.length < 1) return;
+
+    //  Prepare kanban board data for upload to mongoDB
+    let Lists = [...JSON.parse(JSON.stringify(kanbanState.lists))];
+
+    Lists.forEach((list, outerIndex) => {
+      list.forEach((l) => {
+        if (
+          l.status.trim().split("- ").join(" ") !==
+          kanbanState.statuses[outerIndex]
+        ) {
+          l.status =
+            " " + kanbanState.statuses[outerIndex].split(" ").join("- ");
+        }
+      });
+    });
+
+    Lists = Lists.filter((newList) => newList.length > 0).flat();
+
+    // Upload kanban board updates to mongoDB
+    const updateKanbanList = async () => {
+      try {
+        const serverResponse = await axios({
+          url: `/api/schools/${schoolId}/kanban/update`,
+          method: "POST",
+          data: { tasks: Lists, listOrder: kanbanState.statuses },
+          headers: {
+            Authorization: `Bearer ${schoolToken}`,
+          },
+          signal,
+        });
+        console.log(serverResponse);
+      } catch (error) {
+        if (axios.isCancel(error)) return;
+
+        console.log(error);
+      }
+    };
+
+    updateKanbanList();
+
+    return () => {
+      abortController.abort(signal);
+    };
+  }, [kanbanState, schoolId, schoolToken]);
+
+  // Fetch school data
   useEffect(() => {
     if (message !== null && message.includes("jwt expired")) {
       localStorage.removeItem("schoolCredentials");
@@ -270,6 +362,7 @@ function Kanban(props) {
     dispatch(fetchSchoolData(authToken));
   }, [authToken, dispatch, navigate, message]);
 
+  // Set current page
   useEffect(() => {
     dispatch(setCurrentPage("schooldashboard"));
   }, [dispatch]);
@@ -286,7 +379,7 @@ function Kanban(props) {
         <Content>
           <main>
             <PageHeader title="Kanban" />
-            {tasks === undefined && (
+            {tasks.length <= 0 && (
               <div className="create-kanban">
                 <img alt="add-student" src={noKanbanSvg}></img>
                 <p>No Kanban data found.</p>
@@ -302,44 +395,83 @@ function Kanban(props) {
                 </div>
               </div>
             )}
-            {!isLoading && tasks && tasks.length && (
-              <div className="available-kanban">
-                <Button onClick={handleNewKanbanCard}>
-                  <BiBookAdd style={{ fontSize: "1.4rem" }} />
-                  <span>Add kanban Card</span>
-                </Button>
+            {!isLoading && tasks.length && (
+              <>
+                <div className="available-kanban">
+                  <Button callback={handleNewKanbanCard}>
+                    <BiBookAdd style={{ fontSize: "1.4rem" }} />
+                    <span>Add kanban Card</span>
+                  </Button>
 
-                <DETheme>
-                  <div id="kanban">
-                    <ScrollView
-                      className="scrollable-board"
-                      direction="horizontal"
-                      showScrollbar="always"
-                    >
-                      <Sortable
-                        className="sortable-lists"
-                        itemOrientation="horizontal"
-                        handle=".list-title"
-                        onReorder={onListReorder}
+                  <DETheme>
+                    <div id="kanban">
+                      <ScrollView
+                        className="scrollable-board"
+                        direction="horizontal"
+                        showScrollbar="always"
                       >
-                        {kanbanState.lists.map((tasks, listIndex) => {
-                          const status = kanbanState.statuses[listIndex];
-                          return (
-                            <List
-                              key={status}
-                              title={status}
-                              index={listIndex}
-                              tasks={tasks}
-                              onTaskDragStart={onTaskDragStart}
-                              onTaskDrop={onTaskDrop}
-                            ></List>
-                          );
-                        })}
-                      </Sortable>
-                    </ScrollView>
-                  </div>
-                </DETheme>
-              </div>
+                        <Sortable
+                          className="sortable-lists"
+                          itemOrientation="horizontal"
+                          handle=".list-title"
+                          onReorder={onListReorder}
+                        >
+                          {kanbanState.lists.map((tasks, listIndex) => {
+                            const status = kanbanState.statuses[listIndex];
+                            return (
+                              <List
+                                key={status}
+                                title={status}
+                                index={listIndex}
+                                tasks={tasks}
+                                onTaskDragStart={onTaskDragStart}
+                                onTaskDrop={onTaskDrop}
+                                kanbanLists={kanbanState.lists}
+                                setKanbanState={setKanbanState}
+                              ></List>
+                            );
+                          })}
+                        </Sortable>
+                      </ScrollView>
+                    </div>
+                  </DETheme>
+                </div>
+                <div className="instructions-panel">
+                  <h3>Instructions Panel</h3>
+                  <ul>
+                    <li>
+                      <span>
+                        Click and drag list title to any position to re-arrange
+                        lists.
+                      </span>
+                    </li>
+                    <li>
+                      <span>
+                        Click and drag tasks to re-order tasks in each list or
+                        change their position across all lists.
+                      </span>
+                    </li>
+                    <li>
+                      <span>
+                        Click on the "Add kanban card" button to add another
+                        task to your kanban board.
+                      </span>
+                    </li>
+                    <li>
+                      <span>
+                        Click on ❌ to delete or remove task from kanban.
+                      </span>
+                    </li>
+                    <li>
+                      <span>
+                        Don't worry about losing changes made like
+                        re-arrangement of lists or re-ordering of tasks as those
+                        changes are changed behind the scenes.
+                      </span>
+                    </li>
+                  </ul>
+                </div>
+              </>
             )}
           </main>
         </Content>

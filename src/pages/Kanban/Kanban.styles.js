@@ -154,6 +154,24 @@ export const Content = styled.div`
   .card-assignee {
     opacity: 0.6;
   }
+  .card-delete {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    font-size: 0.5em;
+    padding: 5px;
+    border-radius: 10px;
+    background: var(--translucent-white);
+    filter: grayscale(1) brightness(250%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 200ms ease;
+
+    :hover {
+      filter: none !important;
+    }
+  }
 
   .card-priority {
     position: absolute;
@@ -179,6 +197,45 @@ export const Content = styled.div`
 
   .priority-4 {
     background: var(--red);
+  }
+
+  .instructions-panel {
+    background: var(--background);
+    border-radius: 10px;
+    margin: 30px 10px;
+    border: 1px solid var(--dark-mid-gray);
+    padding: 10px;
+
+    ul {
+      padding: 10px 0;
+    }
+
+    li {
+      list-style-position: inside;
+      span {
+        font-family: var(--hind);
+        color: var(--text);
+      }
+    }
+    li::marker {
+      content: "📎 ";
+      font-size: 1.2em;
+    }
+
+    p.info-notice {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      color: var(--primary-color);
+      padding-left: 5px;
+      margin-top: 20px;
+
+      span {
+        font-family: var(--hind);
+        color: var(--whitesmoke);
+        font-size: 0.9rem;
+      }
+    }
   }
 `;
 
