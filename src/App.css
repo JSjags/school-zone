@@ -1005,7 +1005,7 @@ div.e-content.e-dropdownbase .e-list-item.e-active {
 
 .card {
   position: relative;
-  background-color: white;
+  background-color: var(--background);
   box-sizing: border-box;
   width: 230px;
   padding: 10px 20px;
@@ -1020,6 +1020,25 @@ div.e-content.e-dropdownbase .e-list-item.e-active {
 
 .card-assignee {
   opacity: 0.6;
+}
+
+.card-delete {
+  position: absolute;
+  top: 5px;
+  right: 5px;
+  font-size: 0.5em;
+  padding: 5px;
+  border-radius: 10px;
+  background: var(--translucent-white);
+  filter: grayscale(1) brightness(250%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 200ms ease;
+}
+
+.card-delete:hover {
+  filter: none !important;
 }
 
 .card-priority {

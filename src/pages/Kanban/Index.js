@@ -1,13 +1,7 @@
-import React, {
-  useCallback,
-  useEffect,
-  useMemo,
-  useRef,
-  useState,
-} from "react";
+import React, { useEffect, useMemo, useState } from "react";
+import axios from "axios";
 import { useSelector, useDispatch } from "react-redux";
 import { useNavigate } from "react-router";
-import { v4 as uuidv4 } from "uuid";
 
 import ScrollView from "devextreme-react/scroll-view";
 import Sortable from "devextreme-react/sortable";
@@ -29,23 +23,19 @@ import {
   LoadingContainer,
   Wrapper,
 } from "./Kanban.styles";
-import { FaSignOutAlt } from "react-icons/fa";
-import { MdMessage, MdNotifications, MdSettings } from "react-icons/md";
+
 import { BiBookAdd, BiError } from "react-icons/bi";
+import { IoCreateOutline } from "react-icons/io5";
+import { BsPersonPlus } from "react-icons/bs";
 
 import PageHeader from "../../components/PageHeader/Index";
 import EditModal from "../../components/EditModal/Index";
 import Spinner from "../../components/Spinner/Index";
-import noDataSvg from "../../assets/no-data.svg";
-import { BsInfoCircleFill, BsPersonPlus } from "react-icons/bs";
-import { IoCreateOutline } from "react-icons/io5";
+import Button from "../../components/Button/Index";
 
 import noKanbanSvg from "../../assets/no-kanban.svg";
-import Button from "../../components/Button/Index";
-import { TbListDetails } from "react-icons/tb";
-import Options from "../../components/Options/Index";
-import axios from "axios";
 
+// Lazily loaded themes for DE Components
 const LightTheme = React.lazy(() =>
   import("../../DEThemes/SchedulerThemes/LightTheme")
 );
@@ -53,6 +43,7 @@ const DarkTheme = React.lazy(() =>
   import("../../DEThemes/SchedulerThemes/DarkTheme")
 );
 
+// DE Theme
 const DETheme = ({ children }) => {
   const CHOSEN_THEME =
     useSelector((state) => state.schoolData.data.settings?.theme) ?? "Light";
@@ -364,7 +355,7 @@ function Kanban(props) {
 
   // Set current page
   useEffect(() => {
-    dispatch(setCurrentPage("schooldashboard"));
+    dispatch(setCurrentPage("kanban"));
   }, [dispatch]);
 
   return (
@@ -400,9 +391,8 @@ function Kanban(props) {
                 <div className="available-kanban">
                   <Button callback={handleNewKanbanCard}>
                     <BiBookAdd style={{ fontSize: "1.4rem" }} />
-                    <span>Add kanban Card</span>
+                    <span>Add Kanban Card</span>
                   </Button>
-
                   <DETheme>
                     <div id="kanban">
                       <ScrollView
@@ -435,6 +425,29 @@ function Kanban(props) {
                       </ScrollView>
                     </div>
                   </DETheme>
+                  <div className="priority-color-codes">
+                    <h4 className="priority-color-codes_title">
+                      Priority color codes:
+                    </h4>
+                    <ul className="priority-color-codes_box">
+                      <li className="priority-color-codes_number">
+                        <span>1</span>
+                        <div className="priority-color-codes_color"></div>
+                      </li>
+                      <li className="priority-color-codes_number">
+                        <span>2</span>
+                        <div className="priority-color-codes_color"></div>
+                      </li>
+                      <li className="priority-color-codes_number">
+                        <span>3</span>
+                        <div className="priority-color-codes_color"></div>
+                      </li>
+                      <li className="priority-color-codes_number">
+                        <span>4</span>
+                        <div className="priority-color-codes_color"></div>
+                      </li>
+                    </ul>
+                  </div>
                 </div>
                 <div className="instructions-panel">
                   <h3>Instructions Panel</h3>

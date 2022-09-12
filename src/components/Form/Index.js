@@ -35,10 +35,7 @@ import {
   closeEditProfileModal,
   showForm,
 } from "../../features/config/configData";
-import {
-  fetchSchoolData,
-  fetchSchoolSettings,
-} from "../../features/school/schoolDataSlice";
+import { fetchSchoolData } from "../../features/school/schoolDataSlice";
 
 import {
   ChangeAvatarContent,

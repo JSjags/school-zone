@@ -304,7 +304,7 @@ export const GlobalStyles = createGlobalStyle`
         inset -1px 0 var(--primary-color), inset 1px 0 var(--primary-color);
     }
     body .dx-htmleditor-add-image-popup > .dx-overlay-content > .dx-popup-content .dx-tabpanel.dx-state-focused .dx-tab.dx-tab-selected:first-child {
-      webkit-box-shadow: inset 0 1px var(--primary-color),
+      -webkit-box-shadow: inset 0 1px var(--primary-color),
         inset -1px 0 var(--primary-color), inset 1px 0 var(--primary-color);
       box-shadow: inset 0 1px var(--primary-color),
         inset -1px 0 var(--primary-color), inset 1px 0 var(--primary-color);
@@ -319,7 +319,7 @@ export const GlobalStyles = createGlobalStyle`
     }
     body .dx-tabpanel.dx-state-focused > .dx-tabpanel-tabs .dx-tabs {
     -webkit-box-shadow: inset 0 1px var(--primary-color);
-    webkit-box-shadow: inset 0 -1px var(--primary-color),inset 0 1px,inset -1px 0,inset 1px 0;
+    -webkit-box-shadow: inset 0 -1px var(--primary-color),inset 0 1px,inset -1px 0,inset 1px 0;
       box-shadow: inset 0 -1px var(--primary-color),inset 0 1px,inset -1px 0,inset 1px 0;
     }
 
