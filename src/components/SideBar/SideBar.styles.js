@@ -165,7 +165,7 @@ export const Content = styled.div`
     display: flex;
     flex-direction: column;
     padding-bottom: 10px;
-    border-radius: 0 0 5px 5px;
+    border-radius: 5px;
     box-shadow: 0 0 0 300px var(--background);
   }
   #menu {

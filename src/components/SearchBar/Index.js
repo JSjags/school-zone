@@ -1,6 +1,11 @@
 import { useEffect, useState } from "react";
 import { FaSearch } from "react-icons/fa";
+import {
+  fetchSchoolData,
+  fetchSchoolPosts,
+} from "../../features/school/schoolDataSlice";
 import { SearchBarWrapper, SearchBarContent } from "./SearchBar.styles";
+import { useDispatch, useSelector } from "react-redux";
 
 const SearchBar = ({
   showSearch,
@@ -11,7 +16,9 @@ const SearchBar = ({
   setPageNumber,
   setMaxIndex,
   filter,
+  query,
 }) => {
+  const dispatch = useDispatch();
   const formatDateTime = (arg1, arg2 = "") => {
     const d = arg1.split("-");
     const t = arg2.split(":");
@@ -25,6 +32,10 @@ const SearchBar = ({
     return date;
   };
 
+  const { token: schoolToken, id: schoolId } = useSelector(
+    (state) => state.schoolAuth
+  );
+  const { currentPage } = useSelector((state) => state.config);
   const [value, setValue] = useState("");
 
   const handleSearch = (e) => {
@@ -35,6 +46,16 @@ const SearchBar = ({
       (e.keyCode === 13 && e.key === "Enter" && e.isTrusted === true) ||
       (e.type === "click" && e.isTrusted === true)
     ) {
+      // articles tab search configurations
+      dispatch(
+        fetchSchoolPosts({
+          authToken: schoolToken,
+          pageNumber: 1,
+          query: value,
+        })
+      );
+
+      // finance tab search configurations
       // all fields filter
       if (filter === "All") {
         const test = financeData.filter((object) => {
@@ -99,6 +120,11 @@ const SearchBar = ({
   const cancelSearch = (value) => {
     if (value === "") {
       setPageNumber(1);
+      // if user is on articles tab
+      currentPage === "posts" &&
+        dispatch(fetchSchoolPosts({ authToken: schoolToken, pageNumber: 1 }));
+
+      // finance page
       setMaxIndex(1 * 10);
       setShowSearch(false);
     }
@@ -107,6 +133,10 @@ const SearchBar = ({
   useEffect(() => {
     !showSearch && setValue("");
   }, [showSearch]);
+
+  useEffect(() => {
+    query && setValue(query);
+  }, [query]);
 
   return (
     <SearchBarWrapper>

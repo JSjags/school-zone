@@ -13,6 +13,7 @@ import { storage } from "../../firebase/firebase.config";
 import { resetSchoolAuth } from "../../features/school/schoolAuthSlice";
 import {
   fetchSchoolData,
+  fetchSchoolPosts,
   resetSchoolData,
 } from "../../features/school/schoolDataSlice";
 import {
@@ -57,27 +58,12 @@ import { TbListDetails } from "react-icons/tb";
 import Options from "../../components/Options/Index";
 import { RiFilterLine } from "react-icons/ri";
 import SearchBar from "../../components/SearchBar/Index";
-
-const LightTheme = React.lazy(() =>
-  import("../../DEThemes/SchedulerThemes/LightTheme")
-);
-const DarkTheme = React.lazy(() =>
-  import("../../DEThemes/SchedulerThemes/DarkTheme")
-);
-
-const EditorTheme = ({ children }) => {
-  const CHOSEN_THEME =
-    useSelector((state) => state.schoolData.data.settings.theme) ?? "Light";
-  return (
-    <>
-      <React.Suspense fallback={<></>}>
-        {CHOSEN_THEME.trim() === "Light" && <LightTheme />}
-        {CHOSEN_THEME.trim() === "Dark" && <DarkTheme />}
-      </React.Suspense>
-      {children}
-    </>
-  );
-};
+import {
+  FaAngleDoubleLeft,
+  FaAngleDoubleRight,
+  FaAngleLeft,
+  FaAngleRight,
+} from "react-icons/fa";
 
 const Posts = () => {
   const dispatch = useDispatch();
@@ -102,15 +88,52 @@ const Posts = () => {
     isError,
     message,
   } = useSelector((state) => state.schoolData);
-  const { articles } = useSelector((state) => state.schoolData.data);
+
+  const { posts, query } = useSelector((state) => state.schoolData.data);
+
+  const { isPostsLoading, isPostsSuccess, isPostsError, postsMessage } =
+    useSelector((state) => state.schoolData);
   const { isEditProfileModalOpen } = useSelector((state) => state.config);
 
   const [searchText, setSearchText] = useState("");
-  const [searchedData, setSearchedData] = useState("");
   const [showSearch, setShowSearch] = useState(false);
 
   const [pageNumber, setPageNumber] = useState(1);
-  const [maxIndex, setMaxIndex] = useState(pageNumber * 10);
+
+  const checkButtonRef = useCallback(
+    (node) => {
+      if (posts.results === undefined || posts.totalPages === undefined) return;
+      if (node === null) return;
+      if (posts.results === undefined) return;
+
+      if (pageNumber - 2 < 1 && node.classList.contains("double-left")) {
+        node.disabled = true;
+        return node.classList.add("disabled");
+      }
+      if (pageNumber - 1 < 1 && node.classList.contains("left")) {
+        node.disabled = true;
+        return node.classList.add("disabled");
+      }
+      if (
+        pageNumber + 1 > posts.totalPages &&
+        node.classList.contains("right")
+      ) {
+        node.disabled = true;
+        return node.classList.add("disabled");
+      }
+      if (
+        pageNumber + 2 > posts.totalPages &&
+        node.classList.contains("double-right")
+      ) {
+        node.disabled = true;
+        return node.classList.add("disabled");
+      }
+
+      node.disabled = false;
+      node.classList.remove("disabled");
+    },
+    [pageNumber, posts]
+  );
 
   useEffect(() => {
     if (message !== null && message.includes("jwt expired")) {
@@ -126,11 +149,12 @@ const Posts = () => {
       navigate("/login");
     }
 
-    dispatch(fetchSchoolData(schoolToken));
+    dispatch(fetchSchoolPosts({ authToken: schoolToken, pageNumber: 1 }));
   }, [schoolToken, dispatch, navigate, message]);
 
   useEffect(() => {
     dispatch(setCurrentPage("posts"));
+    setPageNumber(1);
   }, [dispatch]);
 
   const redirect = (location) => {
@@ -158,16 +182,16 @@ const Posts = () => {
         </div>
       )} */}
       {isEditProfileModalOpen && <EditModal />}
-      {isLoading && (
+      {isPostsLoading && (
         <LoadingContainer>
           <Spinner />
         </LoadingContainer>
       )}
-      {isSuccess && (
+      {!isPostsLoading && isPostsSuccess && (
         <Content>
           <main>
             <PageHeader title="Posts" />
-            {(articles === undefined || articles.length <= 0) && (
+            {(posts?.results === undefined || posts?.results.length <= 0) && (
               <div className="create-article">
                 <img alt="add-article" src={noPostsSvg}></img>
                 <p>No posts found.</p>
@@ -179,7 +203,7 @@ const Posts = () => {
                 </div>
               </div>
             )}
-            {!isLoading && articles.length >= 1 && (
+            {!isPostsLoading && posts?.results.length >= 1 && (
               <>
                 <div className="available-articles">
                   <div className="action-buttons-box">
@@ -190,7 +214,7 @@ const Posts = () => {
                           options={viewOptions.current}
                           value={formData.view}
                           setFormData={setFormData}
-                          name="posts"
+                          name="view"
                         />
                       </div>
                     </div>
@@ -208,17 +232,22 @@ const Posts = () => {
                         showSearch={showSearch}
                         setShowSearch={setShowSearch}
                         setSearchText={setSearchText}
-                        financeData={articles}
-                        setSearchedData={setSearchedData}
+                        financeData={posts.results}
                         setPageNumber={setPageNumber}
-                        setMaxIndex={setMaxIndex}
                         filter={formData.filter}
+                        query={posts.query}
                       />
                     </div>
                   </div>
-                  <div className="articles-box">
-                    {articles.map((article) => (
-                      <div className="article">
+                  <div
+                    className={
+                      formData.view.trim().toLowerCase() === "column"
+                        ? "articles-box column"
+                        : "articles-box grid"
+                    }
+                  >
+                    {posts.results.map((article) => (
+                      <div key={article.articleId} className="article">
                         <div className="article-banner-cont">
                           <img
                             className="article-banner"
@@ -255,13 +284,102 @@ const Posts = () => {
                       </div>
                     ))}
                   </div>
+                  <div className="page-info">
+                    <div className="page-controls">
+                      <button
+                        ref={checkButtonRef}
+                        className="page-controls_btn double-left"
+                        onClick={() => {
+                          dispatch(
+                            fetchSchoolPosts({
+                              authToken: schoolToken,
+                              pageNumber: pageNumber - 2,
+                              ...(posts.query && { query: posts.query }),
+                            })
+                          );
+                          setPageNumber((prevState) => prevState - 2);
+                        }}
+                      >
+                        <FaAngleDoubleLeft />
+                      </button>
+                      <button
+                        ref={checkButtonRef}
+                        className="page-controls_btn left"
+                        onClick={() => {
+                          dispatch(
+                            fetchSchoolPosts({
+                              authToken: schoolToken,
+                              pageNumber: pageNumber - 1,
+                              ...(posts.query && { query: posts.query }),
+                            })
+                          );
+                          setPageNumber((prevState) => prevState - 1);
+                        }}
+                      >
+                        <FaAngleLeft />
+                      </button>
+                      <span className="page-controls_number">
+                        Page {pageNumber} of {posts.totalPages}
+                      </span>
+                      <button
+                        ref={checkButtonRef}
+                        className="page-controls_btn right"
+                        onClick={() => {
+                          dispatch(
+                            fetchSchoolPosts({
+                              authToken: schoolToken,
+                              pageNumber: pageNumber + 1,
+                              ...(posts.query && { query: posts.query }),
+                            })
+                          );
+                          setPageNumber((prevState) => prevState + 1);
+                        }}
+                      >
+                        <FaAngleRight />
+                      </button>
+                      <button
+                        ref={checkButtonRef}
+                        className="page-controls_btn double-right"
+                        onClick={() => {
+                          dispatch(
+                            fetchSchoolPosts({
+                              authToken: schoolToken,
+                              pageNumber: pageNumber + 2,
+                              ...(posts.query && { query: posts.query }),
+                            })
+                          );
+                          setPageNumber((prevState) => prevState + 2);
+                        }}
+                      >
+                        <FaAngleDoubleRight />
+                      </button>
+                    </div>
+                    <div className="page-details">
+                      <span className="current-items">
+                        Items{" "}
+                        {pageNumber < 2
+                          ? 1
+                          : (pageNumber - 1) *
+                              schoolData.settings.paginationResults +
+                            1}
+                        -{" "}
+                        {pageNumber * schoolData.settings.paginationResults >
+                        posts.totalArticles
+                          ? posts.totalArticles
+                          : pageNumber * schoolData.settings.paginationResults}
+                      </span>
+                      <span className="total-items">
+                        ( {posts.totalArticles} Items)
+                      </span>
+                    </div>
+                  </div>
                 </div>
               </>
             )}
           </main>
         </Content>
       )}
-      {isError && (
+      {isPostsError && (
         <ErrorContainer>
           <BiError
             style={{
@@ -270,7 +388,7 @@ const Posts = () => {
             }}
           />
           <p>
-            {message.includes("jwt expired")
+            {postsMessage.includes("jwt expired")
               ? "Timeout"
               : `${message}, try refreshing the page.`}
           </p>

@@ -54,6 +54,7 @@ export const OptionsWrapper = styled.div`
       transition: all 200ms ease-in-out;
       text-transform: capitalize;
       color: var(--text);
+      cursor: pointer;
 
       :hover {
         background: var(--primary-color);

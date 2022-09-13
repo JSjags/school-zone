@@ -5,12 +5,17 @@ const initialState = {
   data: {},
   isLoading: false,
   isSettingsLoading: false,
+  isPostsLoading: false,
   isSuccess: false,
   isSettingsSuccess: false,
+  isPostsSuccess: false,
   isError: false,
   isSettingsError: true,
+  isPostsError: false,
   message: null,
   settingsMessage: null,
+  postsMessage: null,
+  pageNumber: null,
 };
 
 export const fetchSchoolData = createAsyncThunk(
@@ -52,6 +57,25 @@ export const fetchSchoolSettings = createAsyncThunk(
     }
   }
 );
+
+export const fetchSchoolPosts = createAsyncThunk(
+  "schoolData/fetchSchoolPosts",
+  async (obj, thunkAPI) => {
+    try {
+      const postsData = await schoolService.fetchSchoolPosts(obj);
+      return await thunkAPI.fulfillWithValue(postsData);
+    } catch (error) {
+      const message =
+        error.name ||
+        error.response.data.message ||
+        error.message ||
+        error.toString();
+      console.log(error);
+      return thunkAPI.rejectWithValue(message);
+    }
+  }
+);
+
 export const schoolDataSlice = createSlice({
   name: "schoolData",
   initialState,
@@ -90,6 +114,29 @@ export const schoolDataSlice = createSlice({
         state.isSuccess = false;
         state.message = action.payload;
       })
+      // School Posts
+      .addCase(fetchSchoolPosts.pending, (state) => {
+        state.data = {};
+        state.isPostsLoading = true;
+        state.isPostsSuccess = false;
+        state.isPostsError = false;
+        state.postsMessage = null;
+      })
+      .addCase(fetchSchoolPosts.fulfilled, (state, action) => {
+        state.data = action.payload;
+        state.isPostsLoading = false;
+        state.isPostsSuccess = true;
+        state.isPostsError = false;
+        state.postsMessage = null;
+        state.pageNumber = action.payload.pageNumber;
+      })
+      .addCase(fetchSchoolPosts.rejected, (state, action) => {
+        state.isPostsLoading = false;
+        state.isPostsError = true;
+        state.isPostsSuccess = false;
+        state.postsMessage = action.payload;
+      })
+      // School Settings
       .addCase(fetchSchoolSettings.pending, (state) => {
         state.isSettingsLoading = true;
         state.isSettingsError = false;
