@@ -112,6 +112,8 @@ const Settings = () => {
     if (schoolData?.settings)
       setSettingsData(JSON.parse(JSON.stringify(schoolData.settings)));
 
+    localStorage.setItem("schoolZoneTheme", schoolData?.settings?.theme);
+
     paginationResultsRef.current = schoolData?.settings?.paginationResults;
   }, [schoolData.settings]);
 

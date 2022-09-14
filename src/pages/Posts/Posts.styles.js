@@ -499,6 +499,22 @@ export const Content = styled.div`
     margin: 0 0 10px 0;
     color: var(--text);
   }
+
+  .search-title {
+    letter-spacing: 1px;
+  }
+  .search-text {
+    color: var(--secondary-color);
+  }
+  .search-subtitle {
+    color: var(--text);
+    font-family: var(--hind);
+
+    span {
+      font-weight: bolder;
+      font-size: 1.2rem;
+    }
+  }
 `;
 
 export const LoadingContainer = styled.div`

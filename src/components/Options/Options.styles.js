@@ -55,6 +55,9 @@ export const OptionsWrapper = styled.div`
       text-transform: capitalize;
       color: var(--text);
       cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 3px;
 
       :hover {
         background: var(--primary-color);

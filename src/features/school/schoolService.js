@@ -18,8 +18,8 @@ const fetchSchoolData = async (authToken, page) => {
 // fetch school articles and posts
 const fetchSchoolPosts = async (obj) => {
   const url = obj.query
-    ? `${baseUrl}/posts?page=${obj.pageNumber}&query=${obj.query}`
-    : `${baseUrl}/posts?page=${obj.pageNumber}`;
+    ? `${baseUrl}/posts?page=${obj.pageNumber}&query=${obj.query}&sort=${obj.sort}`
+    : `${baseUrl}/posts?page=${obj.pageNumber}&sort=${obj.sort}`;
   const response = await axios({
     method: "get",
     url,

@@ -56,7 +56,7 @@ import { BsInfoCircleFill } from "react-icons/bs";
 import noPostsSvg from "../../assets/no-posts.svg";
 import { TbListDetails } from "react-icons/tb";
 import Options from "../../components/Options/Index";
-import { RiFilterLine } from "react-icons/ri";
+import { BsSortDown } from "react-icons/bs";
 import SearchBar from "../../components/SearchBar/Index";
 import {
   FaAngleDoubleLeft,
@@ -78,7 +78,7 @@ const Posts = () => {
 
   const [formData, setFormData] = useState({
     view: "Column",
-    filter: "All",
+    filter: "Date(desc)",
   });
 
   const {
@@ -89,7 +89,7 @@ const Posts = () => {
     message,
   } = useSelector((state) => state.schoolData);
 
-  const { posts, query } = useSelector((state) => state.schoolData.data);
+  const { posts } = useSelector((state) => state.schoolData.data);
 
   const { isPostsLoading, isPostsSuccess, isPostsError, postsMessage } =
     useSelector((state) => state.schoolData);
@@ -149,12 +149,20 @@ const Posts = () => {
       navigate("/login");
     }
 
-    dispatch(fetchSchoolPosts({ authToken: schoolToken, pageNumber: 1 }));
-  }, [schoolToken, dispatch, navigate, message]);
+    dispatch(
+      fetchSchoolPosts({
+        authToken: schoolToken,
+        pageNumber: 1,
+        sort: formData.filter,
+      })
+    );
+    console.log(formData.filter);
+  }, [schoolToken, formData.filter, dispatch, navigate, message]);
 
   useEffect(() => {
     dispatch(setCurrentPage("posts"));
     setPageNumber(1);
+    setShowSearch(false);
   }, [dispatch]);
 
   const redirect = (location) => {
@@ -182,203 +190,226 @@ const Posts = () => {
         </div>
       )} */}
       {isEditProfileModalOpen && <EditModal />}
-      {isPostsLoading && (
-        <LoadingContainer>
-          <Spinner />
-        </LoadingContainer>
-      )}
-      {!isPostsLoading && isPostsSuccess && (
-        <Content>
-          <main>
-            <PageHeader title="Posts" />
-            {(posts?.results === undefined || posts?.results.length <= 0) && (
-              <div className="create-article">
-                <img alt="add-article" src={noPostsSvg}></img>
-                <p>No posts found.</p>
-                <div className="create-article-button-group">
-                  <button onClick={() => navigate("/schooldashboard/editor")}>
-                    <BiMessageAltAdd style={{ fontSize: "2rem" }} />
-                    <span>Create Post | Article</span>
-                  </button>
-                </div>
-              </div>
-            )}
-            {!isPostsLoading && posts?.results.length >= 1 && (
-              <>
-                <div className="available-articles">
-                  <div className="action-buttons-box">
-                    <div className="left-hand">
-                      <div className="item">
-                        <TbListDetails style={{ fontSize: "1.4rem" }} />
-                        <Options
-                          options={viewOptions.current}
-                          value={formData.view}
-                          setFormData={setFormData}
-                          name="view"
-                        />
-                      </div>
-                    </div>
-                    <div className="right-hand">
-                      <div className="item filter">
-                        <RiFilterLine style={{ fontSize: "1.6rem" }} />
-                        <Options
-                          options={"All Date Alphabet"}
-                          value={formData.filter}
-                          setFormData={setFormData}
-                          name="filter"
-                        />
-                      </div>
-                      <SearchBar
-                        showSearch={showSearch}
-                        setShowSearch={setShowSearch}
-                        setSearchText={setSearchText}
-                        financeData={posts.results}
-                        setPageNumber={setPageNumber}
-                        filter={formData.filter}
-                        query={posts.query}
-                      />
-                    </div>
+      <Content>
+        <main>
+          <PageHeader title="Posts" />
+
+          {isPostsLoading && (
+            <LoadingContainer>
+              <Spinner />
+            </LoadingContainer>
+          )}
+          {!isPostsLoading && isPostsSuccess && (
+            <>
+              {(posts?.results === undefined || posts?.results.length <= 0) && (
+                <div className="create-article">
+                  <img alt="add-article" src={noPostsSvg}></img>
+                  <p>No posts found.</p>
+                  <div className="create-article-button-group">
+                    <button onClick={() => navigate("/schooldashboard/editor")}>
+                      <BiMessageAltAdd style={{ fontSize: "2rem" }} />
+                      <span>Create Post | Article</span>
+                    </button>
                   </div>
-                  <div
-                    className={
-                      formData.view.trim().toLowerCase() === "column"
-                        ? "articles-box column"
-                        : "articles-box grid"
-                    }
-                  >
-                    {posts.results.map((article) => (
-                      <div key={article.articleId} className="article">
-                        <div className="article-banner-cont">
-                          <img
-                            className="article-banner"
-                            src={article.articleDetails.cover}
-                            alt="banner"
+                </div>
+              )}
+              {!isPostsLoading && posts?.results.length >= 1 && (
+                <>
+                  <div className="available-articles">
+                    <div className="action-buttons-box">
+                      <div className="left-hand">
+                        <div className="item">
+                          <TbListDetails style={{ fontSize: "1.4rem" }} />
+                          <Options
+                            options={viewOptions.current}
+                            value={formData.view}
+                            setFormData={setFormData}
+                            name="view"
                           />
                         </div>
-                        <div className="article-details">
-                          <h3
-                            className="
-                      title"
-                          >
-                            {article.articleDetails.title}
-                          </h3>
-                          <p
-                            className="
-                      author"
-                          >
-                            by {article.articleDetails.author}
-                          </p>
-                          <p
-                            className="
-                      time"
-                          >
-                            {moment(article.articleDetails.timeStamp).fromNow()}
-                          </p>
-                          <p
-                            className="
-                      summary"
-                          >
-                            {article.articleDetails.summary}
-                          </p>
-                        </div>
                       </div>
-                    ))}
-                  </div>
-                  <div className="page-info">
-                    <div className="page-controls">
-                      <button
-                        ref={checkButtonRef}
-                        className="page-controls_btn double-left"
-                        onClick={() => {
-                          dispatch(
-                            fetchSchoolPosts({
-                              authToken: schoolToken,
-                              pageNumber: pageNumber - 2,
-                              ...(posts.query && { query: posts.query }),
-                            })
-                          );
-                          setPageNumber((prevState) => prevState - 2);
-                        }}
-                      >
-                        <FaAngleDoubleLeft />
-                      </button>
-                      <button
-                        ref={checkButtonRef}
-                        className="page-controls_btn left"
-                        onClick={() => {
-                          dispatch(
-                            fetchSchoolPosts({
-                              authToken: schoolToken,
-                              pageNumber: pageNumber - 1,
-                              ...(posts.query && { query: posts.query }),
-                            })
-                          );
-                          setPageNumber((prevState) => prevState - 1);
-                        }}
-                      >
-                        <FaAngleLeft />
-                      </button>
-                      <span className="page-controls_number">
-                        Page {pageNumber} of {posts.totalPages}
-                      </span>
-                      <button
-                        ref={checkButtonRef}
-                        className="page-controls_btn right"
-                        onClick={() => {
-                          dispatch(
-                            fetchSchoolPosts({
-                              authToken: schoolToken,
-                              pageNumber: pageNumber + 1,
-                              ...(posts.query && { query: posts.query }),
-                            })
-                          );
-                          setPageNumber((prevState) => prevState + 1);
-                        }}
-                      >
-                        <FaAngleRight />
-                      </button>
-                      <button
-                        ref={checkButtonRef}
-                        className="page-controls_btn double-right"
-                        onClick={() => {
-                          dispatch(
-                            fetchSchoolPosts({
-                              authToken: schoolToken,
-                              pageNumber: pageNumber + 2,
-                              ...(posts.query && { query: posts.query }),
-                            })
-                          );
-                          setPageNumber((prevState) => prevState + 2);
-                        }}
-                      >
-                        <FaAngleDoubleRight />
-                      </button>
+                      <div className="right-hand">
+                        <div className="item filter">
+                          <BsSortDown style={{ fontSize: "1.6rem" }} />
+                          <Options
+                            options={
+                              "Date(desc) Date(asc) Title(desc) Title(asc)"
+                            }
+                            value={posts.sort}
+                            setFormData={setFormData}
+                            name="filter"
+                          />
+                        </div>
+                        <SearchBar
+                          showSearch={showSearch}
+                          setShowSearch={setShowSearch}
+                          setSearchText={setSearchText}
+                          financeData={posts.results}
+                          setPageNumber={setPageNumber}
+                          filter={formData.filter}
+                          query={posts.query}
+                        />
+                      </div>
                     </div>
-                    <div className="page-details">
-                      <span className="current-items">
-                        Items{" "}
-                        {pageNumber < 2
-                          ? 1
-                          : (pageNumber - 1) *
-                              schoolData.settings.paginationResults +
-                            1}
-                        -{" "}
-                        {pageNumber * schoolData.settings.paginationResults >
-                        posts.totalArticles
-                          ? posts.totalArticles
-                          : pageNumber * schoolData.settings.paginationResults}
-                      </span>
-                      <span className="total-items">
-                        ( {posts.totalArticles} Items)
-                      </span>
+                    {showSearch && (
+                      <div>
+                        <h2 className="search-title">
+                          Search results for{" "}
+                          <span className="search-text">"{posts.query}"</span>
+                        </h2>
+                        <p className="search-subtitle">
+                          <span>{posts.totalArticles}</span> results found.
+                        </p>
+                      </div>
+                    )}
+                    <div
+                      className={
+                        formData.view.trim().toLowerCase() === "column"
+                          ? "articles-box column"
+                          : "articles-box grid"
+                      }
+                    >
+                      {posts.results.map((article) => (
+                        <div key={article.articleId} className="article">
+                          <div className="article-banner-cont">
+                            <img
+                              className="article-banner"
+                              src={article.articleDetails.cover}
+                              alt="banner"
+                            />
+                          </div>
+                          <div className="article-details">
+                            <h3
+                              className="
+                      title"
+                            >
+                              {article.articleDetails.title}
+                            </h3>
+                            <p
+                              className="
+                      author"
+                            >
+                              by {article.articleDetails.author}
+                            </p>
+                            <p
+                              className="
+                      time"
+                            >
+                              {moment(
+                                article.articleDetails.timeStamp
+                              ).fromNow()}
+                            </p>
+                            <p
+                              className="
+                      summary"
+                            >
+                              {article.articleDetails.summary}
+                            </p>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                    <div className="page-info">
+                      <div className="page-controls">
+                        <button
+                          ref={checkButtonRef}
+                          className="page-controls_btn double-left"
+                          onClick={() => {
+                            dispatch(
+                              fetchSchoolPosts({
+                                authToken: schoolToken,
+                                pageNumber: pageNumber - 2,
+                                ...(posts.query && { query: posts.query }),
+                                sort: formData.filter,
+                              })
+                            );
+                            setPageNumber((prevState) => prevState - 2);
+                          }}
+                        >
+                          <FaAngleDoubleLeft />
+                        </button>
+                        <button
+                          ref={checkButtonRef}
+                          className="page-controls_btn left"
+                          onClick={() => {
+                            dispatch(
+                              fetchSchoolPosts({
+                                authToken: schoolToken,
+                                pageNumber: pageNumber - 1,
+                                ...(posts.query && { query: posts.query }),
+                                sort: formData.filter,
+                              })
+                            );
+                            setPageNumber((prevState) => prevState - 1);
+                          }}
+                        >
+                          <FaAngleLeft />
+                        </button>
+                        <span className="page-controls_number">
+                          Page {pageNumber} of {posts.totalPages}
+                        </span>
+                        <button
+                          ref={checkButtonRef}
+                          className="page-controls_btn right"
+                          onClick={() => {
+                            dispatch(
+                              fetchSchoolPosts({
+                                authToken: schoolToken,
+                                pageNumber: pageNumber + 1,
+                                ...(posts.query && { query: posts.query }),
+                                sort: formData.filter,
+                              })
+                            );
+                            setPageNumber((prevState) => prevState + 1);
+                          }}
+                        >
+                          <FaAngleRight />
+                        </button>
+                        <button
+                          ref={checkButtonRef}
+                          className="page-controls_btn double-right"
+                          onClick={() => {
+                            dispatch(
+                              fetchSchoolPosts({
+                                authToken: schoolToken,
+                                pageNumber: pageNumber + 2,
+                                ...(posts.query && { query: posts.query }),
+                                sort: formData.filter,
+                              })
+                            );
+                            setPageNumber((prevState) => prevState + 2);
+                          }}
+                        >
+                          <FaAngleDoubleRight />
+                        </button>
+                      </div>
+                      <div className="page-details">
+                        <span className="current-items">
+                          Items{" "}
+                          {pageNumber < 2
+                            ? 1
+                            : (pageNumber - 1) *
+                                schoolData.settings.paginationResults +
+                              1}
+                          -{" "}
+                          {pageNumber * schoolData.settings.paginationResults >
+                          posts.totalArticles
+                            ? posts.totalArticles
+                            : pageNumber *
+                              schoolData.settings.paginationResults}
+                        </span>
+                        <span className="total-items">
+                          ( {posts.totalArticles} Items)
+                        </span>
+                      </div>
                     </div>
                   </div>
-                </div>
-              </>
-            )}
-          </main>
-        </Content>
-      )}
+                </>
+              )}
+            </>
+          )}
+        </main>
+      </Content>
       {isPostsError && (
         <ErrorContainer>
           <BiError

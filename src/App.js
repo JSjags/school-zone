@@ -39,14 +39,13 @@ function App() {
   const location = useLocation();
   const isLoggedIn = useSelector((state) => state.schoolAuth.isLoggedIn);
   const { data: schoolData } = useSelector((state) => state.schoolData);
+  const THEME_VALUE = localStorage.getItem("schoolZoneTheme").trim()
+    ? localStorage.getItem("schoolZoneTheme").trim()
+    : schoolData?.settings?.theme;
 
   return (
     <ThemeProvider
-      theme={
-        getTheme(schoolData?.settings?.theme) === "Light"
-          ? lightTheme
-          : darkTheme
-      }
+      theme={getTheme(THEME_VALUE) === "Light" ? lightTheme : darkTheme}
     >
       <GlobalStyles />
       <Wrapper isLoggedIn={isLoggedIn}>

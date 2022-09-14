@@ -47,13 +47,17 @@ const SearchBar = ({
       (e.type === "click" && e.isTrusted === true)
     ) {
       // articles tab search configurations
-      dispatch(
-        fetchSchoolPosts({
-          authToken: schoolToken,
-          pageNumber: 1,
-          query: value,
-        })
-      );
+      if (currentPage === "posts") {
+        dispatch(
+          fetchSchoolPosts({
+            authToken: schoolToken,
+            pageNumber: 1,
+            query: value,
+            sort: filter,
+          })
+        );
+        return setShowSearch(true);
+      }
 
       // finance tab search configurations
       // all fields filter
@@ -110,6 +114,7 @@ const SearchBar = ({
         // other fields
         return regExp.test(data[filter.split(" ").join("")]);
       });
+
       setSearchText(value);
       setSearchedData(filteredData);
       setShowSearch(true);
@@ -121,8 +126,16 @@ const SearchBar = ({
     if (value === "") {
       setPageNumber(1);
       // if user is on articles tab
-      currentPage === "posts" &&
-        dispatch(fetchSchoolPosts({ authToken: schoolToken, pageNumber: 1 }));
+      if (currentPage === "posts") {
+        dispatch(
+          fetchSchoolPosts({
+            authToken: schoolToken,
+            pageNumber: 1,
+            sort: filter,
+          })
+        );
+        return setShowSearch(false);
+      }
 
       // finance page
       setMaxIndex(1 * 10);

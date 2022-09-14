@@ -6,6 +6,12 @@ import { useSelector, useDispatch } from "react-redux";
 import axios from "axios";
 
 import { fetchSchoolSettings } from "../../features/school/schoolDataSlice";
+import {
+  BsSortAlphaDownAlt,
+  BsSortAlphaUpAlt,
+  BsSortNumericDownAlt,
+  BsSortNumericUpAlt,
+} from "react-icons/bs";
 
 const Options = ({ options, value, setShowMessage, setFormData, name }) => {
   const dispatch = useDispatch();
@@ -13,12 +19,19 @@ const Options = ({ options, value, setShowMessage, setFormData, name }) => {
   const { id: schoolId, token: schoolToken } = useSelector(
     (state) => state.schoolAuth
   );
+  const { currentPage } = useSelector((state) => state.config);
 
   const OptionsRef = useRef();
   const [isOpen, setIsOpen] = useState(false);
 
   const toggleMenu = () => {
     setIsOpen(!isOpen);
+  };
+
+  const resolveValue = (val) => {
+    return val.replace(/([A-Z])/g, " $1").replace(/^./, function (str) {
+      return str;
+    });
   };
 
   const updateSettings = async (object) => {
@@ -144,9 +157,26 @@ const Options = ({ options, value, setShowMessage, setFormData, name }) => {
                     OptionsRef.current.blur();
                   }}
                 >
-                  {val.replace(/([A-Z])/g, " $1").replace(/^./, function (str) {
-                    return str;
-                  })}
+                  {currentPage === "posts" &&
+                    (() => {
+                      switch (resolveValue(val).trim()) {
+                        case "Date(asc)":
+                          return <BsSortNumericUpAlt />;
+
+                        case "Date(desc)":
+                          return <BsSortNumericDownAlt />;
+
+                        case "Title(asc)":
+                          return <BsSortAlphaUpAlt />;
+
+                        case "Title(desc)":
+                          return <BsSortAlphaDownAlt />;
+
+                        default:
+                          return;
+                      }
+                    })()}
+                  {resolveValue(val)}
                 </li>
               );
             })}
