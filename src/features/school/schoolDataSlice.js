@@ -16,6 +16,8 @@ const initialState = {
   settingsMessage: null,
   postsMessage: null,
   pageNumber: null,
+  postsToDelete: [],
+  postId: null,
 };
 
 export const fetchSchoolData = createAsyncThunk(
@@ -92,6 +94,18 @@ export const schoolDataSlice = createSlice({
       state.isError = false;
       state.message = null;
     },
+    setPostsToDelete: (state, action) => {
+      state.postsToDelete = action.payload;
+    },
+    resetPostsToDelete: (state) => {
+      state.postsToDelete = [];
+    },
+    setPostToShow: (state, action) => {
+      state.postId = action.payload;
+    },
+    resetPostToShow: (state) => {
+      state.postId = null;
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -157,6 +171,13 @@ export const schoolDataSlice = createSlice({
   },
 });
 
-export const { setSchoolData, resetSchoolData } = schoolDataSlice.actions;
+export const {
+  setSchoolData,
+  resetSchoolData,
+  setPostsToDelete,
+  resetPostsToDelete,
+  setPostToShow,
+  resetPostToShow,
+} = schoolDataSlice.actions;
 
 export default schoolDataSlice.reducer;

@@ -27,6 +27,7 @@ import {
   uploadString,
   deleteObject,
 } from "firebase/storage";
+import parse from "html-react-parser";
 
 import { v4 as uuidv4 } from "uuid";
 
@@ -35,9 +36,15 @@ import {
   closeEditProfileModal,
   showForm,
 } from "../../features/config/configData";
-import { fetchSchoolData } from "../../features/school/schoolDataSlice";
+import {
+  fetchSchoolData,
+  fetchSchoolPosts,
+  resetPostsToDelete,
+} from "../../features/school/schoolDataSlice";
 
 import {
+  ArticleContent,
+  ArticleWrapper,
   ChangeAvatarContent,
   ChangeAvatarWrapper,
   ChangePasswordContent,
@@ -4078,6 +4085,7 @@ const StaffProfile = () => {
   );
 };
 
+// Delete Modal
 const DeleteModal = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [isError, setIsError] = useState(false);
@@ -4204,6 +4212,187 @@ const DeleteModal = () => {
                 className="white-btn"
                 onClick={() => {
                   dispatch(showForm("financialStatement"));
+                  document.body.style.overflowY = "scroll";
+                }}
+              >
+                No, Cancel
+              </button>
+            )}
+            {!isLoading && (
+              <button className="delete-btn" onClick={handleDelete}>
+                Yes, Delete
+              </button>
+            )}
+            {isLoading && (
+              <Spinner
+                style={{
+                  position: "absolute",
+                  bottom: 0,
+                  left: 0,
+                  width: "100%",
+                }}
+              />
+            )}
+          </div>
+        </DeleteModalContent>
+      )}
+    </DeleteModalWrapper>
+  );
+};
+
+// Delete Posts
+const DeletePosts = () => {
+  const [isLoading, setIsLoading] = useState(false);
+  const [isError, setIsError] = useState(false);
+  const [isSuccess, setIsSuccess] = useState(false);
+
+  const dispatch = useDispatch();
+
+  const { data: schoolData } = useSelector((state) => state.schoolData);
+  const { id: schoolId } = useSelector((state) => state.schoolAuth);
+  const { token: schoolToken } = useSelector((state) => state.schoolAuth);
+
+  const { postsToDelete } = useSelector((state) => state.schoolData);
+
+  const handleDelete = async () => {
+    setIsLoading(true);
+    setIsError(false);
+    setIsSuccess(false);
+
+    try {
+      //
+      let storageRefArr = [];
+
+      // prepare array with refs for deleting article and article assets
+      postsToDelete.forEach((item) => {
+        storageRefArr.push([
+          ref(storage, `articles/${item}`),
+          ref(storage, `articlesAssets/${item}`),
+        ]);
+      });
+      storageRefArr = storageRefArr.flat();
+
+      // delete resources from firebase storage
+      const firebaseResp = await Promise.all(
+        storageRefArr.map((ref) => deleteObject(ref))
+      );
+
+      console.log(firebaseResp);
+
+      if (!firebaseResp) {
+        throw new Error(
+          `${
+            postsToDelete.length > 1 ? "Article assets" : "Article asset"
+          } not deleted from firebase`
+        );
+      }
+      try {
+        const serverResponse = await axios({
+          url: `/api/schools/${schoolId}/articles/remove`,
+          method: "put",
+          data: { postsToDelete },
+          headers: {
+            Authorization: "Bearer " + schoolToken,
+          },
+        });
+        if (
+          serverResponse.status !== 200 &&
+          serverResponse.statusText !== "OK"
+        ) {
+          throw new Error(
+            `Could not delete ${
+              postsToDelete.length > 1 ? "article" : "articles"
+            } record from mongoDB`
+          );
+        }
+
+        setIsLoading(false);
+        setIsError(false);
+        setIsSuccess(true);
+        dispatch(
+          fetchSchoolPosts({
+            authToken: schoolToken,
+            pageNumber: 1,
+            sort: "Date(desc)",
+          })
+        );
+        setTimeout(() => dispatch(closeEditProfileModal()), 3000);
+      } catch (error) {
+        setIsLoading(false);
+        setIsError(true);
+        setIsSuccess(false);
+        console.log(error);
+      }
+    } catch (error) {
+      setIsLoading(false);
+      setIsError(true);
+      setIsSuccess(false);
+      console.log(error);
+    }
+  };
+
+  return (
+    <DeleteModalWrapper>
+      {isSuccess && (
+        <SuccessMessageWrapper>
+          <SuccessMessageContent>
+            <div className="success-message">
+              <p>
+                <FcApproval
+                  style={{
+                    fontSize: "5rem",
+                    paddingTop: "-5px",
+                  }}
+                />
+                <span>{`${
+                  postsToDelete.length > 1 ? "Articles" : "Article "
+                } deleted successfully.`}</span>
+              </p>
+            </div>
+          </SuccessMessageContent>
+        </SuccessMessageWrapper>
+      )}
+      {!isSuccess && (
+        <DeleteModalContent>
+          <h2>Delete Selected Posts</h2>
+          {isError && (
+            <div id="registration-error-message">
+              <p>
+                <BiErrorCircle
+                  style={{ fontSize: "1.4rem", paddingTop: "-5px" }}
+                />
+                <span>
+                  Sorry, we couldn't delete the selected posts, please try again
+                  later.
+                </span>
+              </p>
+            </div>
+          )}
+          <p>
+            Are you sure you want to delete{" "}
+            {postsToDelete.length > 1
+              ? `these ${postsToDelete.length} posts.`
+              : "this post."}{" "}
+            with the following {postsToDelete.length > 1 ? `titles` : "title"}:
+          </p>
+          <ol>
+            {postsToDelete.map((post) => (
+              <li>
+                {
+                  schoolData.posts.results.filter(
+                    (article) => article.articleId === post
+                  )[0].articleDetails.title
+                }
+              </li>
+            ))}
+          </ol>
+          <div className="btn-group">
+            {!isLoading && (
+              <button
+                className="cancel-btn"
+                onClick={() => {
+                  dispatch(closeEditProfileModal());
+                  dispatch(resetPostsToDelete());
                   document.body.style.overflowY = "scroll";
                 }}
               >
@@ -4579,6 +4768,43 @@ const StudentProfile = () => {
   );
 };
 
+// Artical Viewer
+const Article = () => {
+  const { id: schoolId, token: schoolToken } = useSelector(
+    (state) => state.schoolAuth
+  );
+  const targetId = useSelector((state) => state.schoolData.postId);
+
+  const [article, setArticle] = useState("");
+
+  useEffect(() => {
+    const articleData = async () => {
+      const response = await axios({
+        url: `/api/schools/${schoolId}/articles/${targetId}`,
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${schoolToken}`,
+        },
+      });
+      const finalData = await response.data.article;
+      setArticle(finalData);
+    };
+
+    articleData();
+  }, [schoolId, schoolToken, targetId]);
+
+  return (
+    <ArticleWrapper>
+      <ArticleContent>
+        <div className="article">
+          {!article && <Spinner />}
+          {parse(article)}
+        </div>
+      </ArticleContent>
+    </ArticleWrapper>
+  );
+};
+
 const Form = () => {
   const { formToShow } = useSelector((state) => state.config);
 
@@ -4606,8 +4832,11 @@ const Form = () => {
       {formToShow === "createSlug" && <CreateSlug />}
       {formToShow === "deleteSlug" && <DeleteSlug />}
       {formToShow === "deleteModal" && <DeleteModal />}
+      {formToShow === "deletePosts" && <DeletePosts />}
       {formToShow === "saving" && <Saving />}
+      {formToShow === "readArticle" && <Article />}
       {formToShow === "publishing" && <Saving type="Publishing" />}
+      {formToShow === "prepareEditor" && <Saving type="Preparing Editor" />}
     </>
   );
 };

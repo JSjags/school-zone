@@ -12,9 +12,10 @@ import moment from "moment";
 import { storage } from "../../firebase/firebase.config";
 import { resetSchoolAuth } from "../../features/school/schoolAuthSlice";
 import {
-  fetchSchoolData,
   fetchSchoolPosts,
   resetSchoolData,
+  setPostsToDelete,
+  setPostToShow,
 } from "../../features/school/schoolDataSlice";
 import {
   closeEditProfileModal,
@@ -36,7 +37,7 @@ import {
   LoadingContainer,
   Wrapper,
 } from "./Posts.styles";
-import { BiError, BiMessageAltAdd } from "react-icons/bi";
+import { BiBookAdd, BiError, BiMessageAltAdd } from "react-icons/bi";
 
 import PageHeader from "../../components/PageHeader/Index";
 import Spinner from "../../components/Spinner/Index";
@@ -45,7 +46,11 @@ import { useState } from "react";
 import { v4 as uuidv4 } from "uuid";
 import axios from "axios";
 import { useRef } from "react";
-import { AiOutlineFileDone } from "react-icons/ai";
+import {
+  AiOutlineControl,
+  AiOutlineEdit,
+  AiOutlineFileDone,
+} from "react-icons/ai";
 import EditModal from "../../components/EditModal/Index";
 import { useCallback } from "react";
 import Text from "../../components/Text/Index";
@@ -64,13 +69,52 @@ import {
   FaAngleLeft,
   FaAngleRight,
 } from "react-icons/fa";
+import Button from "../../components/Button/Index";
+import { MdDeleteOutline, MdDownloadDone } from "react-icons/md";
+
+const PostControlButtons = ({ setDeletionArray, deletionArray, targetId }) => {
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+
+  const [isSelected, setIsSelected] = useState(false);
+  const alteredArray = useRef([]);
+
+  const handleSelection = () => {
+    setIsSelected((prev) => (prev = !prev));
+
+    if (deletionArray.includes(targetId)) {
+      alteredArray.current = deletionArray.filter((id) => id !== targetId);
+      setDeletionArray(() => [...alteredArray.current]);
+      return dispatch(setPostsToDelete([...alteredArray.current]));
+    }
+
+    dispatch(setPostsToDelete([...deletionArray, targetId]));
+    setDeletionArray((prev) => [...prev, targetId]);
+  };
+
+  return (
+    <>
+      <Button
+        callback={() => {
+          dispatch(setPostToShow(targetId));
+          navigate("/schooldashboard/editor");
+        }}
+      >
+        <AiOutlineEdit style={{ fontSize: "1.4rem" }} />
+        <span>Edit</span>
+      </Button>
+      <Button isSelected={isSelected} callback={() => handleSelection()}>
+        <MdDeleteOutline style={{ fontSize: "1.4rem" }} />
+        <span>{isSelected ? "Marked for deletion" : "Delete"}</span>
+      </Button>
+    </>
+  );
+};
 
 const Posts = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-
-  const [publishingError, setPublishingError] = useState(false);
-  const [publishingSuccess, setPublishingSuccess] = useState(false);
+  const [managePosts, setManagePosts] = useState(false);
   const { id: schoolId, token: schoolToken } = useSelector(
     (state) => state.schoolAuth
   );
@@ -99,6 +143,8 @@ const Posts = () => {
   const [showSearch, setShowSearch] = useState(false);
 
   const [pageNumber, setPageNumber] = useState(1);
+
+  const [deletionArray, setDeletionArray] = useState([]);
 
   const checkButtonRef = useCallback(
     (node) => {
@@ -134,6 +180,16 @@ const Posts = () => {
     },
     [pageNumber, posts]
   );
+
+  const handleManagePosts = () => {
+    setManagePosts((prev) => !prev);
+
+    if (deletionArray.length) {
+      dispatch(openEditProfileModal());
+      dispatch(showForm("deletePosts"));
+    }
+    setDeletionArray([]);
+  };
 
   useEffect(() => {
     if (message !== null && message.includes("jwt expired")) {
@@ -177,23 +233,10 @@ const Posts = () => {
 
   return (
     <Wrapper isSuccess={isSuccess ? true : false}>
-      {/* {publishingSuccess && (
-        <div className="publish-success-message">
-          <AiOutlineFileDone style={{ fontSize: "1.4rem" }} />
-          <p>{uploadInfo.message}</p>
-        </div>
-      )}
-      {publishingError && (
-        <div className="publish-error-message">
-          <BiError style={{ fontSize: "1.4rem", paddingTop: "-5px" }} />
-          <p>{uploadInfo.message}</p>
-        </div>
-      )} */}
       {isEditProfileModalOpen && <EditModal />}
       <Content>
         <main>
           <PageHeader title="Posts" />
-
           {isPostsLoading && (
             <LoadingContainer>
               <Spinner />
@@ -216,6 +259,25 @@ const Posts = () => {
               {!isPostsLoading && posts?.results.length >= 1 && (
                 <>
                   <div className="available-articles">
+                    <div className="buttons-holder">
+                      <Button
+                        callback={() => navigate("/schooldashboard/editor")}
+                      >
+                        <BiBookAdd style={{ fontSize: "1.4rem" }} />
+                        <span>Add Article | Post</span>
+                      </Button>
+                      <Button
+                        callback={handleManagePosts}
+                        status={managePosts ? "done" : undefined}
+                      >
+                        {managePosts ? (
+                          <MdDownloadDone style={{ fontSize: "1.4rem" }} />
+                        ) : (
+                          <AiOutlineControl style={{ fontSize: "1.4rem" }} />
+                        )}
+                        <span>{managePosts ? "Done" : "Manage Posts"}</span>
+                      </Button>
+                    </div>
                     <div className="action-buttons-box">
                       <div className="left-hand">
                         <div className="item">
@@ -282,6 +344,11 @@ const Posts = () => {
                             <h3
                               className="
                       title"
+                              onClick={() => {
+                                dispatch(openEditProfileModal());
+                                dispatch(showForm("readArticle"));
+                                dispatch(setPostToShow(article.articleId));
+                              }}
                             >
                               {article.articleDetails.title}
                             </h3>
@@ -306,6 +373,15 @@ const Posts = () => {
                               {article.articleDetails.summary}
                             </p>
                           </div>
+                          {managePosts && (
+                            <div className="manage-buttons">
+                              <PostControlButtons
+                                deletionArray={deletionArray}
+                                setDeletionArray={setDeletionArray}
+                                targetId={article.articleId}
+                              />
+                            </div>
+                          )}
                         </div>
                       ))}
                     </div>

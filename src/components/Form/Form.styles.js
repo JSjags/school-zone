@@ -1728,7 +1728,7 @@ export const DeleteModalWrapper = styled.div`
 export const DeleteModalContent = styled.div`
   width: clamp(240px, 90%, 500px);
   max-height: 400px;
-  background: white;
+  background: var(--background);
   border-radius: 10px;
   position: sticky;
   top: 100px;
@@ -1740,6 +1740,12 @@ export const DeleteModalContent = styled.div`
 
   p {
     font-family: var(--hind);
+    color: var(--text);
+  }
+  ol {
+    color: var(--text);
+    font-family: var(--hind);
+    padding-left: 30px;
   }
   .btn-group {
     display: flex;
@@ -1762,6 +1768,51 @@ export const DeleteModalContent = styled.div`
       align-items: center;
       padding: 5px;
       gap: 5px;
+      color: var(--text);
+    }
+  }
+`;
+
+export const ArticleWrapper = styled.div`
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  margin-bottom: 30px;
+  scroll-behavior: smooth;
+`;
+export const ArticleContent = styled.div`
+  width: clamp(200px, 100%, 800px);
+  border-radius: 10px;
+  background: var(--background);
+  padding: 10px 10px 80px;
+  position: relative;
+
+  .article {
+    color: var(--text);
+    font-family: var(--hind);
+    padding: 10px;
+
+    ul {
+      margin: 10px;
+      padding-left: 20px;
+    }
+
+    img {
+      display: block;
+    }
+
+    table {
+      border-collapse: collapse;
+      width: 100%;
+      border-radius: 5px;
+      margin: 10px 0;
+      border: 1px solid var(--red);
+
+      td {
+        border-radius: 5px;
+        padding: 5px;
+        border: 1px solid var(--text);
+      }
     }
   }
 `;

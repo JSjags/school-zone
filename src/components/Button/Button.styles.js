@@ -1,4 +1,4 @@
-import styled from "styled-components";
+import styled, { css } from "styled-components";
 
 export const StyledButton = styled.button`
   display: flex;
@@ -14,13 +14,48 @@ export const StyledButton = styled.button`
   cursor: pointer;
   transition: all 300ms ease;
 
-  :hover {
-    background-color: var(--primary-color);
-    color: var(--white);
-    box-shadow: 0 4px 10px var(--dark-gray);
-    border: 1px solid transparent;
-    transform: scale(1.05);
-  }
+  ${(props) =>
+    props.isSelected
+      ? css`
+          background: var(--red);
+
+          :hover {
+            background-color: var(--white);
+            color: var(--red);
+            box-shadow: 0 4px 10px var(--dark-gray);
+            border: 1px solid transparent;
+            transform: scale(1.05);
+          }
+        `
+      : css`
+          background: var(--background);
+
+          :hover {
+            background-color: var(--primary-color);
+            color: var(--white);
+            box-shadow: 0 4px 10px var(--dark-gray);
+            border: 1px solid transparent;
+            transform: scale(1.05);
+          }
+        `};
+
+  ${(props) =>
+    props.status
+      ? css`
+          background: var(--background);
+          color: var(--lime);
+          border: 1px solid var(--lime);
+
+          :hover {
+            background-color: var(--lime);
+            border: 1px solid var(--lime);
+            color: var(--white);
+            box-shadow: 0 4px 10px var(--dark-gray);
+            border: 1px solid transparent;
+            transform: scale(1.05);
+          }
+        `
+      : undefined}
 
   span {
     font-size: clamp(1rem, 1vw, 1.2rem);

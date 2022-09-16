@@ -12,6 +12,7 @@ import { storage } from "../../firebase/firebase.config";
 import { resetSchoolAuth } from "../../features/school/schoolAuthSlice";
 import {
   fetchSchoolData,
+  resetPostToShow,
   resetSchoolData,
 } from "../../features/school/schoolDataSlice";
 import {
@@ -60,7 +61,7 @@ const DarkTheme = React.lazy(() =>
 
 const EditorTheme = ({ children }) => {
   const CHOSEN_THEME =
-    useSelector((state) => state.schoolData.data.settings.theme) ?? "Light";
+    useSelector((state) => state.schoolData.data.settings?.theme) ?? "Light";
   return (
     <>
       <React.Suspense fallback={<></>}>
@@ -117,26 +118,6 @@ const Editor = () => {
           <li>Mention (for example, @person)</li>
           <li>Tables</li>
       </ul>
-      <br>
-      <p>The editor supports the following frameworks and libraries:</p>
-      <table>
-          <tr>
-              <td><strong>jQuery</strong></td>
-              <td>v2.1 - v2.2 and v3.x</td>
-          </tr>
-          <tr>
-              <td><strong>Angular</strong></td>
-              <td>v7.0.x - v11.0.x</td>
-          </tr>
-          <tr>
-              <td><strong>React</strong></td>
-              <td>v16.2+</td>
-          </tr>
-          <tr>
-              <td><strong>Vue</strong></td>
-              <td>v2.6.3+</td>
-          </tr>
-      </table>
   </div>
 `);
   const [uploadInfo, setUploadInfo] = useState({
@@ -167,10 +148,18 @@ const Editor = () => {
     (state) => state.schoolAuth
   );
 
-  const { isLoading, isSuccess, isError, message } = useSelector(
-    (state) => state.schoolData
-  );
+  const {
+    isLoading,
+    isSuccess,
+    isError,
+    message,
+    postId: targetId,
+  } = useSelector((state) => state.schoolData);
   const { isEditProfileModalOpen } = useSelector((state) => state.config);
+
+  const [fetchedArticleData, setFetchedArticleData] = useState(null);
+
+  const showMe = useRef();
 
   const handlePublish = async () => {
     dispatch(openEditProfileModal());
@@ -184,7 +173,7 @@ const Editor = () => {
       isValid: markup.current.trim().length < 1 ? false : true,
     }));
     // generate article ID
-    const articleId = uuidv4();
+    const articleId = targetId ? targetId : uuidv4();
     try {
       // storage refs for article and cover photo
       const articleStorageRef = ref(storage, `/articles/${articleId}`);
@@ -192,19 +181,21 @@ const Editor = () => {
 
       // stored cover photo and article refs
       const uploadStringRefArr = await Promise.all([
-        uploadString(articleStorageRef, markup),
-        uploadString(assetStorageRef, editorDetails.cover, "data_url"),
+        uploadString(articleStorageRef, markup.current),
+        !editorDetails?.cover.startsWith(
+          "https://firebasestorage.googleapis.com"
+        ) && uploadString(assetStorageRef, editorDetails.cover, "data_url"),
       ]);
 
       // download URL's for cover photo and article
       const downloadUrl = await Promise.all([
         getDownloadURL(uploadStringRefArr[0].ref),
-        getDownloadURL(uploadStringRefArr[1].ref),
+        !fetchedArticleData?.cover && getDownloadURL(uploadStringRefArr[1].ref),
       ]);
 
       // send article details to mongoDB
       const res = await axios({
-        url: `/api/schools/${schoolId}/articles/${articleId}}`,
+        url: `/api/schools/${schoolId}/articles/${articleId}`,
         method: "POST",
         data: {
           articleURL: downloadUrl[0],
@@ -212,14 +203,22 @@ const Editor = () => {
             title: editorDetails.title,
             author: editorDetails.author,
             summary: editorDetails.summary,
-            cover: downloadUrl[1],
-            timeStamp: new Date(),
+            cover: !fetchedArticleData?.cover
+              ? downloadUrl[1]
+              : fetchedArticleData.cover,
+            timeStamp: !fetchedArticleData?.timeStamp
+              ? new Date()
+              : fetchedArticleData.timeStamp,
           },
         },
         headers: {
           Authorization: `Bearer ${schoolToken}`,
         },
       });
+
+      if (res.status !== 200 && res.statusText !== "OK") {
+        throw new Error("Couldn't publish article");
+      }
 
       // Reset editor values only on success
       markup.current = "";
@@ -239,9 +238,12 @@ const Editor = () => {
         message: "Article successfully published",
         isValid: markup.current.trim().length < 1 ? false : true,
       }));
-      setTimeout(() => dispatch(closeEditProfileModal()), 3000);
+      setTimeout(() => dispatch(closeEditProfileModal()), 0);
       setTimeout(() => setPublishingSuccess(false), 10000);
+      dispatch(resetPostToShow());
+      navigate("/schooldashboard/posts");
     } catch (error) {
+      console.log(error);
       setUploadInfo((prev) => ({
         ...prev,
         isLoading: false,
@@ -255,6 +257,7 @@ const Editor = () => {
       setPublishingError(true);
       setTimeout(() => dispatch(closeEditProfileModal()), 3000);
       setTimeout(() => setPublishingError(false), 10000);
+      dispatch(resetPostToShow());
     }
   };
 
@@ -279,6 +282,81 @@ const Editor = () => {
     dispatch(setCurrentPage("editor"));
   }, [dispatch]);
 
+  const [articleToBeEdited, setArticleToBeEdited] = useState("");
+  // if user was redirected here from edit button
+  useEffect(() => {
+    if (targetId) {
+      const articleData = async () => {
+        dispatch(openEditProfileModal());
+        dispatch(showForm("prepareEditor"));
+
+        setUploadInfo((prev) => ({
+          isLoading: true,
+          isError: false,
+          isSuccess: false,
+          message: null,
+          isValid: markup.current.trim().length < 1 ? false : true,
+        }));
+
+        try {
+          const response = await axios({
+            url: `/api/schools/${schoolId}/articles/edit/${targetId}`,
+            method: "GET",
+            headers: {
+              Authorization: `Bearer ${schoolToken}`,
+            },
+          });
+
+          if (response.status !== 200 && response.statusText !== "OK") {
+            throw new Error("Couldn't prepare editor");
+          }
+
+          const finalData = await response.data.article;
+          setArticleToBeEdited(finalData);
+          markup.current = finalData;
+
+          setFetchedArticleData(response.data.articleDetails);
+          setEditorDetails({
+            title: response.data.articleDetails.title,
+            author: response.data.articleDetails.author,
+            cover: response.data.articleDetails.cover,
+            summary: response.data.articleDetails.summary,
+          });
+
+          setPublishingSuccess(true);
+
+          setUploadInfo((prev) => ({
+            isLoading: false,
+            isError: false,
+            isSuccess: true,
+            message: "Article ready for editing.",
+            isValid: markup.current.trim().length < 1 ? false : true,
+          }));
+          setTimeout(() => dispatch(closeEditProfileModal()), 0);
+          setTimeout(() => setPublishingSuccess(false), 10000);
+        } catch (error) {
+          setPublishingSuccess(false);
+          setUploadInfo((prev) => ({ ...prev, isError: true }));
+          setTimeout(() => setPublishingSuccess(false), 10000);
+          setUploadInfo((prev) => ({
+            ...prev,
+            isLoading: false,
+            isError: true,
+            isSuccess: false,
+            message: "Couldn't prepare article for editing at the moment.",
+            isValid: markup.current.trim().length < 1 ? false : true,
+          }));
+
+          setPublishingError(true);
+          setTimeout(() => dispatch(closeEditProfileModal()), 3000);
+          setTimeout(() => setPublishingError(false), 10000);
+        }
+      };
+
+      articleData();
+    }
+  }, [schoolId, schoolToken, targetId, dispatch]);
+
   const redirect = (location) => {
     if (location === "home") {
       localStorage.removeItem("schoolCredentials");
@@ -288,8 +366,6 @@ const Editor = () => {
       return navigate("/login");
     }
   };
-
-  const showMe = useRef();
 
   return (
     <Wrapper isSuccess={isSuccess ? true : false}>
@@ -354,11 +430,14 @@ const Editor = () => {
               <div className="widget-container">
                 <HtmlEditor
                   defaultValue={markup.current}
+                  value={articleToBeEdited}
+                  activeStateEnabled={true}
                   valueType="html"
                   elementAttr={{ id: "editor" }}
                   onValueChanged={(obj) => {
                     obj.component.beginUpdate();
                     markup.current = obj.value;
+                    setArticleToBeEdited(obj.value);
                     obj.value.trim().length < 1
                       ? setUploadInfo((prev) => ({ ...prev, isValid: false }))
                       : setUploadInfo((prev) => ({ ...prev, isValid: true }));

@@ -39,7 +39,7 @@ function App() {
   const location = useLocation();
   const isLoggedIn = useSelector((state) => state.schoolAuth.isLoggedIn);
   const { data: schoolData } = useSelector((state) => state.schoolData);
-  const THEME_VALUE = localStorage.getItem("schoolZoneTheme").trim()
+  const THEME_VALUE = localStorage.getItem("schoolZoneTheme")
     ? localStorage.getItem("schoolZoneTheme").trim()
     : schoolData?.settings?.theme;
 

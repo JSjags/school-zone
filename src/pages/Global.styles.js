@@ -410,6 +410,7 @@ export const GlobalStyles = createGlobalStyle`
       border-radius: 5px;
       padding: 10px 20px;
       width: 100%;
+      border: 1px solid var(--dark-mid-gray);
       background: var(--background);
       font-family: var(--hind);
       color: var(--text);
@@ -424,6 +425,32 @@ export const GlobalStyles = createGlobalStyle`
           box-shadow: 0 5px 10px var(--secondary-dark-mid-gray);
           color: var(--secondary-color);
       }
+    }
+    .cancel-btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 5px;
+      font-size: 1rem;
+      border: none;
+      border-radius: 5px;
+      padding: 10px 20px;
+      width: 100%;
+      border: 1px solid var(--dark-mid-gray);
+      background: var(--background);
+      font-family: var(--hind);
+      color: var(--text);
+      font-weight: 500;
+      transition: all 200ms ease;
+      width: 100%;
+      cursor: pointer;
+      transition: all 300ms ease;
+
+      :hover {
+        background: var(--translucent-white);
+        box-shadow: 0 5px 10px var(--dark-gray);
+        color: var(--text);
+      }
     
     }
     .delete-btn {
@@ -435,9 +462,9 @@ export const GlobalStyles = createGlobalStyle`
       border: none;
       border-radius: 5px;
       padding: 10px 20px;
-      box-shadow: 0 5px 10px var(--dark-gray);
       width: 100%;
-      background: var(--white);
+      background: var(--background);
+      border: 1px solid var(--red);
       font-family: var(--hind);
       color: var(--red);
       font-weight: 500;
@@ -446,6 +473,7 @@ export const GlobalStyles = createGlobalStyle`
 
       :hover {
         background: var(--red);
+        box-shadow: 0 5px 10px var(--dark-gray);
         color: var(--white);
         transform: scale(1.05);
       }

@@ -24,10 +24,13 @@ export const Wrapper = styled.div`
     border: 1px solid var(--white);
     font-family: var(--hind);
     color: var(--white);
-    background: rgba(0, 255, 0, 0.3);
+    background: var(--lime);
     border-radius: 5px;
     font-family: var(--hind);
     position: absolute;
+    left: 30%;
+    top: 20px;
+    z-index: 10000;
   }
   .publish-error-message {
     backdrop-filter: blur(3px);
@@ -38,12 +41,16 @@ export const Wrapper = styled.div`
     color: var(--white);
     width: clamp(200px, 40vw, 500px);
     gap: 5px;
-    background: rgba(255, 0, 0, 0.3);
+    background: var(--red);
     padding: 5px;
     border: 1px solid var(--white);
     border-radius: 5px;
     font-family: var(--hind);
     margin: 10px auto 0;
+    position: absolute;
+    left: 30%;
+    top: 20px;
+    z-index: 10000;
   }
 `;
 
@@ -73,7 +80,6 @@ export const Content = styled.div`
     width: 100%;
     outline: 0;
     overflow-y: auto;
-    /* background: var(--translucent-white); */
     padding: 12px 15px;
     white-space: pre-wrap;
     word-wrap: break-word;
@@ -117,7 +123,7 @@ export const Content = styled.div`
       span {
         font-family: var(--hind);
         color: var(--text);
-        filter: invert(80%);
+        filter: invert(40%);
         font-size: 0.9rem;
       }
     }

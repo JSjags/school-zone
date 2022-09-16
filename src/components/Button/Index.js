@@ -1,8 +1,13 @@
 import { StyledButton } from "./Button.styles";
 
-const Button = ({ callback, children }) => {
+const Button = ({ status, isSelected, callback, children }) => {
   return (
-    <StyledButton as="button" onClick={callback}>
+    <StyledButton
+      status={status}
+      isSelected={isSelected}
+      as="button"
+      onClick={callback}
+    >
       {children}
     </StyledButton>
   );
