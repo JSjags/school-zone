@@ -190,7 +190,9 @@ const Editor = () => {
       // download URL's for cover photo and article
       const downloadUrl = await Promise.all([
         getDownloadURL(uploadStringRefArr[0].ref),
-        !fetchedArticleData?.cover && getDownloadURL(uploadStringRefArr[1].ref),
+        !editorDetails?.cover.startsWith(
+          "https://firebasestorage.googleapis.com"
+        ) && getDownloadURL(uploadStringRefArr[1].ref),
       ]);
 
       // send article details to mongoDB
@@ -203,9 +205,7 @@ const Editor = () => {
             title: editorDetails.title,
             author: editorDetails.author,
             summary: editorDetails.summary,
-            cover: !fetchedArticleData?.cover
-              ? downloadUrl[1]
-              : fetchedArticleData.cover,
+            cover: downloadUrl[1] ? downloadUrl[1] : fetchedArticleData.cover,
             timeStamp: !fetchedArticleData?.timeStamp
               ? new Date()
               : fetchedArticleData.timeStamp,
@@ -436,8 +436,8 @@ const Editor = () => {
                   elementAttr={{ id: "editor" }}
                   onValueChanged={(obj) => {
                     obj.component.beginUpdate();
-                    markup.current = obj.value;
                     setArticleToBeEdited(obj.value);
+                    markup.current = obj.value;
                     obj.value.trim().length < 1
                       ? setUploadInfo((prev) => ({ ...prev, isValid: false }))
                       : setUploadInfo((prev) => ({ ...prev, isValid: true }));
