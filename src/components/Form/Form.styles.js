@@ -1907,3 +1907,269 @@ export const CreateSlugContent = styled.div`
     border-radius: 5px;
   }
 `;
+export const MessagesWrapper = styled.div`
+  width: 100%;
+  min-height: 80vh;
+  display: flex;
+  justify-content: center;
+`;
+export const MessagesContent = styled.div`
+  width: clamp(240px, calc(100% - 10px), 500px);
+  height: fit-content;
+  background: var(--background);
+  border-radius: 10px;
+  box-shadow: 0 3px 10px var(--dark-gray);
+  padding: 10px;
+  margin-bottom: 20px;
+
+  .tabs {
+    width: max-content;
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    margin-top: 30px;
+    background: var(--translucent-white);
+    backdrop-filter: invert(0.3);
+    padding: 10px;
+    border-radius: 5px 5px 0 0;
+    position: relative;
+    z-index: 100;
+
+    ::after {
+      content: "";
+      width: 10px;
+      height: 10px;
+      border-radius: 5px;
+      background: var(--transparent);
+      position: absolute;
+      bottom: 0;
+      right: -10px;
+      box-shadow: ${(props) =>
+        props.theme.trim() === "Light"
+          ? "-5px 5px 0 #e8e8e8"
+          : "-5px 5px 0 #1d1d1d"};
+      z-index: 10;
+    }
+  }
+  .current-tab {
+    width: 25px;
+    height: 4px;
+    border-radius: 1px 1px 3px 3px;
+    background-color: var(--secondary-color);
+    position: absolute;
+    bottom: 0;
+    left: 10px;
+    transform: translateX(-50%);
+    transition: all 200ms cubic-bezier(0.68, -0.55, 0.265, 1.55);
+  }
+  .messages-cont {
+    background: var(--translucent-white);
+    min-height: 400px;
+    border-radius: 0 5px 5px 5px;
+    backdrop-filter: invert(0.3);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    gap: 2rem;
+  }
+  .send-messages-cont {
+    background: var(--translucent-white);
+    backdrop-filter: invert(0.3);
+    min-height: 400px;
+    border-radius: 0 5px 5px 5px;
+    padding: 20px 10px 50px;
+    gap: 2rem;
+    position: relative;
+    width: clamp(240px, 100%, 500px);
+
+    hr {
+      margin: 10px 0;
+      border: none;
+      border-bottom: 2px solid var(--background);
+    }
+
+    h5 {
+      transform: translateY(10px);
+    }
+  }
+  .recipient {
+    position: relative;
+  }
+  .recipient-loader {
+    transform: scale(0.7);
+    position: absolute;
+    height: 100%;
+    width: 40px;
+    right: 0;
+    bottom: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .send-message-btn {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 5px;
+    align-self: end;
+    position: absolute;
+    width: calc(100% - 20px);
+    bottom: 10px;
+    left: 10px;
+  }
+
+  .tab-link {
+    transition: all 200ms cubic-bezier(0.68, -0.55, 0.265, 1.55);
+
+    :hover {
+      cursor: pointer;
+    }
+  }
+  .active {
+    color: var(--secondary-color);
+    transition: all 200ms cubic-bezier(0.68, -0.55, 0.265, 1.55);
+  }
+  .no-messages {
+    display: block;
+    width: 200px;
+  }
+  .no-messages-text {
+    color: var(--text);
+    font-family: var(--hind);
+    width: 70%;
+    margin: 20px auto;
+    text-align: center;
+  }
+  .matched-schools {
+    position: absolute;
+    bottom: -140%;
+    width: 100%;
+    border-radius: 5px;
+    box-shadow: 0 5px 12px var(--dark-gray);
+    background: var(--background);
+    z-index: 10;
+    overflow: hidden;
+    padding: 0;
+  }
+  .matched-school-item {
+    width: 100%;
+    padding: 0 5px 5px 50px;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: flex-start;
+    gap: 3px;
+    transition: all 100ms ease-in-out;
+    cursor: pointer;
+
+    :hover {
+      background: var(--primary-color);
+    }
+  }
+  .school-logo {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    position: absolute;
+    top: 5px;
+    left: 5px;
+    background: var(--translucent-white);
+    backdrop-filter: invert(0.3);
+  }
+  .matched-school-name {
+    font-family: var(--hind);
+    color: var(--text);
+    font-size: 0.8rem;
+  }
+  .matched-school-address {
+    font-family: var(--hind);
+    color: var(--dark-mid-gray);
+    font-size: 0.6rem;
+    display: flex;
+    align-items: center;
+    gap: 3px;
+
+    span {
+      display: block;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+      overflow: hidden;
+    }
+  }
+
+  .create-slug {
+    width: 70%;
+    margin: 20px auto;
+    display: block;
+  }
+
+  p {
+    color: var(--text);
+    font-family: var(--hind);
+    margin-top: 10px;
+    font-weight: 400;
+  }
+  .delete-phrase {
+    font-weight: 600;
+    color: var(--red);
+  }
+  .input-field {
+    width: 100%;
+    display: flex;
+    gap: 5px;
+  }
+  .confirmation-icon {
+    width: 50px;
+  }
+
+  .delete-slug {
+    margin-top: 20px;
+  }
+
+  .info {
+    padding: 10px 20px;
+    margin-bottom: 20px;
+
+    li {
+      color: var(--text);
+      font-family: var(--hind);
+      font-size: clamp(0.6em, 1vw, 0.8rem);
+      transition: all 200ms ease;
+
+      ::marker {
+        ${(props) =>
+          getTheme(props.currentTheme) === "Dark"
+            ? css`
+                content: "⬛ ";
+              `
+            : css`
+                content: "⬜ ";
+              `}
+        color: var(--primary-color);
+        font-size: 1rem;
+        line-height: 40px;
+      }
+    }
+    li.valid {
+      color: var(--green);
+      font-family: var(--hind);
+      font-size: clamp(0.6em, 1vw, 0.8rem);
+
+      ::marker {
+        content: "✅ ";
+        color: var(--primary-color);
+        font-size: 1rem;
+        line-height: 40px;
+      }
+    }
+  }
+  .error-message {
+    display: flex;
+    align-items: flex-start;
+    gap: 5px;
+    background: var(--red);
+    padding: 5px;
+    border-radius: 5px;
+  }
+`;

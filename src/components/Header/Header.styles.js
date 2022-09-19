@@ -111,7 +111,8 @@ export const Content = styled.div`
       display: inline-block;
       border-radius: 15px;
       padding: 5px 10px;
-      background: whitesmoke;
+      background: var(--translucent-white);
+      backdrop-filter: invert(0.3);
       transition: all 300ms ease-in-out;
 
       :hover {

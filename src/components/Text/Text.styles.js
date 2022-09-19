@@ -3,7 +3,8 @@ import styled from "styled-components";
 export const TextWrapper = styled.input`
   display: block;
   font-size: 1rem;
-  padding: 10px;
+  padding: ${(props) =>
+    props.name === "recipient" ? "10px 35px 10px 10px" : "10px"};
   border: none;
   border-radius: 5px;
   caret-color: var(--primary-color);

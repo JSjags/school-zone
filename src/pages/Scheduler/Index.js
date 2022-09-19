@@ -34,7 +34,7 @@ const DarkTheme = React.lazy(() =>
 
 const SchedulerTheme = ({ children }) => {
   const CHOSEN_THEME =
-    useSelector((state) => state.schoolData.data.settings.theme) ?? "Light";
+    useSelector((state) => state.schoolData?.data?.settings?.theme) ?? "Light";
   return (
     <>
       <React.Suspense fallback={<></>}>

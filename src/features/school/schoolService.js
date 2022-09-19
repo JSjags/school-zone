@@ -3,7 +3,7 @@ import axios from "axios";
 const baseUrl = "/api/schools";
 
 // fetch school data
-const fetchSchoolData = async (authToken, page) => {
+const fetchSchoolData = async (authToken, isCancelled) => {
   const response = await axios({
     method: "get",
     url: `${baseUrl}/info`,

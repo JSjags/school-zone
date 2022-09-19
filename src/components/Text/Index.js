@@ -1,13 +1,17 @@
 import { useState } from "react";
 import { TextWrapper } from "./Text.styles";
 
-const Text = ({ value, setFormData, name }) => {
-  const [text, setText] = useState("");
+const Text = ({ value, setFormData, setFetch, setIsFetching, name }) => {
+  const [, setText] = useState("");
   const handleChange = (e) => {
     setFormData((prev) => {
       if (name === "schoolSlug" || name === "deletePhrase") {
         return e.target.value;
-      } else if (name === "title" || name === "author") {
+      } else if (
+        name === "title" ||
+        name === "author" ||
+        name === "recipient"
+      ) {
         return {
           ...prev,
           [name]: e.target.value,
@@ -27,12 +31,15 @@ const Text = ({ value, setFormData, name }) => {
   return (
     <>
       <TextWrapper
+        as="input"
         placeholder={name[0].toUpperCase() + name.slice(1)}
         name={name}
         value={value}
         onChange={(e) => {
           setText(e.target.value);
           handleChange(e);
+          setFetch(true);
+          setIsFetching(true);
         }}
       />
     </>

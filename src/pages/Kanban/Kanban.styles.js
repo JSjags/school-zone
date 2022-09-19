@@ -205,6 +205,7 @@ export const Content = styled.div`
     list-style-type: none;
 
     span {
+      color: var(--text);
       font-size: clamp(0.8rem, 1vw, 1rem);
     }
 

@@ -72,6 +72,7 @@ const Settings = () => {
     });
     if (serverResponse.data.message === "successful") {
       dispatch(fetchSchoolSettings(schoolToken));
+      localStorage.setItem("schoolZoneTheme", object.theme);
       setShowMessage(true);
       setTimeout(() => setShowMessage(false), 3000);
     } else {
@@ -112,7 +113,10 @@ const Settings = () => {
     if (schoolData?.settings)
       setSettingsData(JSON.parse(JSON.stringify(schoolData.settings)));
 
-    localStorage.setItem("schoolZoneTheme", schoolData?.settings?.theme);
+    localStorage.setItem(
+      "schoolZoneTheme",
+      schoolData?.settings?.theme ? schoolData?.settings?.theme : "Light"
+    );
 
     paginationResultsRef.current = schoolData?.settings?.paginationResults;
   }, [schoolData.settings]);

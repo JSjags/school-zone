@@ -84,7 +84,7 @@ const Students = () => {
     (state) => state.schoolAuth
   );
   const { isEditProfileModalOpen } = useSelector((state) => state.config);
-  const { students } = useSelector((state) => state.schoolData.data);
+  const students = useSelector((state) => state.schoolData.data?.students);
   const {
     data: schoolData,
     isLoading,
@@ -266,7 +266,7 @@ const Students = () => {
         <Content>
           <main>
             <PageHeader title="Students" />
-            {students.length < 1 && (
+            {(!students || students.length < 1) && (
               <div className="create-student">
                 <img alt="add-student" src={noStudentSvg}></img>
                 <p>No registered student found.</p>
@@ -286,7 +286,7 @@ const Students = () => {
                 </div>
               </div>
             )}
-            {students.length > 0 && (
+            {students && students.length > 0 && (
               <>
                 <div className="available-students">
                   <button onClick={handleCreateStudent}>

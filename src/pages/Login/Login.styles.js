@@ -17,7 +17,7 @@ export const Wrapper = styled.div`
 export const Content = styled.div`
   max-width: 400px;
   padding: 40px 20px;
-  background: white;
+  background: var(--background);
   border-radius: 20px;
   box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
 
@@ -29,7 +29,7 @@ export const Content = styled.div`
   }
   p {
     font-family: var(--hind);
-    color: var(--deep-gray);
+    color: var(--text);
   }
   hr {
     border: none;
@@ -59,7 +59,9 @@ export const Content = styled.div`
     outline-width: 3px;
     min-width: 300px;
     width: 300px;
-    background: whitesmoke;
+    background: var(--translucent-white);
+    backdrop-filter: invert(0.3);
+    color: var(--text);
     margin-bottom: 30px;
     transition: all 200ms ease-in-out;
 

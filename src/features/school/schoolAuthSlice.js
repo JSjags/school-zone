@@ -5,7 +5,7 @@ const schoolCredentials = JSON.parse(localStorage.getItem("schoolCredentials"));
 const initialState = schoolCredentials
   ? schoolCredentials
   : {
-      schoolId: null,
+      id: null,
       token: null,
       isLoggedIn: false,
     };
@@ -15,18 +15,18 @@ export const schoolAuthSlice = createSlice({
   initialState,
   reducers: {
     loginSchool: (state, action) => {
-      state.schoolId = action.payload.id;
+      state.id = action.payload.id;
       state.token = action.payload.token;
       state.isLoggedIn = true;
     },
     logoutSchool: (state) => {
-      state.schoolId = "";
-      state.token = "";
+      state.id = null;
+      state.token = null;
       state.isLoggedIn = false;
     },
     resetSchoolAuth: (state) => {
-      state.schoolId = "";
-      state.token = "";
+      state.id = null;
+      state.token = null;
       state.isLoggedIn = false;
     },
   },

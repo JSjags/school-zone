@@ -85,7 +85,7 @@ const Staffs = () => {
     (state) => state.schoolAuth
   );
   const { isEditProfileModalOpen } = useSelector((state) => state.config);
-  const { staffs } = useSelector((state) => state.schoolData.data);
+  const staffs = useSelector((state) => state.schoolData.data?.staffs);
   const {
     data: schoolData,
     isLoading,
@@ -267,7 +267,7 @@ const Staffs = () => {
         <Content>
           <main>
             <PageHeader title="Staffs" />
-            {staffs.length < 1 && (
+            {(!staffs || staffs.length <= 0) && (
               <div className="create-staff">
                 <img alt="add-staff" src={noStaffsSvg}></img>
                 <p>No registered staff found.</p>
@@ -283,7 +283,7 @@ const Staffs = () => {
                 </div>
               </div>
             )}
-            {staffs.length > 0 && (
+            {staffs && staffs.length > 0 && (
               <>
                 <div className="available-staffs">
                   <button onClick={handleCreateStaff}>

@@ -45,7 +45,6 @@ const Home = () => {
 
   useEffect(() => {
     if (id) {
-      console.log(id);
       navigate("/schooldashboard");
     }
   }, [id, navigate]);

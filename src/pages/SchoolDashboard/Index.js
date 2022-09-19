@@ -15,10 +15,9 @@ import {
   LoadingContainer,
   Wrapper,
 } from "./SchoolDashboard.styles";
-import { FaSignOutAlt } from "react-icons/fa";
-import { MdMessage, MdNotifications, MdSettings } from "react-icons/md";
 import { BiError } from "react-icons/bi";
 
+import EditModal from "../../components/EditModal/Index";
 import PageHeader from "../../components/PageHeader/Index";
 import Spinner from "../../components/Spinner/Index";
 import noDataSvg from "../../assets/no-data.svg";
@@ -32,6 +31,7 @@ const SchoolDashboard = () => {
   const { data, isLoading, isSuccess, isError, message } = useSelector(
     (state) => state.schoolData
   );
+  const { isEditProfileModalOpen } = useSelector((state) => state.config);
 
   useEffect(() => {
     if (message !== null && message.includes("jwt expired")) {
@@ -48,7 +48,7 @@ const SchoolDashboard = () => {
     }
 
     dispatch(fetchSchoolData(authToken));
-  }, [authToken, dispatch, navigate, message]);
+  }, [authToken, message, dispatch, navigate]);
 
   useEffect(() => {
     dispatch(setCurrentPage("schooldashboard"));
@@ -71,16 +71,19 @@ const SchoolDashboard = () => {
           <Spinner />
         </LoadingContainer>
       )}
+
+      {isEditProfileModalOpen && <EditModal />}
       {isSuccess && (
         <Content>
           <main>
             <PageHeader title="Dashboard" />
-            {data.students.length < 1 && data.staffs.length < 1 && (
-              <div className="no-data">
-                <img alt="no-data" src={noDataSvg} />
-                <p>No data to display, try adding a student or a staff.</p>
-              </div>
-            )}
+            {(!data.students || data.students.length < 1) &&
+              (!data.staffs || data.staffs.length < 1) && (
+                <div className="no-data">
+                  <img alt="no-data" src={noDataSvg} />
+                  <p>No data to display, try adding a student or a staff.</p>
+                </div>
+              )}
           </main>
         </Content>
       )}

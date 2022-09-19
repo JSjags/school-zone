@@ -2,13 +2,18 @@ import React, { useState } from "react";
 import axios from "axios";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { loginSchool } from "../../features/school/schoolAuthSlice";
+import {
+  loginSchool,
+  resetSchoolAuth,
+} from "../../features/school/schoolAuthSlice";
 
 import { AnimatePresence, motion } from "framer-motion";
 import { Wrapper, Content } from "./Login.styles";
 import { BiErrorCircle } from "react-icons/bi";
 
 import Spinner from "../../components/Spinner/Index";
+import { useEffect } from "react";
+import { resetSchoolData } from "../../features/school/schoolDataSlice";
 
 function Login() {
   const navigate = useNavigate();
@@ -45,8 +50,9 @@ function Login() {
         isLoggedIn: true,
       };
       localStorage.setItem("schoolCredentials", JSON.stringify(resData));
-      response.data && dispatch(loginSchool(response.data));
-      navigate("/schooldashboard");
+      response.data &&
+        dispatch(loginSchool(response.data)) &&
+        navigate("/schooldashboard");
     } catch (error) {
       console.log(error);
       setIsError(true);

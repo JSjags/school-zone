@@ -151,7 +151,7 @@ function Kanban(props) {
     (state) => state.schoolAuth
   );
   const { kanban: tasks, kanbanListOrder } = useSelector(
-    (state) => state.schoolData.data
+    (state) => state.schoolData?.data
   );
   const { isEditProfileModalOpen } = useSelector((state) => state.config);
   const authToken = useSelector((state) => state.schoolAuth.token);
@@ -370,7 +370,7 @@ function Kanban(props) {
         <Content>
           <main>
             <PageHeader title="Kanban" />
-            {tasks.length <= 0 && (
+            {(!tasks || tasks.length <= 0) && (
               <div className="create-kanban">
                 <img alt="add-student" src={noKanbanSvg}></img>
                 <p>No Kanban data found.</p>
@@ -386,7 +386,7 @@ function Kanban(props) {
                 </div>
               </div>
             )}
-            {!isLoading && tasks.length && (
+            {tasks !== undefined && !isLoading && tasks.length && (
               <>
                 <div className="available-kanban">
                   <Button callback={handleNewKanbanCard}>
@@ -479,7 +479,7 @@ function Kanban(props) {
                       <span>
                         Don't worry about losing changes made like
                         re-arrangement of lists or re-ordering of tasks as those
-                        changes are changed behind the scenes.
+                        changes are saved behind the scenes.
                       </span>
                     </li>
                   </ul>

@@ -116,7 +116,7 @@ export const schoolDataSlice = createSlice({
         state.message = null;
       })
       .addCase(fetchSchoolData.fulfilled, (state, action) => {
-        state.data = action.payload;
+        state.data = action.payload ? action.payload : {};
         state.isLoading = false;
         state.isSuccess = true;
         state.isError = false;
@@ -130,7 +130,6 @@ export const schoolDataSlice = createSlice({
       })
       // School Posts
       .addCase(fetchSchoolPosts.pending, (state) => {
-        state.data = {};
         state.isPostsLoading = true;
         state.isPostsSuccess = false;
         state.isPostsError = false;

@@ -1,7 +1,7 @@
 import { useState, useRef, useEffect } from "react";
 import axios from "axios";
 import { motion, AnimatePresence } from "framer-motion";
-import { BiErrorCircle } from "react-icons/bi";
+import { BiErrorCircle, BiMailSend } from "react-icons/bi";
 import { RiLockPasswordLine } from "react-icons/ri";
 import { TbTemplate } from "react-icons/tb";
 import { FaCameraRetro } from "react-icons/fa";
@@ -11,6 +11,7 @@ import {
   MdPlaylistAdd,
   MdDeleteForever,
   MdPublishedWithChanges,
+  MdLocationOn,
 } from "react-icons/md";
 import { BsImage, BsCloudUpload, BsInfoCircleFill } from "react-icons/bs";
 import { isStrongPassword } from "validator";
@@ -59,6 +60,8 @@ import {
   DeleteModalWrapper,
   EditProfileContent,
   EditProfileWrapper,
+  MessagesContent,
+  MessagesWrapper,
   RecordFinanceContent,
   RecordFinanceWrapper,
   SavingContent,
@@ -89,6 +92,10 @@ import { useLayoutEffect } from "react";
 
 import createSlug from "../../assets/create-slug.svg";
 import deleteSlug from "../../assets/delete-slug.svg";
+import noMessagesSvg from "../../assets/no-messages.svg";
+import { useCallback } from "react";
+import TextArea from "../../components/TextArea/Index";
+
 // Form types and modals
 
 // Edit Profile
@@ -4040,6 +4047,7 @@ const FinancialStatement = () => {
     </>
   );
 };
+
 // Student Profile
 const StaffProfile = () => {
   const dispatch = useDispatch();
@@ -4805,6 +4813,219 @@ const Article = () => {
   );
 };
 
+// Messages
+const Messages = () => {
+  const dispatch = useDispatch();
+
+  const { data: schoolData } = useSelector((state) => state.schoolData);
+  const { token: schoolToken } = useSelector((state) => state.schoolAuth);
+
+  const [tabState, setTabState] = useState(false);
+
+  const inboxRef = useRef();
+  const sendMessRef = useRef();
+  const currentTabIcon = useRef();
+
+  const [formData, setFormData] = useState({
+    recipient: "",
+    title: "",
+    message: "",
+  });
+  const [matchedSchools, setMatchedSchools] = useState([]);
+  const [fetch, setFetch] = useState(true);
+  const [isFetching, setIsFetching] = useState(true);
+
+  const adjustTabIcon = useCallback(() => {
+    currentTabIcon.current.style.left = `${
+      !tabState
+        ? inboxRef.current.clientWidth / 2 + 10
+        : inboxRef.current.clientWidth +
+          10 +
+          (sendMessRef.current.clientWidth / 2 + 10)
+    }px`;
+  }, [tabState]);
+
+  useEffect(() => {
+    adjustTabIcon();
+  }, [adjustTabIcon]);
+
+  useEffect(() => {
+    let controller, signal;
+
+    if (formData.recipient.length >= 3) {
+      controller = new AbortController();
+      signal = controller.signal;
+
+      const fetchSchoolNames = async () => {
+        try {
+          setIsFetching(true);
+          let response = await axios({
+            url: "/api/schools/",
+            method: "POST",
+            data: { query: formData.recipient },
+            headers: {
+              Authorization: `Bearer ${schoolToken}`,
+              Accept: "application/json",
+            },
+            signal,
+          });
+
+          if (response.status !== 200 && response.statusText !== "OK") {
+            setIsFetching(false);
+            throw new Error("Error fetching schoolnames");
+          }
+          setIsFetching(false);
+          setMatchedSchools(response.data.data);
+        } catch (error) {
+          if (error.name === "AbortError") {
+            return console.log("Request Canceled");
+          }
+          console.log(error);
+        }
+      };
+      fetch && fetchSchoolNames();
+    }
+    if (formData.recipient.length < 3) {
+      setIsFetching(false);
+      setMatchedSchools([]);
+    }
+
+    return () => {
+      if (controller) {
+        setIsFetching(false);
+        controller.abort();
+        console.log("Cancelled");
+      }
+    };
+  }, [formData.recipient, schoolToken, fetch]);
+
+  useEffect(() => {
+    window.addEventListener("click", (e) => {
+      setMatchedSchools([]);
+      // if (
+      //   e.target.matches(".matched-school-item") ||
+      //   e.target.matches(".matched-school-name") ||
+      //   e.target.matches(".matched-school-address") ||
+      //   e.target.matches(".school-logo")
+      // ) {
+      //   alert(true);
+      // }
+    });
+    return () => {
+      window.removeEventListener("click", () => setMatchedSchools([]));
+    };
+  }, []);
+
+  return (
+    <MessagesWrapper>
+      <MessagesContent
+        theme={schoolData.settings.theme ? schoolData.settings.theme : "Light"}
+      >
+        <h2>Messages</h2>
+        <div className="tabs">
+          <h3
+            ref={inboxRef}
+            className={!tabState ? "tab-link active" : "tab-link"}
+            onClick={() => {
+              setTabState(false);
+              adjustTabIcon();
+            }}
+          >
+            Inbox
+          </h3>
+          <h3
+            ref={sendMessRef}
+            className={!tabState ? "tab-link" : "tab-link active"}
+            onClick={() => {
+              setTabState(true);
+              adjustTabIcon();
+            }}
+          >
+            {" "}
+            Send Message
+          </h3>
+          <div ref={currentTabIcon} className="current-tab"></div>
+        </div>
+        <div className={!tabState ? "messages-cont" : "send-messages-cont"}>
+          {!tabState && !schoolData.messages && (
+            <>
+              <img className="no-messages" alt="mailbox" src={noMessagesSvg} />
+              <p className="no-messages-text">You have no messages!</p>
+            </>
+          )}
+          {tabState && !schoolData.messages && (
+            <>
+              <h5>Recipient</h5>
+              <div className="recipient">
+                <Text
+                  value={formData.recipient}
+                  setFormData={setFormData}
+                  setFetch={setFetch}
+                  setIsFetching={setIsFetching}
+                  name="recipient"
+                />
+                <div className="recipient-loader">
+                  {isFetching && <Spinner />}
+                </div>
+                <ul className="matched-schools">
+                  {matchedSchools &&
+                    matchedSchools.map((school) => (
+                      <li
+                        key={school._id}
+                        className="matched-school-item"
+                        onClick={() => {
+                          setFormData((prevState) => ({
+                            ...prevState,
+                            recipient: school.name,
+                          }));
+                          setMatchedSchools([]);
+                          setFetch(false);
+                        }}
+                      >
+                        <img
+                          className="school-logo"
+                          alt="logo"
+                          src={
+                            school.avatar_image
+                              ? school.avatar_image
+                              : "https://th.bing.com/th/id/R.e62421c9ba5aeb764163aaccd64a9583?rik=DzXjlnhTgV5CvA&riu=http%3a%2f%2fcdn.onlinewebfonts.com%2fsvg%2fimg_210318.png&ehk=952QCsChZS0znBch2iju8Vc%2fS2aIXvqX%2f0zrwkjJ3GA%3d&risl=&pid=ImgRaw&r=0"
+                          }
+                        />
+                        <p className="matched-school-name">{school.name}</p>
+                        <span className="matched-school-address">
+                          <MdLocationOn style={{ fontSize: "0.8rem" }} />
+                          <span>{school.address}</span>
+                        </span>
+                      </li>
+                    ))}
+                </ul>
+              </div>
+              <hr />
+              <h5>Title</h5>
+              <Text
+                value={formData.title}
+                setFormData={setFormData}
+                name="title"
+              />
+              <h5>Message</h5>
+              <TextArea
+                message={"message"}
+                value={formData.message}
+                setFormData={setFormData}
+                name="message"
+              />
+              <button className="primary-btn send-message-btn">
+                <BiMailSend style={{ fontSize: "1.4rem" }} />
+                <span>Send Message</span>
+              </button>
+            </>
+          )}
+        </div>
+      </MessagesContent>
+    </MessagesWrapper>
+  );
+};
+
 const Form = () => {
   const { formToShow } = useSelector((state) => state.config);
 
@@ -4837,6 +5058,7 @@ const Form = () => {
       {formToShow === "readArticle" && <Article />}
       {formToShow === "publishing" && <Saving type="Publishing" />}
       {formToShow === "prepareEditor" && <Saving type="Preparing Editor" />}
+      {formToShow === "messages" && <Messages />}
     </>
   );
 };
