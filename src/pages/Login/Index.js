@@ -70,7 +70,8 @@ function Login() {
         );
       }
 
-      setErrorMessage(error.response.data.message.replace("Error: ", ""));
+      error.response.data.message &&
+        setErrorMessage(error.response.data.message.replace("Error: ", ""));
     }
   };
 
