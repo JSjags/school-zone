@@ -41,7 +41,9 @@ function App() {
   const { data: schoolData } = useSelector((state) => state.schoolData);
   const THEME_VALUE = schoolData?.settings?.theme
     ? schoolData?.settings?.theme
-    : localStorage.getItem("schoolZoneTheme").trim();
+    : localStorage.getItem("schoolZoneTheme")
+    ? localStorage.getItem("schoolZoneTheme").trim()
+    : " Auto";
 
   return (
     <ThemeProvider
