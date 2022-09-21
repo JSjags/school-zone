@@ -1911,7 +1911,35 @@ export const MessagesWrapper = styled.div`
   width: 100%;
   min-height: 80vh;
   display: flex;
+  flex-direction: column;
   justify-content: center;
+  align-items: center;
+  gap: 1rem;
+
+  .success-message {
+    width: clamp(240px, calc(100% - 10px), 500px);
+    padding: 5px;
+    color: var(--white);
+    font-family: var(--hind);
+    background: var(--lime);
+    border-radius: 5px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 3px;
+  }
+  .error-message {
+    width: clamp(240px, calc(100% - 10px), 500px);
+    padding: 5px;
+    color: var(--white);
+    font-family: var(--hind);
+    background: var(--red);
+    border-radius: 5px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 3px;
+  }
 `;
 export const MessagesContent = styled.div`
   width: clamp(240px, calc(100% - 10px), 500px);
@@ -1995,6 +2023,25 @@ export const MessagesContent = styled.div`
   }
   .recipient {
     position: relative;
+  }
+  .recipient-error {
+    display: flex;
+    align-items: flex-start;
+    gap: 3px;
+    justify-content: flex-start;
+    color: var(--red);
+    font-size: 0.8rem;
+  }
+  .info {
+    display: flex;
+    gap: 5px;
+    align-items: flex-start;
+    justify-content: flex-start;
+    margin: 10px 0 3px;
+
+    span {
+      font-size: 0.8rem;
+    }
   }
   .recipient-loader {
     transform: scale(0.7);
@@ -2125,44 +2172,6 @@ export const MessagesContent = styled.div`
 
   .delete-slug {
     margin-top: 20px;
-  }
-
-  .info {
-    padding: 10px 20px;
-    margin-bottom: 20px;
-
-    li {
-      color: var(--text);
-      font-family: var(--hind);
-      font-size: clamp(0.6em, 1vw, 0.8rem);
-      transition: all 200ms ease;
-
-      ::marker {
-        ${(props) =>
-          getTheme(props.currentTheme) === "Dark"
-            ? css`
-                content: "⬛ ";
-              `
-            : css`
-                content: "⬜ ";
-              `}
-        color: var(--primary-color);
-        font-size: 1rem;
-        line-height: 40px;
-      }
-    }
-    li.valid {
-      color: var(--green);
-      font-family: var(--hind);
-      font-size: clamp(0.6em, 1vw, 0.8rem);
-
-      ::marker {
-        content: "✅ ";
-        color: var(--primary-color);
-        font-size: 1rem;
-        line-height: 40px;
-      }
-    }
   }
   .error-message {
     display: flex;

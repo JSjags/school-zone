@@ -1,8 +1,8 @@
 import { useState, useRef, useEffect } from "react";
 import axios from "axios";
 import { motion, AnimatePresence } from "framer-motion";
-import { BiErrorCircle, BiMailSend } from "react-icons/bi";
-import { RiLockPasswordLine } from "react-icons/ri";
+import { BiErrorCircle, BiInfoCircle, BiMailSend } from "react-icons/bi";
+import { RiLockPasswordLine, RiMailSendLine } from "react-icons/ri";
 import { TbTemplate } from "react-icons/tb";
 import { FaCameraRetro } from "react-icons/fa";
 import { IoIosCloudDone } from "react-icons/io";
@@ -95,6 +95,7 @@ import deleteSlug from "../../assets/delete-slug.svg";
 import noMessagesSvg from "../../assets/no-messages.svg";
 import { useCallback } from "react";
 import TextArea from "../../components/TextArea/Index";
+import { FieldPanel } from "devextreme-react/pivot-grid";
 
 // Form types and modals
 
@@ -4827,13 +4828,23 @@ const Messages = () => {
   const currentTabIcon = useRef();
 
   const [formData, setFormData] = useState({
-    recipient: "",
+    recipient: {
+      name: "",
+      id: null,
+    },
     title: "",
     message: "",
   });
+
+  const [messages, setMessages] = useState([]);
+  const [recipientError, setRecipientError] = useState(false);
   const [matchedSchools, setMatchedSchools] = useState([]);
   const [fetch, setFetch] = useState(true);
   const [isFetching, setIsFetching] = useState(true);
+  const [isSending, setIsSending] = useState(false);
+  const [isSuccess, setIsSuccess] = useState(false);
+  const [isError, setIsError] = useState(false);
+  const [showButton, setShowButton] = useState(false);
 
   const adjustTabIcon = useCallback(() => {
     currentTabIcon.current.style.left = `${
@@ -4845,6 +4856,66 @@ const Messages = () => {
     }px`;
   }, [tabState]);
 
+  // handle message submission
+  const handleSend = async () => {
+    setIsSending(true);
+    setIsError(false);
+    setIsSuccess(false);
+    setRecipientError(false);
+
+    try {
+      const response = await axios({
+        url: "/api/schools/messages/send",
+        method: "POST",
+        data: formData,
+        headers: {
+          Authorization: `Bearer ${schoolToken}`,
+        },
+      });
+
+      if (response.status !== 200 && response.statusText !== "OK") {
+        setIsSending(false);
+        setIsError(true);
+        setTimeout(() => setIsError(false), 3000);
+        throw new Error("Message not sent");
+      }
+
+      setIsSending(false);
+      setIsSuccess(true);
+      setTimeout(() => setIsSuccess(false), 3000);
+      setFormData({
+        recipient: {
+          name: "",
+          id: null,
+        },
+        title: "",
+        message: "",
+      });
+    } catch (error) {
+      console.log(error);
+      if (
+        error.response.data.message.includes("Can't send message to yourself")
+      ) {
+        setIsSending(false);
+        setIsError(true);
+        setRecipientError(true);
+        setTimeout(() => setIsError(false), 3000);
+        throw new Error("Can't send message to yourself");
+      }
+
+      setIsSending(false);
+      setIsError(true);
+      setTimeout(() => setIsError(false), 3000);
+      throw new Error("Error sending message");
+    }
+  };
+
+  const check = useCallback((object) => {
+    return Object.values(object).every((v) => {
+      return v && typeof v === "object" ? check(v) : v !== "" && v !== null;
+    });
+  }, []);
+
   useEffect(() => {
     adjustTabIcon();
   }, [adjustTabIcon]);
@@ -4852,7 +4923,7 @@ const Messages = () => {
   useEffect(() => {
     let controller, signal;
 
-    if (formData.recipient.length >= 3) {
+    if (formData.recipient.name.length >= 3) {
       controller = new AbortController();
       signal = controller.signal;
 
@@ -4862,7 +4933,7 @@ const Messages = () => {
           let response = await axios({
             url: "/api/schools/",
             method: "POST",
-            data: { query: formData.recipient },
+            data: { query: formData.recipient.name },
             headers: {
               Authorization: `Bearer ${schoolToken}`,
               Accept: "application/json",
@@ -4885,9 +4956,10 @@ const Messages = () => {
       };
       fetch && fetchSchoolNames();
     }
-    if (formData.recipient.length < 3) {
+    if (formData.recipient.name.length < 3) {
       setIsFetching(false);
       setMatchedSchools([]);
+      if (controller) controller.abort();
     }
 
     return () => {
@@ -4902,22 +4974,65 @@ const Messages = () => {
   useEffect(() => {
     window.addEventListener("click", (e) => {
       setMatchedSchools([]);
-      // if (
-      //   e.target.matches(".matched-school-item") ||
-      //   e.target.matches(".matched-school-name") ||
-      //   e.target.matches(".matched-school-address") ||
-      //   e.target.matches(".school-logo")
-      // ) {
-      //   alert(true);
-      // }
     });
     return () => {
       window.removeEventListener("click", () => setMatchedSchools([]));
     };
   }, []);
 
+  useEffect(() => {
+    setShowButton(check(formData));
+  }, [check, formData]);
+
+  // fetch school messages
+  useEffect(() => {
+    let controller;
+
+    const fetchMessages = async () => {
+      controller = new AbortController();
+      try {
+        const res = await axios({
+          url: `/api/schools/my-messages`,
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${schoolToken}`,
+          },
+          signal: controller.signal,
+        });
+
+        if (res.status !== 200 && res.statusText !== "OK") {
+          throw new Error("Couldn't fetch messages");
+        }
+
+        console.log(res.data);
+        setMessages(res.data.messages);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    if (!tabState) {
+      fetchMessages();
+    }
+
+    return () => {
+      if (controller) controller.abort();
+    };
+  }, [schoolToken, tabState]);
+
   return (
     <MessagesWrapper>
+      {isSuccess && (
+        <div className="success-message">
+          <RiMailSendLine style={{ fontSize: "1.4rem" }} />
+          <span>Vwoosh!!! Message sent successfully</span>
+        </div>
+      )}
+      {isError && (
+        <div className="error-message">
+          <BiErrorCircle style={{ fontSize: "1.4rem" }} />
+          <span>Doink!!! Message couldn't be sent.</span>
+        </div>
+      )}
       <MessagesContent
         theme={schoolData.settings.theme ? schoolData.settings.theme : "Light"}
       >
@@ -4958,7 +5073,7 @@ const Messages = () => {
               <h5>Recipient</h5>
               <div className="recipient">
                 <Text
-                  value={formData.recipient}
+                  value={formData.recipient.name}
                   setFormData={setFormData}
                   setFetch={setFetch}
                   setIsFetching={setIsFetching}
@@ -4976,7 +5091,7 @@ const Messages = () => {
                         onClick={() => {
                           setFormData((prevState) => ({
                             ...prevState,
-                            recipient: school.name,
+                            recipient: { name: school.name, id: school._id },
                           }));
                           setMatchedSchools([]);
                           setFetch(false);
@@ -5000,6 +5115,12 @@ const Messages = () => {
                     ))}
                 </ul>
               </div>
+              {recipientError && (
+                <p className="recipient-error">
+                  <BiErrorCircle />
+                  <span>Sorry, you can't message yourself</span>
+                </p>
+              )}
               <hr />
               <h5>Title</h5>
               <Text
@@ -5014,10 +5135,32 @@ const Messages = () => {
                 setFormData={setFormData}
                 name="message"
               />
-              <button className="primary-btn send-message-btn">
-                <BiMailSend style={{ fontSize: "1.4rem" }} />
-                <span>Send Message</span>
-              </button>
+              <p className="info">
+                <BiInfoCircle />
+                <span>
+                  Make sure to click on the exact school when the dropdown
+                  appears so that the recipient field is marked valid.
+                </span>
+              </p>
+              {isSending && (
+                <Spinner
+                  style={{
+                    position: "absolute",
+                    width: "calc(100% - 20px)",
+                    bottom: "10px",
+                    left: "10px",
+                  }}
+                />
+              )}
+              {!isSending && showButton && (
+                <button
+                  onClick={handleSend}
+                  className="primary-btn send-message-btn"
+                >
+                  <BiMailSend style={{ fontSize: "1.4rem" }} />
+                  <span>Send Message</span>
+                </button>
+              )}
             </>
           )}
         </div>

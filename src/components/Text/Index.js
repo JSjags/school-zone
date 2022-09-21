@@ -7,14 +7,15 @@ const Text = ({ value, setFormData, setFetch, setIsFetching, name }) => {
     setFormData((prev) => {
       if (name === "schoolSlug" || name === "deletePhrase") {
         return e.target.value;
-      } else if (
-        name === "title" ||
-        name === "author" ||
-        name === "recipient"
-      ) {
+      } else if (name === "author" || name === "title") {
         return {
           ...prev,
           [name]: e.target.value,
+        };
+      } else if (name === "recipient") {
+        return {
+          ...prev,
+          [name]: { name: e.target.value, id: null },
         };
       } else {
         return {
@@ -38,8 +39,8 @@ const Text = ({ value, setFormData, setFetch, setIsFetching, name }) => {
         onChange={(e) => {
           setText(e.target.value);
           handleChange(e);
-          setFetch(true);
-          setIsFetching(true);
+          setFetch && setFetch(true);
+          setIsFetching && setIsFetching(true);
         }}
       />
     </>
