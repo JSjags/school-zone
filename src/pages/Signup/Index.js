@@ -24,7 +24,7 @@ function Signup() {
   const baseUrl =
     process.env.NODE_ENV !== "production"
       ? process.env.REACT_APP_PRODUCTION_BASE_URL
-      : process.env.REACT_APP_DEVELOPMENT_BASE_URL;
+      : "";
 
   // form fields state
   const [formData, setFormData] = useState({

@@ -22,7 +22,7 @@ function Login() {
   const baseUrl =
     process.env.NODE_ENV !== "production"
       ? process.env.REACT_APP_PRODUCTION_BASE_URL
-      : process.env.REACT_APP_DEVELOPMENT_BASE_URL;
+      : "";
 
   const [isLoading, setIsLoading] = useState(false);
   const [isError, setIsError] = useState(false);

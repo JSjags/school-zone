@@ -100,7 +100,7 @@ import { FieldPanel } from "devextreme-react/pivot-grid";
 const baseUrl =
   process.env.NODE_ENV !== "production"
     ? process.env.REACT_APP_PRODUCTION_BASE_URL
-    : process.env.REACT_APP_DEVELOPMENT_BASE_URL;
+    : "";
 
 // Form types and modals
 

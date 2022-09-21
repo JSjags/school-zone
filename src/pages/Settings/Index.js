@@ -35,6 +35,11 @@ const Settings = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
+  const baseUrl =
+    process.env.NODE_ENV !== "production"
+      ? process.env.REACT_APP_PRODUCTION_BASE_URL
+      : "";
+
   const themeOptions = useRef("Light Dark Auto");
   const paginationResultsRef = useRef();
   const saveChangeRef = useRef();
@@ -63,7 +68,7 @@ const Settings = () => {
   const updateSettings = async (object) => {
     if (saveChangeRef.current) saveChangeRef.current.disabled = true;
     const serverResponse = await axios({
-      url: `/api/schools/${schoolId}/settings`,
+      url: `${baseUrl}/api/schools/${schoolId}/settings`,
       method: "put",
       data: object,
       headers: {
