@@ -77,6 +77,11 @@ const Editor = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
+  const baseUrl =
+    process.env.NODE_ENV !== "production"
+      ? process.env.REACT_APP_PRODUCTION_BASE_URL
+      : process.env.REACT_APP_DEVELOPMENT_BASE_URL;
+
   // Editor Settings Start Here
   const unwantedValues = [null, undefined, ""];
   const [editorDetails, setEditorDetails] = useState({
@@ -197,7 +202,7 @@ const Editor = () => {
 
       // send article details to mongoDB
       const res = await axios({
-        url: `/api/schools/${schoolId}/articles/${articleId}`,
+        url: `${baseUrl}/api/schools/${schoolId}/articles/${articleId}`,
         method: "POST",
         data: {
           articleURL: downloadUrl[0],

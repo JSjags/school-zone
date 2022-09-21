@@ -21,6 +21,11 @@ function Signup() {
   // initializing useDispatch
   const dispatch = useDispatch();
 
+  const baseUrl =
+    process.env.NODE_ENV !== "production"
+      ? process.env.REACT_APP_PRODUCTION_BASE_URL
+      : process.env.REACT_APP_DEVELOPMENT_BASE_URL;
+
   // form fields state
   const [formData, setFormData] = useState({
     schoolName: "",
@@ -95,7 +100,7 @@ function Signup() {
     delete body.countryCodePrefix;
 
     try {
-      const response = await axios.post("/api/schools/", body);
+      const response = await axios.post(`${baseUrl}/api/schools/`, body);
       console.log(response.data);
       if (response.data && response.data.token) {
         setError(false);

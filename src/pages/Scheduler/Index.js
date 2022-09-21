@@ -50,6 +50,11 @@ const Scheduler = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
+  const baseUrl =
+    process.env.NODE_ENV !== "production"
+      ? process.env.REACT_APP_PRODUCTION_BASE_URL
+      : process.env.REACT_APP_DEVELOPMENT_BASE_URL;
+
   const { id: schoolId, token: schoolToken } = useSelector(
     (state) => state.schoolAuth
   );
@@ -102,7 +107,7 @@ const Scheduler = () => {
       });
       params = params.slice(0, -1);
 
-      return fetch(`/api/schools/${schoolId}/schedules${params}`, {
+      return fetch(`${baseUrl}/api/schools/${schoolId}/schedules${params}`, {
         method: "GET",
         headers: {
           Authorization: `Bearer ${schoolToken}`,
@@ -127,7 +132,7 @@ const Scheduler = () => {
 
     // Create Appointment
     insert: (values) => {
-      return fetch(`/api/schools/${schoolId}/schedules`, {
+      return fetch(`${baseUrl}/api/schools/${schoolId}/schedules`, {
         method: "POST",
         body: JSON.stringify({
           ...values,
@@ -147,7 +152,9 @@ const Scheduler = () => {
     // Delete Appointment
     remove: (key) => {
       return fetch(
-        `/api/schools/${schoolId}/schedules/${encodeURIComponent(key)}`,
+        `${baseUrl}/api/schools/${schoolId}/schedules/${encodeURIComponent(
+          key
+        )}`,
         {
           method: "DELETE",
           headers: {
@@ -165,7 +172,9 @@ const Scheduler = () => {
     update: (key, values) => {
       console.log(key, values);
       return fetch(
-        `/api/schools/${schoolId}/schedules/${encodeURIComponent(key)}`,
+        `${baseUrl}/api/schools/${schoolId}/schedules/${encodeURIComponent(
+          key
+        )}`,
         {
           method: "PUT",
           body: JSON.stringify(values),

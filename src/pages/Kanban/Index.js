@@ -140,6 +140,11 @@ function Kanban(props) {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
+  const baseUrl =
+    process.env.NODE_ENV !== "production"
+      ? process.env.REACT_APP_PRODUCTION_BASE_URL
+      : process.env.REACT_APP_DEVELOPMENT_BASE_URL;
+
   const {
     data: schoolData,
     isLoading,
@@ -312,7 +317,7 @@ function Kanban(props) {
     const updateKanbanList = async () => {
       try {
         const serverResponse = await axios({
-          url: `/api/schools/${schoolId}/kanban/update`,
+          url: `${baseUrl}/api/schools/${schoolId}/kanban/update`,
           method: "POST",
           data: { tasks: Lists, listOrder: kanbanState.statuses },
           headers: {
@@ -333,7 +338,7 @@ function Kanban(props) {
     return () => {
       abortController.abort(signal);
     };
-  }, [kanbanState, schoolId, schoolToken]);
+  }, [kanbanState, schoolId, schoolToken, baseUrl]);
 
   // Fetch school data
   useEffect(() => {

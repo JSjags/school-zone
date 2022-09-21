@@ -1,12 +1,15 @@
 import axios from "axios";
 
-const baseUrl = "/api/schools";
+const baseUrl =
+  process.env.NODE_ENV !== "production"
+    ? process.env.REACT_APP_PRODUCTION_BASE_URL
+    : process.env.REACT_APP_DEVELOPMENT_BASE_URL;
 
 // fetch school data
 const fetchSchoolData = async (authToken, isCancelled) => {
   const response = await axios({
     method: "get",
-    url: `${baseUrl}/info`,
+    url: `${baseUrl}/api/schools/info`,
     headers: {
       Authorization: `Bearer ${authToken}`,
     },
@@ -18,8 +21,8 @@ const fetchSchoolData = async (authToken, isCancelled) => {
 // fetch school articles and posts
 const fetchSchoolPosts = async (obj) => {
   const url = obj.query
-    ? `${baseUrl}/posts?page=${obj.pageNumber}&query=${obj.query}&sort=${obj.sort}`
-    : `${baseUrl}/posts?page=${obj.pageNumber}&sort=${obj.sort}`;
+    ? `${baseUrl}/api/schools/posts?page=${obj.pageNumber}&query=${obj.query}&sort=${obj.sort}`
+    : `${baseUrl}/api/schools/posts?page=${obj.pageNumber}&sort=${obj.sort}`;
   const response = await axios({
     method: "get",
     url,
@@ -35,7 +38,7 @@ const fetchSchoolPosts = async (obj) => {
 const fetchSchoolSettings = async (authToken) => {
   const response = await axios({
     method: "get",
-    url: `${baseUrl}/settings`,
+    url: `${baseUrl}/api/schools/settings`,
     headers: {
       Authorization: `Bearer ${authToken}`,
     },

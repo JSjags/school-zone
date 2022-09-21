@@ -97,6 +97,11 @@ import { useCallback } from "react";
 import TextArea from "../../components/TextArea/Index";
 import { FieldPanel } from "devextreme-react/pivot-grid";
 
+const baseUrl =
+  process.env.NODE_ENV !== "production"
+    ? process.env.REACT_APP_PRODUCTION_BASE_URL
+    : process.env.REACT_APP_DEVELOPMENT_BASE_URL;
+
 // Form types and modals
 
 // Edit Profile
@@ -269,7 +274,7 @@ const EditProfileForm = () => {
 
     try {
       const response = await axios({
-        url: `/api/schools/${schoolId}`,
+        url: `${baseUrl}${baseUrl}/api/schools/${schoolId}`,
         method: "put",
         data: update,
         headers: {
@@ -467,7 +472,7 @@ const ChangeAvatar = () => {
 
       // update school data with avatar image download URL
       const serverResponse = await axios({
-        url: `/api/schools/${schoolId}`,
+        url: `${baseUrl}/api/schools/${schoolId}`,
         method: "put",
         data: {
           avatar_image: downloadUrl,
@@ -635,7 +640,7 @@ const ChangeCoverPhoto = () => {
 
       // update school data with avatar image download URL
       const serverResponse = await axios({
-        url: `/api/schools/${schoolId}`,
+        url: `${baseUrl}/api/schools/${schoolId}`,
         method: "put",
         data: {
           backdrop_image: downloadUrl,
@@ -872,7 +877,7 @@ const ChangePassword = () => {
     setIsError(false);
 
     const response = await axios({
-      url: `/api/schools/change-password/${schoolId}`,
+      url: `${baseUrl}/api/schools/change-password/${schoolId}`,
       method: "put",
       data: {
         changePassword,
@@ -903,7 +908,7 @@ const ChangePassword = () => {
     setIsError(false);
 
     const response = await axios({
-      url: `/api/schools/change-password/${schoolId}`,
+      url: `${baseUrl}/api/schools/change-password/${schoolId}`,
       method: "put",
       data: {
         newPassword: changePassword,
@@ -1365,7 +1370,7 @@ const CreateStudentTemplate = () => {
     setIsError(false);
     setTemplateMessage(null);
     const response = await axios({
-      url: `/api/schools/${schoolId}/update`,
+      url: `${baseUrl}/api/schools/${schoolId}/update`,
       method: "put",
       data: {
         templateName: "students",
@@ -1642,7 +1647,7 @@ const CreateStaffTemplate = () => {
     setIsError(false);
     setTemplateMessage(null);
     const response = await axios({
-      url: `/api/schools/${schoolId}/update`,
+      url: `${baseUrl}/api/schools/${schoolId}/update`,
       method: "put",
       data: {
         templateName: "staffs",
@@ -1932,7 +1937,7 @@ const CreateFinanceTemplate = () => {
     setIsError(false);
     setTemplateMessage(null);
     const response = await axios({
-      url: `/api/schools/${schoolId}/update`,
+      url: `${baseUrl}/api/schools/${schoolId}/update`,
       method: "put",
       data: {
         templateName: "finance",
@@ -2227,7 +2232,7 @@ const CreateKanbanTemplate = () => {
     setIsError(false);
     setTemplateMessage(null);
     const response = await axios({
-      url: `/api/schools/${schoolId}/update`,
+      url: `${baseUrl}/api/schools/${schoolId}/update`,
       method: "put",
       data: {
         templateName: "kanban",
@@ -2537,7 +2542,7 @@ const StudentRegistration = () => {
       console.log(dataToMongoDB);
 
       const data = await axios({
-        url: `/api/schools/${schoolId}/students`,
+        url: `${baseUrl}/api/schools/${schoolId}/students`,
         method: "post",
         data: [dataToMongoDB, ...schoolData.students],
         headers: {
@@ -2941,7 +2946,7 @@ const StaffRegistration = () => {
       console.log(dataToMongoDB);
 
       const data = await axios({
-        url: `/api/schools/${schoolId}/staffs`,
+        url: `${baseUrl}/api/schools/${schoolId}/staffs`,
         method: "post",
         data: [dataToMongoDB, ...schoolData.staffs],
         headers: {
@@ -3269,7 +3274,7 @@ const RecordFinance = () => {
       dataToMongoDB.statement_id = statementId;
 
       const data = await axios({
-        url: `/api/schools/${schoolId}/finance`,
+        url: `${baseUrl}/api/schools/${schoolId}/finance`,
         method: "post",
         data: dataToMongoDB,
         headers: {
@@ -3528,7 +3533,7 @@ const AddKanban = () => {
       dataToMongoDB.statement_id = statementId;
 
       const data = await axios({
-        url: `/api/schools/${schoolId}/kanban`,
+        url: `${baseUrl}/api/schools/${schoolId}/kanban`,
         method: "POST",
         data: dataToMongoDB,
         headers: {
@@ -3795,7 +3800,7 @@ const FinancialStatement = () => {
       dataToMongoDB.statement_id = financeStatementId;
 
       const data = await axios({
-        url: `/api/schools/${schoolId}/finance`,
+        url: `${baseUrl}/api/schools/${schoolId}/finance`,
         method: "put",
         data: dataToMongoDB,
         headers: {
@@ -4145,7 +4150,7 @@ const DeleteModal = () => {
       }
       try {
         const serverResponse = await axios({
-          url: `/api/schools/${schoolId}/finance/remove`,
+          url: `${baseUrl}/api/schools/${schoolId}/finance/remove`,
           method: "put",
           data: { financeStatementId },
           headers: {
@@ -4297,7 +4302,7 @@ const DeletePosts = () => {
       }
       try {
         const serverResponse = await axios({
-          url: `/api/schools/${schoolId}/articles/remove`,
+          url: `${baseUrl}/api/schools/${schoolId}/articles/remove`,
           method: "put",
           data: { postsToDelete },
           headers: {
@@ -4451,7 +4456,7 @@ const CreateSlug = () => {
 
     try {
       const serverResponse = await axios({
-        url: `/api/schools/${schoolId}/schoolslug`,
+        url: `${baseUrl}/api/schools/${schoolId}/schoolslug`,
         method: "put",
         data: { type: "create", schoolSlug },
         headers: {
@@ -4627,7 +4632,7 @@ const DeleteSlug = () => {
 
     try {
       const serverResponse = await axios({
-        url: `/api/schools/${schoolId}/schoolslug`,
+        url: `${baseUrl}/api/schools/${schoolId}/schoolslug`,
         method: "put",
         data: { type: "delete", schoolSlug: schoolData.schoolSlug },
         headers: {
@@ -4789,7 +4794,7 @@ const Article = () => {
   useEffect(() => {
     const articleData = async () => {
       const response = await axios({
-        url: `/api/schools/${schoolId}/articles/${targetId}`,
+        url: `${baseUrl}/api/schools/${schoolId}/articles/${targetId}`,
         method: "GET",
         headers: {
           Authorization: `Bearer ${schoolToken}`,
@@ -4865,7 +4870,7 @@ const Messages = () => {
 
     try {
       const response = await axios({
-        url: "/api/schools/messages/send",
+        url: `${baseUrl}/api/schools/messages/send`,
         method: "POST",
         data: formData,
         headers: {
@@ -4931,7 +4936,7 @@ const Messages = () => {
         try {
           setIsFetching(true);
           let response = await axios({
-            url: "/api/schools/",
+            url: `${baseUrl}/api/schools/`,
             method: "POST",
             data: { query: formData.recipient.name },
             headers: {
@@ -4992,7 +4997,7 @@ const Messages = () => {
       controller = new AbortController();
       try {
         const res = await axios({
-          url: `/api/schools/my-messages`,
+          url: `${baseUrl}/api/schools/my-messages`,
           method: "GET",
           headers: {
             Authorization: `Bearer ${schoolToken}`,

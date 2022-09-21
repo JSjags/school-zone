@@ -19,6 +19,11 @@ function Login() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
+  const baseUrl =
+    process.env.NODE_ENV !== "production"
+      ? process.env.REACT_APP_PRODUCTION_BASE_URL
+      : process.env.REACT_APP_DEVELOPMENT_BASE_URL;
+
   const [isLoading, setIsLoading] = useState(false);
   const [isError, setIsError] = useState(false);
 
@@ -44,7 +49,10 @@ function Login() {
     setErrorMessage("");
 
     try {
-      const response = await axios.post("/api/schools/login", formData);
+      const response = await axios.post(
+        `${baseUrl}/api/schools/login`,
+        formData
+      );
       const resData = {
         ...response.data,
         isLoggedIn: true,

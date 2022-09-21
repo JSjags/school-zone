@@ -80,6 +80,11 @@ const Students = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
+  const baseUrl =
+    process.env.NODE_ENV !== "production"
+      ? process.env.REACT_APP_PRODUCTION_BASE_URL
+      : process.env.REACT_APP_DEVELOPMENT_BASE_URL;
+
   const { id: schoolId, token: authToken } = useSelector(
     (state) => state.schoolAuth
   );
@@ -184,7 +189,7 @@ const Students = () => {
 
       try {
         const data = await axios({
-          url: `/api/schools/${schoolId}/students/update`,
+          url: `${baseUrl}/api/schools/${schoolId}/students/update`,
           method: "put",
           data: { type: args.requestType, data: args.data },
           headers: {
@@ -215,7 +220,7 @@ const Students = () => {
 
       try {
         const data = await axios({
-          url: `/api/schools/${schoolId}/students/update`,
+          url: `${baseUrl}/api/schools/${schoolId}/students/update`,
           method: "put",
           data: { type: args.requestType, data: args.data },
           headers: {
