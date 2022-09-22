@@ -2538,8 +2538,6 @@ const StudentRegistration = () => {
         (url, i) => (dataToMongoDB[Object.keys(dataToFirebase)[i]] = url)
       );
 
-      console.log(dataToMongoDB);
-
       const data = await axios({
         url: `${baseUrl}/api/schools/${schoolId}/students`,
         method: "post",
@@ -2548,6 +2546,7 @@ const StudentRegistration = () => {
           Authorization: `Bearer ${schoolToken}`,
         },
       });
+      console.log(data);
       if (
         data.status === 200 &&
         data.statusText === "OK" &&
