@@ -273,7 +273,7 @@ const EditProfileForm = () => {
 
     try {
       const response = await axios({
-        url: `${baseUrl}${baseUrl}/api/schools/${schoolId}`,
+        url: `${baseUrl}/api/schools/${schoolId}`,
         method: "put",
         data: update,
         headers: {
@@ -482,7 +482,7 @@ const ChangeAvatar = () => {
       });
 
       // show success message
-      if (serverResponse.status !== 200 && serverResponse.statusText !== "OK") {
+      if (serverResponse.status !== 200) {
         throw new Error("Could not upload avatar image");
       }
       setIsLoading(false);
@@ -650,7 +650,7 @@ const ChangeCoverPhoto = () => {
       });
 
       // show success message
-      if (serverResponse.status !== 200 && serverResponse.statusText !== "OK") {
+      if (serverResponse.status !== 200) {
         throw new Error("Could not upload avatar image");
       }
       setIsLoading(false);
@@ -1380,7 +1380,7 @@ const CreateStudentTemplate = () => {
       },
     });
     console.log(response);
-    if (response.status !== 200 && response.statusText !== "OK") {
+    if (response.status !== 200) {
       setIsLoading(false);
       setIsError(true);
       return setTemplateMessage("Sorry, cannot save template at the moment.");
@@ -1657,7 +1657,7 @@ const CreateStaffTemplate = () => {
       },
     });
     console.log(response);
-    if (response.status !== 200 && response.statusText !== "OK") {
+    if (response.status !== 200) {
       setIsLoading(false);
       setIsError(true);
       return setTemplateMessage("Sorry, cannot save template at the moment.");
@@ -1946,7 +1946,7 @@ const CreateFinanceTemplate = () => {
         Authorization: `Bearer ${schoolToken}`,
       },
     });
-    if (response.status !== 200 && response.statusText !== "OK") {
+    if (response.status !== 200) {
       setIsLoading(false);
       setIsError(true);
       return setTemplateMessage("Sorry, cannot save template at the moment.");
@@ -2241,7 +2241,7 @@ const CreateKanbanTemplate = () => {
         Authorization: `Bearer ${schoolToken}`,
       },
     });
-    if (response.status !== 200 && response.statusText !== "OK") {
+    if (response.status !== 200) {
       setIsLoading(false);
       setIsError(true);
       return setTemplateMessage("Sorry, cannot save template at the moment.");
@@ -2546,12 +2546,8 @@ const StudentRegistration = () => {
           Authorization: `Bearer ${schoolToken}`,
         },
       });
-      console.log(data);
-      if (
-        data.status === 200 &&
-        data.statusText === "OK" &&
-        data.data.acknowledged === true
-      ) {
+
+      if (data.status === 200 && data.data.acknowledged === true) {
         // clear canvas
         context.current.clearRect(
           0,
@@ -2951,11 +2947,7 @@ const StaffRegistration = () => {
           Authorization: `Bearer ${schoolToken}`,
         },
       });
-      if (
-        data.status === 200 &&
-        data.statusText === "OK" &&
-        data.data.acknowledged === true
-      ) {
+      if (data.status === 200 && data.data.acknowledged === true) {
         // Reset canvas
 
         context.current.clearRect(
@@ -3279,11 +3271,7 @@ const RecordFinance = () => {
           Authorization: `Bearer ${schoolToken}`,
         },
       });
-      if (
-        data.status === 200 &&
-        data.statusText === "OK" &&
-        data.data.data.acknowledged === true
-      ) {
+      if (data.status === 200 && data.data.data.acknowledged === true) {
         setIsLoading(false);
         setIsError(false);
         setIsSuccess(true);
@@ -3538,11 +3526,7 @@ const AddKanban = () => {
           Authorization: `Bearer ${schoolToken}`,
         },
       });
-      if (
-        data.status === 200 &&
-        data.statusText === "OK" &&
-        data.data.data.acknowledged === true
-      ) {
+      if (data.status === 200 && data.data.data.acknowledged === true) {
         setIsLoading(false);
         setIsError(false);
         setIsSuccess(true);
@@ -3805,11 +3789,7 @@ const FinancialStatement = () => {
           Authorization: `Bearer ${schoolToken}`,
         },
       });
-      if (
-        data.status === 200 &&
-        data.statusText === "OK" &&
-        data.data.data.acknowledged === true
-      ) {
+      if (data.status === 200 && data.data.data.acknowledged === true) {
         setIsLoading(false);
         setIsError(false);
         setIsSuccess(true);
@@ -4155,10 +4135,7 @@ const DeleteModal = () => {
             Authorization: "Bearer " + schoolToken,
           },
         });
-        if (
-          serverResponse.status !== 200 &&
-          serverResponse.statusText !== "OK"
-        ) {
+        if (serverResponse.status !== 200) {
           throw new Error("Could not delete financial record from mongoDB");
         }
 
@@ -4307,10 +4284,7 @@ const DeletePosts = () => {
             Authorization: "Bearer " + schoolToken,
           },
         });
-        if (
-          serverResponse.status !== 200 &&
-          serverResponse.statusText !== "OK"
-        ) {
+        if (serverResponse.status !== 200) {
           throw new Error(
             `Could not delete ${
               postsToDelete.length > 1 ? "article" : "articles"
@@ -4461,7 +4435,7 @@ const CreateSlug = () => {
           Authorization: "Bearer " + schoolToken,
         },
       });
-      if (serverResponse.status !== 200 && serverResponse.statusText !== "OK") {
+      if (serverResponse.status !== 200) {
         throw new Error("Could not create school slug");
       }
 
@@ -4637,7 +4611,7 @@ const DeleteSlug = () => {
           Authorization: "Bearer " + schoolToken,
         },
       });
-      if (serverResponse.status !== 200 && serverResponse.statusText !== "OK") {
+      if (serverResponse.status !== 200) {
         throw new Error("Could not create school slug");
       }
 
@@ -4876,7 +4850,7 @@ const Messages = () => {
         },
       });
 
-      if (response.status !== 200 && response.statusText !== "OK") {
+      if (response.status !== 200) {
         setIsSending(false);
         setIsError(true);
         setTimeout(() => setIsError(false), 3000);
@@ -4944,7 +4918,7 @@ const Messages = () => {
             signal,
           });
 
-          if (response.status !== 200 && response.statusText !== "OK") {
+          if (response.status !== 200) {
             setIsFetching(false);
             throw new Error("Error fetching schoolnames");
           }
@@ -5003,7 +4977,7 @@ const Messages = () => {
           signal: controller.signal,
         });
 
-        if (res.status !== 200 && res.statusText !== "OK") {
+        if (res.status !== 200) {
           throw new Error("Couldn't fetch messages");
         }
 
