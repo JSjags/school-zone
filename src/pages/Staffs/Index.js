@@ -197,11 +197,7 @@ const Staffs = () => {
             Authorization: `Bearer ${authToken}`,
           },
         });
-        if (
-          data.status === 200 &&
-          data.statusText === "OK" &&
-          data.data.acknowledged === true
-        ) {
+        if (data.status === 200 && data.data.acknowledged === true) {
           setSavingSuccess(true);
           setSavingError(false);
           dispatch(fetchSchoolData(authToken));

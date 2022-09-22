@@ -221,7 +221,7 @@ const Editor = () => {
         },
       });
 
-      if (res.status !== 200 && res.statusText !== "OK") {
+      if (res.status !== 200) {
         throw new Error("Couldn't publish article");
       }
 
