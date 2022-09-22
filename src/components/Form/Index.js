@@ -95,10 +95,9 @@ import deleteSlug from "../../assets/delete-slug.svg";
 import noMessagesSvg from "../../assets/no-messages.svg";
 import { useCallback } from "react";
 import TextArea from "../../components/TextArea/Index";
-import { FieldPanel } from "devextreme-react/pivot-grid";
 
 const baseUrl =
-  process.env.NODE_ENV !== "production"
+  process.env.NODE_ENV === "production"
     ? process.env.REACT_APP_PRODUCTION_BASE_URL
     : "";
 

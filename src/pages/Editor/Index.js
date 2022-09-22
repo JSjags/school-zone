@@ -78,7 +78,7 @@ const Editor = () => {
   const navigate = useNavigate();
 
   const baseUrl =
-    process.env.NODE_ENV !== "production"
+    process.env.NODE_ENV === "production"
       ? process.env.REACT_APP_PRODUCTION_BASE_URL
       : "";
 
