@@ -24,6 +24,7 @@ import { BiError } from "react-icons/bi";
 
 import PageHeader from "../../components/PageHeader/Index";
 import Spinner from "../../components/Spinner/Index";
+import EditModal from "../../components/EditModal/Index";
 
 const LightTheme = React.lazy(() =>
   import("../../DEThemes/SchedulerThemes/LightTheme")
@@ -49,6 +50,8 @@ const SchedulerTheme = ({ children }) => {
 const Scheduler = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
+
+  const { isEditProfileModalOpen } = useSelector((state) => state.config);
 
   const baseUrl =
     process.env.NODE_ENV === "production"
@@ -236,6 +239,7 @@ const Scheduler = () => {
 
   return (
     <Wrapper isSuccess={isSuccess ? true : false}>
+      {isEditProfileModalOpen && <EditModal />}
       {isLoading && (
         <LoadingContainer>
           <Spinner />

@@ -4,6 +4,7 @@ import { Wrapper, Content } from "./EditModal.styles";
 
 import { closeEditProfileModal } from "../../features/config/configData";
 import Form from "../Form/Index";
+import { resetMessages } from "../../features/school/schoolDataSlice";
 
 const EditModal = () => {
   const dispatch = useDispatch();
@@ -11,6 +12,7 @@ const EditModal = () => {
 
   const handleEditProfileModal = () => {
     dispatch(closeEditProfileModal());
+    dispatch(resetMessages());
     formToShow === "changeCoverPhoto" && localStorage.removeItem("coverPhoto");
     formToShow === "changeAvatar" && localStorage.removeItem("avatar");
   };

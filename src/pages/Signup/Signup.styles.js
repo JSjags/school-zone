@@ -16,7 +16,7 @@ export const Wrapper = styled.div`
 export const Content = styled.div`
   max-width: 600px;
   padding: 40px 20px;
-  background: white;
+  background: var(--background);
   border-radius: 20px;
   box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
 
@@ -37,6 +37,7 @@ export const Content = styled.div`
   form {
     display: flex;
     flex-direction: column;
+    background: var(--background);
   }
   label {
     color: var(--primary-color);
@@ -58,7 +59,7 @@ export const Content = styled.div`
     outline-width: 3px;
     cursor: pointer;
     width: 500px;
-    background: whitesmoke;
+    background: var(--translucent-white);
     margin-bottom: 5px;
     transition: all 200ms ease-in-out;
 

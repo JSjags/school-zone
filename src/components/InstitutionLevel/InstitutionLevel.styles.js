@@ -23,7 +23,9 @@ export const Wrapper = styled.div`
     font-family: var(--hind);
     cursor: pointer;
     background: var(--translucent-white);
-    backdrop-filter: invert(0.3);
+    /* backdrop-filter: invert(0.3); */
+
+    color: var(--text);
   }
   ul {
     background: var(--background);

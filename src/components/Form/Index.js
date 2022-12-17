@@ -1,7 +1,12 @@
 import { useState, useRef, useEffect } from "react";
 import axios from "axios";
 import { motion, AnimatePresence } from "framer-motion";
-import { BiErrorCircle, BiInfoCircle, BiMailSend } from "react-icons/bi";
+import {
+  BiArrowFromLeft,
+  BiErrorCircle,
+  BiInfoCircle,
+  BiMailSend,
+} from "react-icons/bi";
 import { RiLockPasswordLine, RiMailSendLine } from "react-icons/ri";
 import { TbTemplate } from "react-icons/tb";
 import { FaCameraRetro } from "react-icons/fa";
@@ -29,6 +34,7 @@ import {
   deleteObject,
 } from "firebase/storage";
 import parse from "html-react-parser";
+import moment from "moment";
 
 import { v4 as uuidv4 } from "uuid";
 
@@ -41,6 +47,7 @@ import {
   fetchSchoolData,
   fetchSchoolPosts,
   resetPostsToDelete,
+  setMessagesAsync,
 } from "../../features/school/schoolDataSlice";
 
 import {
@@ -4795,12 +4802,15 @@ const Article = () => {
 const Messages = () => {
   const dispatch = useDispatch();
 
-  const { data: schoolData } = useSelector((state) => state.schoolData);
+  const { data: schoolData, messages: mailbox } = useSelector(
+    (state) => state.schoolData
+  );
   const { token: schoolToken } = useSelector((state) => state.schoolAuth);
 
-  const [tabState, setTabState] = useState(false);
+  const [tabState, setTabState] = useState("inbox");
 
   const inboxRef = useRef();
+  const outboxRef = useRef();
   const sendMessRef = useRef();
   const currentTabIcon = useRef();
 
@@ -4813,7 +4823,12 @@ const Messages = () => {
     message: "",
   });
 
-  const [messages, setMessages] = useState([]);
+  const outboxHasMore = useRef(null);
+  const inboxHasMore = useRef(null);
+  const isFetchingMore = useRef(false);
+
+  const [inboxPage, setInboxPage] = useState(1);
+  const [outboxPage, setOutboxPage] = useState(1);
   const [recipientError, setRecipientError] = useState(false);
   const [matchedSchools, setMatchedSchools] = useState([]);
   const [fetch, setFetch] = useState(true);
@@ -4824,13 +4839,35 @@ const Messages = () => {
   const [showButton, setShowButton] = useState(false);
 
   const adjustTabIcon = useCallback(() => {
-    currentTabIcon.current.style.left = `${
-      !tabState
-        ? inboxRef.current.clientWidth / 2 + 10
-        : inboxRef.current.clientWidth +
+    switch (tabState) {
+      case "inbox":
+        currentTabIcon.current.style.left = `${
+          inboxRef.current.clientWidth / 2 + 10
+        }px`;
+        break;
+      case "outbox":
+        currentTabIcon.current.style.left = `${
+          inboxRef.current.clientWidth +
           10 +
+          10 +
+          (outboxRef.current.clientWidth / 2 + 10)
+        }px`;
+        break;
+      case "sendMessage":
+        currentTabIcon.current.style.left = `${
+          inboxRef.current.clientWidth +
+          10 +
+          10 +
+          (outboxRef.current.clientWidth + 10) +
           (sendMessRef.current.clientWidth / 2 + 10)
-    }px`;
+        }px`;
+        break;
+      default:
+        currentTabIcon.current.style.left = `${
+          inboxRef.current.clientWidth / 2 + 10
+        }px`;
+        break;
+    }
   }, [tabState]);
 
   // handle message submission
@@ -4887,16 +4924,82 @@ const Messages = () => {
     }
   };
 
+  // tabState === "inbox" ? inboxPage : outboxPage
+
+  const fetchMessages = useCallback(
+    async (data, page, ctrl) => {
+      isFetchingMore.current = true;
+      try {
+        const res = await axios({
+          url: `${baseUrl}/api/schools/messages/${data}?page=${page}`,
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${schoolToken}`,
+          },
+          signal: ctrl.signal,
+        });
+
+        if (res.status !== 200) {
+          throw new Error("Couldn't fetch messages");
+        }
+
+        const { type, results, hasMore } = await res.data;
+
+        if (res.status === 200) {
+          isFetchingMore.current = false;
+          dispatch(setMessagesAsync({ type, results }));
+          type === "inbox"
+            ? (inboxHasMore.current = hasMore)
+            : (outboxHasMore.current = hasMore);
+        }
+      } catch (error) {
+        isFetchingMore.current = false;
+        if (error.name === "CanceledError") return;
+      }
+    },
+    [dispatch, schoolToken]
+  );
+
+  const observer = useRef();
+
+  const fetchMore = useCallback(
+    (node) => {
+      if (observer.current) {
+        observer.current.disconnect();
+      }
+      observer.current = new IntersectionObserver((entries) => {
+        if (isFetchingMore.current === true) return;
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            if (tabState === "inbox" && inboxHasMore.current !== false) {
+              setInboxPage((prev) => prev + 1);
+            }
+            if (tabState === "outbox" && outboxHasMore.current !== false) {
+              setOutboxPage((prev) => prev + 1);
+            }
+          }
+        });
+      });
+      if (node) {
+        observer.current.observe(node);
+      }
+    },
+    [tabState]
+  );
+
+  // check if all input fields are valid before rendering send message button
   const check = useCallback((object) => {
     return Object.values(object).every((v) => {
       return v && typeof v === "object" ? check(v) : v !== "" && v !== null;
     });
   }, []);
 
+  // automatically adjust the current tab indicator
   useEffect(() => {
     adjustTabIcon();
   }, [adjustTabIcon]);
 
+  // fetch schools matching user's input
   useEffect(() => {
     let controller, signal;
 
@@ -4957,44 +5060,51 @@ const Messages = () => {
     };
   }, []);
 
+  // display message if all input fields are valid
   useEffect(() => {
     setShowButton(check(formData));
   }, [check, formData]);
 
   // fetch school messages
   useEffect(() => {
-    let controller;
+    let controller = new AbortController();
 
-    const fetchMessages = async () => {
-      controller = new AbortController();
-      try {
-        const res = await axios({
-          url: `${baseUrl}/api/schools/my-messages`,
-          method: "GET",
-          headers: {
-            Authorization: `Bearer ${schoolToken}`,
-          },
-          signal: controller.signal,
-        });
-
-        if (res.status !== 200) {
-          throw new Error("Couldn't fetch messages");
-        }
-
-        console.log(res.data);
-        setMessages(res.data.messages);
-      } catch (error) {
-        console.log(error);
+    if (tabState === "inbox") {
+      if (inboxHasMore.current === false) controller.abort();
+      if (inboxPage >= 1) {
+        fetchMessages(tabState, inboxPage, controller);
       }
-    };
-    if (!tabState) {
-      fetchMessages();
+    }
+    if (tabState === "outbox") {
+      if (outboxHasMore.current === false) controller.abort();
+      if (outboxPage >= 1) {
+        fetchMessages(tabState, outboxPage, controller);
+      }
     }
 
     return () => {
+      console.log("useEffect cancelled");
       if (controller) controller.abort();
+      if (tabState === "inbox") {
+        setInboxPage((prevState) => {
+          if (isFetchingMore.current === true && inboxPage === 1) return 1;
+          else if (isFetchingMore.current === true && inboxPage >= 2)
+            return prevState - 1;
+          else return prevState;
+        });
+        isFetchingMore.current = false;
+      }
+      if (tabState === "outbox") {
+        setOutboxPage((prevState) => {
+          if (isFetchingMore.current === true && outboxPage === 1) return 1;
+          else if (isFetchingMore.current === true && outboxPage >= 2)
+            return prevState - 1;
+          else return prevState;
+        });
+        isFetchingMore.current = false;
+      }
     };
-  }, [schoolToken, tabState]);
+  }, [schoolToken, tabState, fetchMessages, inboxPage, outboxPage]);
 
   return (
     <MessagesWrapper>
@@ -5017,19 +5127,32 @@ const Messages = () => {
         <div className="tabs">
           <h3
             ref={inboxRef}
-            className={!tabState ? "tab-link active" : "tab-link"}
+            className={tabState === "inbox" ? "tab-link active" : "tab-link"}
             onClick={() => {
-              setTabState(false);
+              setTabState("inbox");
               adjustTabIcon();
             }}
           >
             Inbox
           </h3>
           <h3
-            ref={sendMessRef}
-            className={!tabState ? "tab-link" : "tab-link active"}
+            ref={outboxRef}
+            className={tabState === "outbox" ? "tab-link active" : "tab-link"}
             onClick={() => {
-              setTabState(true);
+              setTabState(false);
+              setTabState("outbox");
+              adjustTabIcon();
+            }}
+          >
+            Outbox
+          </h3>
+          <h3
+            ref={sendMessRef}
+            className={
+              tabState === "sendMessage" ? "tab-link active" : "tab-link"
+            }
+            onClick={() => {
+              setTabState("sendMessage");
               adjustTabIcon();
             }}
           >
@@ -5038,14 +5161,155 @@ const Messages = () => {
           </h3>
           <div ref={currentTabIcon} className="current-tab"></div>
         </div>
-        <div className={!tabState ? "messages-cont" : "send-messages-cont"}>
-          {!tabState && !schoolData.messages && (
+        <div
+          className={
+            tabState === "inbox" || tabState === "outbox"
+              ? "messages-cont"
+              : "send-messages-cont"
+          }
+        >
+          {/* Show  inbox */}
+          {tabState === "inbox" && (
             <>
-              <img className="no-messages" alt="mailbox" src={noMessagesSvg} />
-              <p className="no-messages-text">You have no messages!</p>
+              {mailbox.inbox.length <= 0 && (
+                <>
+                  <img
+                    className="no-messages"
+                    alt="mailbox"
+                    src={noMessagesSvg}
+                  />
+                  <p className="no-messages-text">
+                    You have no messages in your inbox!
+                  </p>
+                </>
+              )}
+              {mailbox.inbox.length >= 1 && (
+                <div className="mailbox">
+                  {mailbox.inbox.map((item, index) => {
+                    return (
+                      <div key={item.messageId} className="matched-school-item">
+                        <img
+                          src={item.avatarUrl}
+                          alt="crest"
+                          className="school-logo"
+                        />
+                        <div className="sender-details">
+                          <h5
+                            className="matched-school-name"
+                            style={{
+                              display: "flex",
+                              alignItems: "center",
+                              gap: "3px",
+                            }}
+                          >
+                            <BiArrowFromLeft />
+                            {item.name}
+                          </h5>
+                          <p className="message-title">{item.title}</p>
+                        </div>
+                        <span className="time">
+                          {moment(item.time).fromNow()}
+                        </span>
+                      </div>
+                    );
+                  })}
+                </div>
+              )}
             </>
           )}
-          {tabState && !schoolData.messages && (
+
+          {/* Show  outbox */}
+          {tabState === "outbox" && (
+            <>
+              {mailbox.outbox.length <= 0 && (
+                <>
+                  <img
+                    className="no-messages"
+                    alt="mailbox"
+                    src={noMessagesSvg}
+                  />
+                  <p className="no-messages-text">
+                    You have no messages in your outbox!
+                  </p>
+                </>
+              )}
+              {mailbox.outbox.length >= 1 && (
+                <div className="mailbox">
+                  {mailbox.outbox.map((item, index) => {
+                    if (index + 1 === mailbox.outbox.length) {
+                      return (
+                        <div
+                          ref={fetchMore}
+                          key={item.messageId}
+                          className="matched-school-item"
+                        >
+                          <img
+                            src={item.avatarUrl}
+                            alt="crest"
+                            className="school-logo"
+                          />
+                          <div className="sender-details">
+                            <h5
+                              className="matched-school-name"
+                              style={{
+                                display: "flex",
+                                alignItems: "center",
+                                gap: "3px",
+                              }}
+                            >
+                              <BiArrowFromLeft />
+                              {item.name}
+                            </h5>
+                            <p className="message-title">{item.title}</p>
+                          </div>
+                          <span className="time">
+                            {moment(item.time).fromNow()}
+                          </span>
+                        </div>
+                      );
+                    } else {
+                      return (
+                        <div
+                          key={item.messageId}
+                          className="matched-school-item"
+                        >
+                          <img
+                            src={item.avatarUrl}
+                            alt="crest"
+                            className="school-logo"
+                          />
+                          <div className="sender-details">
+                            <h5
+                              className="matched-school-name"
+                              style={{
+                                display: "flex",
+                                alignItems: "center",
+                                gap: "3px",
+                              }}
+                            >
+                              <BiArrowFromLeft />
+                              {item.name}
+                            </h5>
+                            <p className="message-title">{item.title}</p>
+                          </div>
+                          <span className="time">
+                            {moment(item.time).fromNow()}
+                          </span>
+                        </div>
+                      );
+                    }
+                  })}
+                  {isFetchingMore && <Spinner />}
+                  {!isFetchingMore && (
+                    <p className="no-more">You have no more messages</p>
+                  )}
+                </div>
+              )}
+            </>
+          )}
+
+          {/* Show send message */}
+          {tabState === "sendMessage" && !schoolData.messages && (
             <>
               <h5>Recipient</h5>
               <div className="recipient">

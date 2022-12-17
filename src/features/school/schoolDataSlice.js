@@ -3,6 +3,10 @@ import schoolService from "./schoolService";
 
 const initialState = {
   data: {},
+  messages: {
+    inbox: [],
+    outbox: [],
+  },
   isLoading: false,
   isSettingsLoading: false,
   isPostsLoading: false,
@@ -78,6 +82,13 @@ export const fetchSchoolPosts = createAsyncThunk(
   }
 );
 
+export const setMessagesAsync = createAsyncThunk(
+  "schoodata/setMessageAsync",
+  async (obj, { dispatch }) => {
+    dispatch(setMessages({ type: obj.type, results: obj.results }));
+  }
+);
+
 export const schoolDataSlice = createSlice({
   name: "schoolData",
   initialState,
@@ -105,6 +116,18 @@ export const schoolDataSlice = createSlice({
     },
     resetPostToShow: (state) => {
       state.postId = null;
+    },
+    setMessages: (state, action) => {
+      state.messages[action.payload.type] = [
+        ...state.messages[action.payload.type],
+        ...action.payload.results,
+      ];
+    },
+    resetMessages: (state) => {
+      state.messages = {
+        inbox: [],
+        outbox: [],
+      };
     },
   },
   extraReducers: (builder) => {
@@ -177,6 +200,8 @@ export const {
   resetPostsToDelete,
   setPostToShow,
   resetPostToShow,
+  setMessages,
+  resetMessages,
 } = schoolDataSlice.actions;
 
 export default schoolDataSlice.reducer;

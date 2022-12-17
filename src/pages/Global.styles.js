@@ -10,9 +10,11 @@ export const lightTheme = {
   garamond: "'EB Garamond', serif",
   hind: "'Hind Madurai', sans-serif",
   primaryColor: "#f46e16",
+  transparentPrimaryColor: "rgba(244,110,22, 0.7)",
   primaryColorHover: "#fef2eb",
   primaryColorActive: "#fbd0b5",
   secondaryColor: "#63b231",
+  transparentSecondaryColor: "rgba(99,178,49, 0.7)",
   darkSecondaryColor: " #478320",
   lightTint: "#54f6f6",
   darkTint: "#fb413f",
@@ -48,9 +50,11 @@ export const darkTheme = {
   garamond: "'EB Garamond', serif",
   hind: "'Hind Madurai', sans-serif",
   primaryColor: "#f46e16",
+  transparentPrimaryColor: "rgba(244,110,22, 0.7)",
   primaryColorHover: "rgba(0, 0, 0, 0.7)",
   primaryColorActive: "#fdae7d",
   secondaryColor: "#63b231",
+  transparentSecondaryColor: "rgba(99,178,49, 0.7)",
   darkSecondaryColor: "#478320",
   lightTint: "#54f6f6",
   darkTint: "#fb413f",
@@ -83,9 +87,13 @@ export const GlobalStyles = createGlobalStyle`
         --background: ${({ theme }) => theme.body};
         --text: ${({ theme }) => theme.text};
         --primary-color: ${({ theme }) => theme.primaryColor};
+        --transparent-primary-color: ${({ theme }) =>
+          theme.transparentPrimaryColor};
         --primary-color-hover:  ${({ theme }) => theme.primaryColorHover};
         --primary-color-active: ${({ theme }) => theme.primaryColorActive};
         --secondary-color: ${({ theme }) => theme.secondaryColor};
+        --transparent-secondary-color: ${({ theme }) =>
+          theme.transparentSecondaryColor};
         --dark-secondary-color: ${({ theme }) => theme.darkSecondaryColor};
         --light-tint: ${({ theme }) => theme.lightTint};
         --dark-tint: ${({ theme }) => theme.darkTint};

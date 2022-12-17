@@ -3,15 +3,47 @@ import styled from "styled-components";
 export const Wrapper = styled.div`
   width: 100%;
   margin-top: 30px;
-  margin-bottom: 30px;
 `;
 export const Content = styled.div`
-  width: 100%;
-  padding: 10px 50px 10px 60px;
+  width: clamp(240px, 100%, 2560px);
+  margin: 0 auto;
+
+  /* Hero illustration reset */
+  #freepik--Shadow--inject-226 {
+    fill: var(--translucent-white);
+    filter: brightness(50%);
+  }
+  #freepik--shadow--inject-226 {
+    fill: var(--translucent-white);
+    filter: brightness(50%);
+  }
+  #freepik--floor--inject-226 {
+    fill: var(--translucent-white);
+  }
+  #eltx6dxt9xu9 {
+    fill: var(--translucent-white);
+  }
+
+  /* Mid banner illustration reset */
+  #freepik--floor--inject-1--inject-2 {
+    fill: var(--translucent-white);
+  }
+  #freepik--shadow--inject-1--inject-2 {
+    fill: var(--translucent-white);
+    filter: brightness(50%);
+  }
+  #freepik--Shadow--inject-1--inject-2 {
+    fill: var(--translucent-white);
+    filter: brightness(50%);
+  }
+  #ela0azwp1wxk {
+    fill: var(--translucent-white);
+  }
 
   .hero {
     width: 100%;
-    min-height: 60vh;
+    padding: 10px 50px 10px 60px;
+    min-height: 80vh;
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -28,7 +60,7 @@ export const Content = styled.div`
     }
     .hero-text-desc {
       font-family: var(--hind);
-      color: var(--deep-gray);
+      color: var(--text);
     }
     button {
       font-size: 1rem;
@@ -37,9 +69,10 @@ export const Content = styled.div`
       font-size: 1rem;
       margin-top: 30px;
       padding: 10px 20px;
-      color: var(--deep-gray);
+      color: var(--text);
       border-radius: 20px;
       transition: all 300ms ease-in-out;
+      background: var(--primary-color);
 
       :hover {
         box-shadow: -2px -2px var(--light-tint), 2px 2px var(--dark-tint);
@@ -49,9 +82,239 @@ export const Content = styled.div`
     }
   }
 
+  .section-header {
+    width: clamp(240px, 100%, 500px);
+    margin: 10vh auto 0;
+
+    h1,
+    h2 {
+      text-align: center;
+      text-shadow: -1px -1px var(--light-tint), 1px 1px var(--dark-tint);
+    }
+    p {
+      margin-top: 5vh;
+      font-family: var(--hind);
+      text-align: center;
+      color: var(--text);
+    }
+  }
+
+  .features {
+    width: clamp(240px, 80%, 2560px);
+    margin: 10vh auto 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    flex-wrap: wrap;
+    row-gap: 10vh;
+
+    .feature-card {
+      width: clamp(220px, 30%, 500px);
+      background: var(--translucent-white);
+      padding: 20px 20px 40px;
+      border-radius: 20px;
+
+      .icon-cont {
+        width: 100px;
+        height: 100px;
+        border-radius: 50%;
+        margin: 0 auto;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      :nth-child(1) .icon-cont {
+        background-color: rgba(99, 178, 49, 0.3);
+      }
+      :nth-child(2) .icon-cont {
+        background-color: rgba(244, 110, 22, 0.3);
+      }
+      :nth-child(3) .icon-cont {
+        background-color: rgba(235, 219, 51, 0.3);
+      }
+
+      .feature-title {
+        margin-top: 20px;
+        text-align: center;
+        text-shadow: -1px -1px var(--light-tint), 1px 1px var(--dark-tint);
+      }
+      .feature-detail {
+        margin-top: 20px;
+        font-family: var(--hind);
+        color: var(--text);
+        text-align: center;
+      }
+    }
+  }
+  .difficulty {
+    position: relative;
+    margin: 20vh auto 0;
+    padding: 5vh 10vw;
+    width: clamp(240px, 100%, 2560px);
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    column-gap: 3vh;
+    flex-wrap: wrap;
+    background-color: #f46e16;
+    opacity: 1;
+    background: var(--translucent-white);
+    overflow: hidden;
+
+    ::before {
+      content: "";
+      width: 10vw;
+      height: 10vw;
+      border-radius: 50%;
+      filter: blur(20px);
+      background: #63b231;
+      z-index: -1;
+      pointer-events: none;
+      display: block;
+      position: absolute;
+      top: 20%;
+      left: 20%;
+      animation: blob-down 5s ease infinite;
+    }
+    ::after {
+      content: "";
+      width: 10vw;
+      height: 10vw;
+      border-radius: 50%;
+      filter: blur(20px);
+      background: #f46e16;
+      z-index: -1;
+      pointer-events: none;
+      display: block;
+      position: absolute;
+      bottom: 20%;
+      right: 20%;
+      animation: blob-up 5s ease infinite;
+    }
+
+    .difficulty-detail {
+      width: clamp(240px, 50%, 720px);
+      padding: 0 20px;
+
+      h1 {
+        text-shadow: -1px -1px var(--light-tint), 1px 1px var(--dark-tint);
+      }
+
+      p {
+        font-family: var(--hind);
+        margin-top: 20px;
+        color: var(--text);
+      }
+    }
+    svg {
+      width: 20%;
+      margin: 0;
+    }
+  }
+  section {
+    width: clamp(240px, 80%, 2560px);
+    margin: 10vh auto 0;
+  }
   svg {
     width: 40%;
     margin: auto;
+  }
+  img {
+    width: 70%;
+    margin: auto;
+  }
+  .cta-box {
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    flex-direction: column;
+    width: 100%;
+    min-height: 20vmax;
+    position: relative;
+    background: linear-gradient(
+        to right,
+        var(--transparent-primary-color),
+        var(--transparent-secondary-color)
+      ),
+      url(/user-mockup.png);
+    background-size: 100%;
+    background-repeat: no-repeat;
+    background-position: right center;
+
+    .difficulty {
+      margin: 0 auto;
+      background: transparent;
+      overflow: hidden;
+      height: 100%;
+
+      ::before {
+        content: "";
+        display: none;
+      }
+      ::after {
+        content: "";
+        display: none;
+      }
+
+      .difficulty-detail {
+        width: clamp(240px, 50%, 720px);
+        padding: 0 20px;
+
+        h1 {
+          text-shadow: -1px -1px var(--light-tint), 1px 1px var(--dark-tint);
+          text-align: center;
+        }
+
+        p {
+          font-family: var(--hind);
+          margin-top: 20px;
+          text-align: center;
+          color: var(--text);
+        }
+        a {
+          display: block;
+          font-size: 1rem;
+          font-family: var(--hind);
+          font-size: 1rem;
+          margin: 30px auto 0;
+          padding: 10px 20px;
+          color: var(--text);
+          border-radius: 20px;
+          transition: all 300ms ease-in-out;
+          background: var(--primary-color);
+          width: fit-content;
+          text-decoration: none;
+
+          :hover {
+            box-shadow: -2px -2px var(--light-tint), 2px 2px var(--dark-tint);
+            background: var(--primary-color);
+            color: white;
+          }
+        }
+      }
+      svg {
+        width: 20%;
+        margin: 0;
+      }
+    }
+
+    ::after {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      display: block;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(
+        105deg,
+        var(--transparent-primary-color),
+        var(--transparent-secondary-color)
+      );
+      z-index: -1;
+    }
   }
 
   //////////////////////////////////hero image svg///////////////////////////////////////////////////////////
@@ -126,11 +389,13 @@ export const Content = styled.div`
       display: flex;
       align-items: center;
       margin-top: 20vh;
+      gap: 5vmin;
     }
     .points-left {
       display: flex;
       align-items: center;
-      flex-direction: row-reverse;
+      /* flex-direction: row-reverse; */
+      gap: 5vmin;
       margin-top: 20vh;
     }
     .points-box {
@@ -144,7 +409,7 @@ export const Content = styled.div`
       }
       p {
         font-family: var(--hind);
-        color: var(--deep-gray);
+        color: var(--text);
       }
     }
   }
@@ -220,340 +485,6 @@ export const Content = styled.div`
       6s Infinite linear floating;
     animation-delay: 0s, 1s;
   }
-
-  //////////////////////////////////////////server image svg//////////////////////////////////////////
-  svg#freepik_stories-memory-storage:not(.animated) .animable {
-    opacity: 0;
-  }
-  svg#freepik_stories-memory-storage.animated #freepik--floor--inject-62 {
-    animation: 1s 1 forwards cubic-bezier(0.36, -0.01, 0.5, 1.38) zoomOut;
-    animation-delay: 0s;
-  }
-  svg#freepik_stories-memory-storage.animated #freepik--Floor--inject-62 {
-    animation: 1s 1 forwards cubic-bezier(0.36, -0.01, 0.5, 1.38) zoomOut,
-      1.5s Infinite linear shake;
-    animation-delay: 0s, 1s;
-  }
-  svg#freepik_stories-memory-storage.animated #freepik--Shadows--inject-62 {
-    animation: 1.5s Infinite linear wind;
-    animation-delay: 0s;
-  }
-  svg#freepik_stories-memory-storage.animated #freepik--Plants--inject-62 {
-    animation: 1s 1 forwards cubic-bezier(0.36, -0.01, 0.5, 1.38) zoomIn,
-      1.5s Infinite linear wind;
-    animation-delay: 0s, 1s;
-  }
-  svg#freepik_stories-memory-storage.animated #freepik--Gears--inject-62 {
-    animation: 1s 1 forwards cubic-bezier(0.36, -0.01, 0.5, 1.38) zoomIn,
-      3s Infinite linear shake;
-    animation-delay: 0s, 1s;
-  }
-  svg#freepik_stories-memory-storage.animated #freepik--Clouds--inject-62 {
-    animation: 1s 1 forwards cubic-bezier(0.36, -0.01, 0.5, 1.38) slideLeft,
-      1.5s Infinite linear floating;
-    animation-delay: 0s, 1s;
-  }
-  svg#freepik_stories-memory-storage.animated #freepik--Conection--inject-62 {
-    animation: 1s 1 forwards cubic-bezier(0.36, -0.01, 0.5, 1.38) slideDown;
-    animation-delay: 0s;
-  }
-  svg#freepik_stories-memory-storage.animated #freepik--Cloud--inject-62 {
-    animation: 1s 1 forwards cubic-bezier(0.36, -0.01, 0.5, 1.38) slideDown;
-    animation-delay: 0.5s;
-    opacity: 0;
-  }
-  svg#freepik_stories-memory-storage.animated #freepik--big-cloud--inject-62 {
-    animation: 1s 1 forwards cubic-bezier(0.36, -0.01, 0.5, 1.38) slideDown,
-      1.5s Infinite linear floating;
-    animation-delay: 0s, 1s;
-  }
-  svg#freepik_stories-memory-storage.animated #freepik--server--inject-62 {
-    animation: 1s 1 forwards cubic-bezier(0.36, -0.01, 0.5, 1.38) zoomOut;
-    animation-delay: 0s;
-  }
-  svg#freepik_stories-memory-storage.animated #freepik--Server--inject-62 {
-    animation: 1s 1 forwards cubic-bezier(0.36, -0.01, 0.5, 1.38) zoomOut,
-      6s Infinite linear heartbeat;
-    animation-delay: 0s, 1s;
-  }
-  svg#freepik_stories-memory-storage.animated #freepik--Folder--inject-62 {
-    animation: 1s 1 forwards cubic-bezier(0.36, -0.01, 0.5, 1.38) slideUp;
-    animation-delay: 0s;
-  }
-  svg#freepik_stories-memory-storage.animated #freepik--folder--inject-62 {
-    animation: 1s 1 forwards cubic-bezier(0.36, -0.01, 0.5, 1.38) slideUp;
-    animation-delay: 0.3333333333333333s;
-    opacity: 0;
-  }
-  svg#freepik_stories-memory-storage.animated #freepik--folder--inject-62 {
-    animation: 1s 1 forwards cubic-bezier(0.36, -0.01, 0.5, 1.38) slideUp;
-    animation-delay: 0.6666666666666666s;
-    opacity: 0;
-  }
-  svg#freepik_stories-memory-storage.animated #freepik--Folders--inject-62 {
-    animation: 1s 1 forwards cubic-bezier(0.36, -0.01, 0.5, 1.38) slideUp;
-    animation-delay: 0s;
-  }
-  svg#freepik_stories-memory-storage.animated #freepik--Character--inject-62 {
-    animation: 1s 1 forwards cubic-bezier(0.36, -0.01, 0.5, 1.38) slideRight;
-    animation-delay: 0s;
-  }
-  svg#freepik_stories-memory-storage.animated
-    #freepik--speech-bubble--inject-62 {
-    animation: 1s 1 forwards cubic-bezier(0.36, -0.01, 0.5, 1.38) zoomIn;
-    animation-delay: 0s;
-  }
-  svg#freepik_stories-memory-storage.animated
-    #freepik--speech-bubble--inject-62 {
-    animation: 1s 1 forwards cubic-bezier(0.36, -0.01, 0.5, 1.38) zoomIn,
-      6s Infinite linear floating;
-    animation-delay: 0s, 1s;
-  }
-
-  //////////////////////////////////////visualize image svg//////////////////////////////////////////////////
-  svg#freepik_stories-data-extraction:not(.animated) .animable {
-    opacity: 0;
-  }
-  svg#freepik_stories-data-extraction.animated #freepik--floor--inject-109 {
-    animation: 1s 1 forwards cubic-bezier(0.36, -0.01, 0.5, 1.38) zoomOut;
-    animation-delay: 0s;
-  }
-  svg#freepik_stories-data-extraction.animated #freepik--Floor--inject-109 {
-    animation: 1s 1 forwards cubic-bezier(0.36, -0.01, 0.5, 1.38) zoomOut,
-      1.5s Infinite linear wind;
-    animation-delay: 0s, 1s;
-  }
-  svg#freepik_stories-data-extraction.animated #freepik--server-2--inject-109 {
-    animation: 1s 1 forwards cubic-bezier(0.36, -0.01, 0.5, 1.38) slideUp,
-      6s Infinite linear shake;
-    animation-delay: 0s, 1s;
-  }
-  svg#freepik_stories-data-extraction.animated
-    #freepik--speech-bubble--inject-109 {
-    animation: 1s 1 forwards cubic-bezier(0.36, -0.01, 0.5, 1.38) slideLeft,
-      3s Infinite linear shake;
-    animation-delay: 0s, 1s;
-  }
-  svg#freepik_stories-data-extraction.animated #freepik--server--inject-109 {
-    animation: 1s 1 forwards cubic-bezier(0.36, -0.01, 0.5, 1.38) zoomIn;
-    animation-delay: 0s;
-  }
-  svg#freepik_stories-data-extraction.animated #freepik--Cable--inject-109 {
-    animation: 1s 1 forwards cubic-bezier(0.36, -0.01, 0.5, 1.38) zoomIn;
-    animation-delay: 0.5s;
-    opacity: 0;
-  }
-  svg#freepik_stories-data-extraction.animated #freepik--server-1--inject-109 {
-    animation: 1s 1 forwards cubic-bezier(0.36, -0.01, 0.5, 1.38) zoomIn,
-      6s Infinite linear heartbeat;
-    animation-delay: 0s, 1s;
-  }
-  svg#freepik_stories-data-extraction.animated #freepik--Line--inject-109 {
-    animation: 1s 1 forwards cubic-bezier(0.36, -0.01, 0.5, 1.38) slideDown;
-    animation-delay: 0s;
-  }
-  svg#freepik_stories-data-extraction.animated #freepik--folder--inject-109 {
-    animation: 1s 1 forwards cubic-bezier(0.36, -0.01, 0.5, 1.38) slideDown;
-    animation-delay: 0.5s;
-    opacity: 0;
-  }
-  svg#freepik_stories-data-extraction.animated #freepik--Folder--inject-109 {
-    animation: 1s 1 forwards cubic-bezier(0.36, -0.01, 0.5, 1.38) slideDown,
-      1.5s Infinite linear floating;
-    animation-delay: 0s, 1s;
-  }
-  svg#freepik_stories-data-extraction.animated #freepik--Laptop--inject-109 {
-    animation: 1s 1 forwards cubic-bezier(0.36, -0.01, 0.5, 1.38) slideRight;
-    animation-delay: 0.5s;
-    opacity: 0;
-  }
-  svg#freepik_stories-data-extraction.animated #freepik--Device--inject-109 {
-    animation: 1s 1 forwards cubic-bezier(0.36, -0.01, 0.5, 1.38) slideRight;
-    animation-delay: 0.5s;
-    opacity: 0;
-  }
-  svg#freepik_stories-data-extraction.animated #freepik--Screen--inject-109 {
-    animation: 1s 1 forwards cubic-bezier(0.36, -0.01, 0.5, 1.38) zoomIn,
-      3s Infinite linear floating;
-    animation-delay: 1s, 2s;
-    opacity: 0;
-  }
-  svg#freepik_stories-data-extraction.animated #freepik--Glass--inject-109 {
-    animation: 1s 1 forwards cubic-bezier(0.36, -0.01, 0.5, 1.38) slideRight;
-    animation-delay: 0s;
-  }
-  svg#freepik_stories-data-extraction.animated
-    #freepik--magnifying-glass--inject-109 {
-    animation: 1s 1 forwards cubic-bezier(0.36, -0.01, 0.5, 1.38) slideRight,
-      3s Infinite linear floating;
-    animation-delay: 0s, 1s;
-  }
-  svg#freepik_stories-data-extraction.animated #freepik--line--inject-109 {
-    animation: 2.9s 1 forwards cubic-bezier(0.36, -0.01, 0.5, 1.38) slideRight;
-    animation-delay: 2s;
-    opacity: 0;
-  }
-  svg#freepik_stories-data-extraction.animated #freepik--Document--inject-109 {
-    animation: 2.9s 1 forwards cubic-bezier(0.36, -0.01, 0.5, 1.38) slideRight;
-    animation-delay: 0.725s;
-    opacity: 0;
-  }
-  svg#freepik_stories-data-extraction.animated #freepik--shadow--inject-109 {
-    animation: 2.9s 1 forwards cubic-bezier(0.36, -0.01, 0.5, 1.38) slideRight;
-    animation-delay: 1.45s;
-    opacity: 0;
-  }
-  svg#freepik_stories-data-extraction.animated #freepik--document--inject-109 {
-    animation: 2.9s 1 forwards cubic-bezier(0.36, -0.01, 0.5, 1.38) slideRight;
-    animation-delay: 2.175s;
-    opacity: 0;
-  }
-  svg#freepik_stories-data-extraction.animated #freepik--Documents--inject-109 {
-    animation: 2.9s 1 forwards cubic-bezier(0.36, -0.01, 0.5, 1.38) slideRight,
-      3s Infinite linear floating;
-    animation-delay: 2s, 2.9s;
-    opacity: 0;
-  }
-
-  ///////////////////////////////////reliable image svg//////////////////////////////////////////////////////////
-
-  svg#freepik_stories-pipeline-maintenance:not(.animated) .animable {
-    opacity: 0;
-  }
-  svg#freepik_stories-pipeline-maintenance.animated
-    #freepik--Walls--inject-362 {
-    animation: 1s 1 forwards cubic-bezier(0.36, -0.01, 0.5, 1.38) zoomOut;
-    animation-delay: 0s;
-  }
-  svg#freepik_stories-pipeline-maintenance.animated
-    #freepik--Character--inject-362 {
-    animation: 1s 1 forwards cubic-bezier(0.36, -0.01, 0.5, 1.38) slideLeft;
-    animation-delay: 1s;
-    opacity: 0;
-  }
-  svg#freepik_stories-pipeline-maintenance.animated
-    #freepik--character-1--inject-362 {
-    animation: 1s 1 forwards cubic-bezier(0.36, -0.01, 0.5, 1.38) slideLeft;
-    animation-delay: 1s;
-    opacity: 0;
-  }
-  svg#freepik_stories-pipeline-maintenance.animated
-    #freepik--Pipelines--inject-362 {
-    animation: 1s 1 forwards cubic-bezier(0.36, -0.01, 0.5, 1.38) slideDown,
-      6s Infinite linear floating;
-    animation-delay: 0s, 1s;
-  }
-  svg#freepik_stories-pipeline-maintenance.animated
-    #freepik--character-2--inject-362 {
-    animation: 1s 1 forwards cubic-bezier(0.36, -0.01, 0.5, 1.38) slideRight;
-    animation-delay: 2s;
-    opacity: 0;
-  }
-  svg#freepik_stories-pipeline-maintenance.animated
-    #freepik--speech-bubble--inject-362 {
-    animation: 1s 1 forwards cubic-bezier(0.36, -0.01, 0.5, 1.38) zoomIn;
-    animation-delay: 2.5s;
-    opacity: 0;
-  }
-
-  ///////////////////////////////////////secure image svg///////////////////////////////////////////////////
-
-  svg#freepik_stories-private-data:not(.animated) .animable {
-    opacity: 0;
-  }
-  svg#freepik_stories-private-data.animated #freepik--Floor--inject-434 {
-    animation: 1s 1 forwards cubic-bezier(0.36, -0.01, 0.5, 1.38) zoomOut,
-      1.5s Infinite linear wind;
-    animation-delay: 0s, 1s;
-  }
-  svg#freepik_stories-private-data.animated #freepik--Shadows--inject-434 {
-    animation: 1s 1 forwards cubic-bezier(0.36, -0.01, 0.5, 1.38) slideRight,
-      1.5s Infinite linear wind;
-    animation-delay: 2s, 3s;
-    opacity: 0;
-  }
-  svg#freepik_stories-private-data.animated #freepik--Gears--inject-434 {
-    animation: 1.5s Infinite linear floating;
-    animation-delay: 0s;
-  }
-  svg#freepik_stories-private-data.animated #freepik--Plant--inject-434 {
-    animation: 1s 1 forwards cubic-bezier(0.36, -0.01, 0.5, 1.38) zoomIn,
-      1.5s Infinite linear wind;
-    animation-delay: 2.5s, 3.5s;
-    opacity: 0;
-  }
-  svg#freepik_stories-private-data.animated #freepik--Folder--inject-434 {
-    animation: 1s 1 forwards cubic-bezier(0.36, -0.01, 0.5, 1.38) slideLeft;
-    animation-delay: 0.5s;
-    opacity: 0;
-  }
-  svg#freepik_stories-private-data.animated #freepik--folder--inject-434 {
-    animation: 1s 1 forwards cubic-bezier(0.36, -0.01, 0.5, 1.38) slideLeft;
-    animation-delay: 0.3333333333333333s;
-    opacity: 0;
-  }
-  svg#freepik_stories-private-data.animated #freepik--folder--inject-434 {
-    animation: 1s 1 forwards cubic-bezier(0.36, -0.01, 0.5, 1.38) slideLeft;
-    animation-delay: 0.6666666666666666s;
-    opacity: 0;
-  }
-  svg#freepik_stories-private-data.animated #freepik--Folders--inject-434 {
-    animation: 1s 1 forwards cubic-bezier(0.36, -0.01, 0.5, 1.38) slideLeft;
-    animation-delay: 0.5s;
-    opacity: 0;
-  }
-  svg#freepik_stories-private-data.animated #freepik--Lines--inject-434 {
-    animation: 1s 1 forwards cubic-bezier(0.36, -0.01, 0.5, 1.38) zoomIn,
-      6s Infinite linear shake;
-    animation-delay: 1s, 2s;
-    opacity: 0;
-  }
-  svg#freepik_stories-private-data.animated #freepik--Title--inject-434 {
-    animation: 1s 1 forwards cubic-bezier(0.36, -0.01, 0.5, 1.38) zoomOut;
-    animation-delay: 1.6s;
-    opacity: 0;
-  }
-  svg#freepik_stories-private-data.animated #freepik--shield--inject-434 {
-    animation: 1s 1 forwards cubic-bezier(0.36, -0.01, 0.5, 1.38) zoomOut;
-    animation-delay: 0.5s;
-    opacity: 0;
-  }
-  svg#freepik_stories-private-data.animated #freepik--Shield--inject-434 {
-    animation: 1s 1 forwards cubic-bezier(0.36, -0.01, 0.5, 1.38) zoomOut,
-      3s Infinite linear heartbeat;
-    animation-delay: 1.6s, 2.6s;
-    opacity: 0;
-  }
-  svg#freepik_stories-private-data.animated #freepik--Key--inject-434 {
-    animation: 1s 1 forwards cubic-bezier(0.36, -0.01, 0.5, 1.38) zoomIn,
-      3s Infinite linear heartbeat;
-    animation-delay: 2s, 3s;
-    opacity: 0;
-  }
-  svg#freepik_stories-private-data.animated #freepik--character--inject-434 {
-    animation: 1s 1 forwards cubic-bezier(0.36, -0.01, 0.5, 1.38) slideRight;
-    animation-delay: 2s;
-    opacity: 0;
-  }
-  svg#freepik_stories-private-data.animated #freepik--Character--inject-434 {
-    animation: 1s 1 forwards cubic-bezier(0.36, -0.01, 0.5, 1.38) slideRight;
-    animation-delay: 2s;
-    opacity: 0;
-  }
-  svg#freepik_stories-private-data.animated
-    #freepik--speech-bubble--inject-434 {
-    animation: 1s 1 forwards cubic-bezier(0.36, -0.01, 0.5, 1.38) slideDown;
-    animation-delay: 2.5s;
-    opacity: 0;
-  }
-  svg#freepik_stories-private-data.animated
-    #freepik--speech-bubble--inject-434 {
-    animation: 1s 1 forwards cubic-bezier(0.36, -0.01, 0.5, 1.38) slideDown,
-      3s Infinite linear floating;
-    animation-delay: 2.5s, 3.5s;
-    opacity: 0;
-  }
-
   ///////////////////////////////////////svg's end here///////////////////////////////////////////////////
 
   ///////////////////////////////////////hero image svg animations///////////////////////////////////////////
@@ -703,451 +634,101 @@ export const Content = styled.div`
 
   ///////////////////////////time image svg animation ends here///////////////////////////////////////////
 
-  ///////////////////////////server image svg animations///////////////////////////////////////
-  @keyframes zoomOut {
+  /////////////////////////////////Mid banner blob animations start here////////////////////////////////////////////////
+
+  @keyframes blob-down {
     0% {
-      opacity: 0;
-      transform: scale(1.5);
-    }
-    100% {
-      opacity: 1;
-      transform: scale(1);
-    }
-  }
-  @keyframes shake {
-    10%,
-    90% {
-      transform: translate3d(-1px, 0, 0);
-    }
-    20%,
-    80% {
-      transform: translate3d(2px, 0, 0);
-    }
-    30%,
-    50%,
-    70% {
-      transform: translate3d(-4px, 0, 0);
-    }
-    40%,
-    60% {
-      transform: translate3d(4px, 0, 0);
-    }
-  }
-  @keyframes wind {
-    0% {
-      transform: rotate(0deg);
-    }
-    25% {
-      transform: rotate(1deg);
-    }
-    75% {
-      transform: rotate(-1deg);
-    }
-  }
-  @keyframes zoomIn {
-    0% {
-      opacity: 0;
-      transform: scale(0.5);
-    }
-    100% {
-      opacity: 1;
-      transform: scale(1);
-    }
-  }
-  @keyframes slideLeft {
-    0% {
-      opacity: 0;
-      transform: translateX(-30px);
-    }
-    100% {
-      opacity: 1;
-      transform: translateX(0);
-    }
-  }
-  @keyframes floating {
-    0% {
-      opacity: 1;
-      transform: translateY(0px);
-    }
-    50% {
-      transform: translateY(-10px);
-    }
-    100% {
-      opacity: 1;
-      transform: translateY(0px);
-    }
-  }
-  @keyframes slideDown {
-    0% {
-      opacity: 0;
-      transform: translateY(-30px);
-    }
-    100% {
-      opacity: 1;
-      transform: translateY(0);
-    }
-  }
-  @keyframes heartbeat {
-    0% {
-      transform: scale(1);
+      top: 20%;
+      left: 20%;
+      border-radius: 50%;
     }
     10% {
-      transform: scale(1.1);
+      border-radius: 10% 16% 42% 25%;
+    }
+    20% {
+      left: 10%;
+      border-radius: 45% 20% 12% 32%;
     }
     30% {
-      transform: scale(1);
+      border-radius: 20% 40% 10% 50%;
     }
     40% {
-      transform: scale(1);
+      top: 50%;
+      border-radius: 10% 16% 42% 25%;
     }
     50% {
-      transform: scale(1.1);
+      border-radius: 45% 20% 12% 32%;
+      top: 80%;
+      left: 15%;
     }
     60% {
-      transform: scale(1);
+      top: 50%;
+      border-radius: 20% 40% 10% 50%;
     }
-    100% {
-      transform: scale(1);
-    }
-  }
-  @keyframes slideUp {
-    0% {
-      opacity: 0;
-      transform: translateY(30px);
-    }
-    100% {
-      opacity: 1;
-      transform: inherit;
-    }
-  }
-  @keyframes slideRight {
-    0% {
-      opacity: 0;
-      transform: translateX(30px);
-    }
-    100% {
-      opacity: 1;
-      transform: translateX(0);
-    }
-  }
-
-  ////////////////////////////////////server image svg animation ends here///////////////////////////////////////
-
-  //////////////////////////////////visualize image svg animations///////////////////////////////////////////////
-  @keyframes zoomOut {
-    0% {
-      opacity: 0;
-      transform: scale(1.5);
-    }
-    100% {
-      opacity: 1;
-      transform: scale(1);
-    }
-  }
-  @keyframes wind {
-    0% {
-      transform: rotate(0deg);
-    }
-    25% {
-      transform: rotate(1deg);
-    }
-    75% {
-      transform: rotate(-1deg);
-    }
-  }
-  @keyframes slideUp {
-    0% {
-      opacity: 0;
-      transform: translateY(30px);
-    }
-    100% {
-      opacity: 1;
-      transform: inherit;
-    }
-  }
-  @keyframes shake {
-    10%,
-    90% {
-      transform: translate3d(-1px, 0, 0);
-    }
-    20%,
-    80% {
-      transform: translate3d(2px, 0, 0);
-    }
-    30%,
-    50%,
     70% {
-      transform: translate3d(-4px, 0, 0);
+      border-radius: 32% 12% 45% 33%;
+      left: 25%;
     }
-    40%,
-    60% {
-      transform: translate3d(4px, 0, 0);
+    80% {
+      top: 40%;
+      border-radius: 32% 12% 45% 33%;
     }
-  }
-  @keyframes slideLeft {
-    0% {
-      opacity: 0;
-      transform: translateX(-30px);
+    90% {
+      border-radius: 20% 40% 10% 50%;
     }
     100% {
-      opacity: 1;
-      transform: translateX(0);
+      border-radius: 50%;
+      top: 20%;
+      left: 20%;
     }
   }
-  @keyframes zoomIn {
+
+  @keyframes blob-up {
     0% {
-      opacity: 0;
-      transform: scale(0.5);
-    }
-    100% {
-      opacity: 1;
-      transform: scale(1);
-    }
-  }
-  @keyframes heartbeat {
-    0% {
-      transform: scale(1);
+      right: 20%;
+      bottom: 20%;
+      border-radius: 50%;
     }
     10% {
-      transform: scale(1.1);
+      border-radius: 10% 16% 42% 25%;
+    }
+    20% {
+      bottom: 10%;
+      border-radius: 45% 20% 12% 32%;
     }
     30% {
-      transform: scale(1);
+      border-radius: 20% 40% 10% 50%;
     }
     40% {
-      transform: scale(1);
+      right: 40%;
+      border-radius: 10% 16% 42% 25%;
     }
     50% {
-      transform: scale(1.1);
+      border-radius: 45% 20% 12% 32%;
+      right: 60%;
+      bottom: 45%;
     }
     60% {
-      transform: scale(1);
+      right: 50%;
+      border-radius: 20% 40% 10% 50%;
     }
-    100% {
-      transform: scale(1);
-    }
-  }
-  @keyframes slideDown {
-    0% {
-      opacity: 0;
-      transform: translateY(-30px);
-    }
-    100% {
-      opacity: 1;
-      transform: translateY(0);
-    }
-  }
-  @keyframes floating {
-    0% {
-      opacity: 1;
-      transform: translateY(0px);
-    }
-    50% {
-      transform: translateY(-10px);
-    }
-    100% {
-      opacity: 1;
-      transform: translateY(0px);
-    }
-  }
-  @keyframes slideRight {
-    0% {
-      opacity: 0;
-      transform: translateX(30px);
-    }
-    100% {
-      opacity: 1;
-      transform: translateX(0);
-    }
-  }
-  //////////////////////////////////visualize image svg animations ends here///////////////////////////////////////////////
-
-  /////////////////////////////////reliable image svg animations starts here////////////////////////////////////////////////
-
-  @keyframes zoomOut {
-    0% {
-      opacity: 0;
-      transform: scale(1.5);
-    }
-    100% {
-      opacity: 1;
-      transform: scale(1);
-    }
-  }
-  @keyframes slideLeft {
-    0% {
-      opacity: 0;
-      transform: translateX(-30px);
-    }
-    100% {
-      opacity: 1;
-      transform: translateX(0);
-    }
-  }
-  @keyframes slideDown {
-    0% {
-      opacity: 0;
-      transform: translateY(-30px);
-    }
-    100% {
-      opacity: 1;
-      transform: translateY(0);
-    }
-  }
-  @keyframes floating {
-    0% {
-      opacity: 1;
-      transform: translateY(0px);
-    }
-    50% {
-      transform: translateY(-10px);
-    }
-    100% {
-      opacity: 1;
-      transform: translateY(0px);
-    }
-  }
-  @keyframes slideRight {
-    0% {
-      opacity: 0;
-      transform: translateX(30px);
-    }
-    100% {
-      opacity: 1;
-      transform: translateX(0);
-    }
-  }
-  @keyframes zoomIn {
-    0% {
-      opacity: 0;
-      transform: scale(0.5);
-    }
-    100% {
-      opacity: 1;
-      transform: scale(1);
-    }
-  }
-
-  /////////////////////////////////reliable image svg animations ends here////////////////////////////////////////////////
-
-  /////////////////////////////////Secure image svg animations starts here////////////////////////////////////////////////
-
-  @keyframes zoomOut {
-    0% {
-      opacity: 0;
-      transform: scale(1.5);
-    }
-    100% {
-      opacity: 1;
-      transform: scale(1);
-    }
-  }
-  @keyframes wind {
-    0% {
-      transform: rotate(0deg);
-    }
-    25% {
-      transform: rotate(1deg);
-    }
-    75% {
-      transform: rotate(-1deg);
-    }
-  }
-  @keyframes slideRight {
-    0% {
-      opacity: 0;
-      transform: translateX(30px);
-    }
-    100% {
-      opacity: 1;
-      transform: translateX(0);
-    }
-  }
-  @keyframes floating {
-    0% {
-      opacity: 1;
-      transform: translateY(0px);
-    }
-    50% {
-      transform: translateY(-10px);
-    }
-    100% {
-      opacity: 1;
-      transform: translateY(0px);
-    }
-  }
-  @keyframes zoomIn {
-    0% {
-      opacity: 0;
-      transform: scale(0.5);
-    }
-    100% {
-      opacity: 1;
-      transform: scale(1);
-    }
-  }
-  @keyframes slideLeft {
-    0% {
-      opacity: 0;
-      transform: translateX(-30px);
-    }
-    100% {
-      opacity: 1;
-      transform: translateX(0);
-    }
-  }
-  @keyframes shake {
-    10%,
-    90% {
-      transform: translate3d(-1px, 0, 0);
-    }
-    20%,
-    80% {
-      transform: translate3d(2px, 0, 0);
-    }
-    30%,
-    50%,
     70% {
-      transform: translate3d(-4px, 0, 0);
+      border-radius: 32% 12% 45% 33%;
+      bottom: 30%;
     }
-    40%,
-    60% {
-      transform: translate3d(4px, 0, 0);
+    80% {
+      right: 40%;
+      border-radius: 32% 12% 45% 33%;
     }
-  }
-  @keyframes heartbeat {
-    0% {
-      transform: scale(1);
-    }
-    10% {
-      transform: scale(1.1);
-    }
-    30% {
-      transform: scale(1);
-    }
-    40% {
-      transform: scale(1);
-    }
-    50% {
-      transform: scale(1.1);
-    }
-    60% {
-      transform: scale(1);
+    90% {
+      border-radius: 20% 40% 10% 50%;
     }
     100% {
-      transform: scale(1);
-    }
-  }
-  @keyframes slideDown {
-    0% {
-      opacity: 0;
-      transform: translateY(-30px);
-    }
-    100% {
-      opacity: 1;
-      transform: translateY(0);
+      border-radius: 50%;
+      right: 20%;
+      bottom: 20%;
     }
   }
 
-  /////////////////////////////////Secure image svg animations ends here////////////////////////////////////////////////
+  /////////////////////////////////Mid banner blob animations ends here////////////////////////////////////////////////
 `;

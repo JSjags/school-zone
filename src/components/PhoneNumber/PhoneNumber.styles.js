@@ -23,11 +23,12 @@ export const Content = styled.div`
     gap: 5px;
     flex: 25%;
     border-radius: 5px;
-    backdrop-filter: invert(0.3);
+    /* backdrop-filter: invert(0.3); */
     padding: 0 8px 0 10px;
     position: relative;
     background: var(--translucent-white);
     cursor: pointer;
+    color: var(--text);
 
     :hover {
       box-shadow: 0 5px 8px rgba(0, 0, 0, 0.3);
@@ -43,8 +44,9 @@ export const Content = styled.div`
       padding: 0;
       cursor: pointer;
       outline: none;
-      background: var(--translucent-white);
-      backdrop-filter: invert(0.5);
+      background: transparent;
+      /* backdrop-filter: invert(0.5); */
+      color: var(--text);
       border: 1px solid transparent;
 
       :hover {
@@ -81,13 +83,14 @@ export const Content = styled.div`
     overflow-y: scroll;
     background-color: var(--background);
     box-shadow: 0 7px 10px rgba(0, 0, 0, 0.4);
+    overflow-y: overlay;
 
     ::-webkit-scrollbar {
       width: 6px;
       height: 6px;
     }
     ::-webkit-scrollbar-track {
-      background-color: var(--background);
+      background-color: transparent;
       border-radius: 5px;
     }
     ::-webkit-scrollbar-thumb {
@@ -106,10 +109,12 @@ export const Content = styled.div`
 
       #country-dial-code {
         width: 40px;
+        color: var(--text);
       }
       #country-name {
         white-space: nowrap;
         text-align: left;
+        color: var(--text);
       }
 
       :hover {

@@ -1943,7 +1943,6 @@ export const MessagesWrapper = styled.div`
 `;
 export const MessagesContent = styled.div`
   width: clamp(240px, calc(100% - 10px), 500px);
-  height: fit-content;
   background: var(--background);
   border-radius: 10px;
   box-shadow: 0 3px 10px var(--dark-gray);
@@ -1992,7 +1991,6 @@ export const MessagesContent = styled.div`
   }
   .messages-cont {
     background: var(--translucent-white);
-    min-height: 400px;
     border-radius: 0 5px 5px 5px;
     backdrop-filter: invert(0.3);
     display: flex;
@@ -2000,11 +1998,14 @@ export const MessagesContent = styled.div`
     justify-content: center;
     flex-direction: column;
     gap: 2rem;
+    min-height: 360px;
+    max-height: 360px;
+    width: clamp(240px, 100%, 500px);
   }
   .send-messages-cont {
     background: var(--translucent-white);
     backdrop-filter: invert(0.3);
-    min-height: 400px;
+    height: 400px;
     border-radius: 0 5px 5px 5px;
     padding: 20px 10px 50px;
     gap: 2rem;
@@ -2099,6 +2100,70 @@ export const MessagesContent = styled.div`
     overflow: hidden;
     padding: 0;
   }
+  .mailbox {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    padding: 10px;
+    margin-top: 10px;
+    gap: 10px;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: flex-start;
+    overflow: hidden;
+    overflow-y: scroll;
+
+    ::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+      border-radius: 10px;
+      background-color: var(--transparent);
+    }
+    ::-webkit-scrollbar-track {
+      background-color: var(--transparent);
+    }
+    ::-webkit-scrollbar-thumb {
+      border-radius: 10px;
+      height: 5px;
+      background: var(--secondary-color);
+    }
+
+    .matched-school-item {
+      width: 100%;
+      /* padding: 5px 5px 5px 50px; */
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      justify-content: flex-start;
+      gap: 3px;
+      transition: all 100ms ease-in-out;
+      cursor: pointer;
+      position: relative;
+
+      :hover {
+        background: var(--primary-color);
+      }
+    }
+
+    .sender-details {
+      width: 100%;
+
+      h5 {
+        margin-top: 5px;
+        margin-bottom: 5px;
+      }
+      p {
+        margin-top: 0;
+      }
+    }
+  }
+
+  .no-more {
+    text-align: center;
+    width: 100%;
+  }
+
   .matched-school-item {
     width: 100%;
     padding: 0 5px 5px 50px;
@@ -2107,9 +2172,15 @@ export const MessagesContent = styled.div`
     align-items: flex-start;
     justify-content: flex-start;
     gap: 3px;
-    transition: all 100ms ease-in-out;
     cursor: pointer;
+    position: relative;
+    border-radius: 5px;
+    border: 1px solid var(--background);
+    transition: all 100ms ease-in-out;
 
+    :hover .time {
+      background: var(--primary-color);
+    }
     :hover {
       background: var(--primary-color);
     }
@@ -2132,10 +2203,11 @@ export const MessagesContent = styled.div`
   .matched-school-address {
     font-family: var(--hind);
     color: var(--dark-mid-gray);
-    font-size: 0.6rem;
+    font-size: 0.7rem;
     display: flex;
     align-items: center;
     gap: 3px;
+    white-space: nowrap;
 
     span {
       display: block;
@@ -2143,6 +2215,39 @@ export const MessagesContent = styled.div`
       text-overflow: ellipsis;
       overflow: hidden;
     }
+  }
+  .message-title {
+    font-family: var(--hind);
+    color: var(--dark-mid-gray);
+    font-size: 0.7rem;
+    display: flex;
+    align-items: center;
+    gap: 3px;
+    white-space: nowrap;
+    width: 100%;
+    overflow: hidden;
+    text-overflow: clip;
+
+    span {
+      display: block;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+      overflow: hidden;
+    }
+  }
+  .time {
+    display: block;
+    font-family: var(--hind);
+    color: var(--text);
+    font-size: 0.8rem;
+    position: absolute;
+    right: 0;
+    top: 0;
+    padding: 3px 5px;
+    height: fit-content;
+    background: var(--background);
+    border-radius: 0 5px 5px 5px;
+    transition: all 100ms ease-in-out;
   }
 
   .create-slug {
