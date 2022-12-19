@@ -26,6 +26,227 @@ export const Content = styled.div`
     background: var(--background);
     width: 0;
     border: 1px solid var(--dark-mid-gray);
+
+    .student-staff-cont {
+      width: 100%;
+      border-radius: 10px;
+      padding: 1rem;
+      display: flex;
+      flex-direction: row;
+      justify-content: space-between;
+      align-items: center;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+
+    .student-board {
+      width: clamp(200px, calc(50% - 0.5rem), 1500px);
+      min-height: 200px;
+      background-color: yellow;
+      padding: 1rem;
+      border: 1px solid var(--dark-mid-gray);
+      border-radius: 10px;
+    }
+
+    .staff-board {
+      width: clamp(200px, calc(50% - 0.5rem), 1500px);
+      min-height: 200px;
+      background-color: rebeccapurple;
+      padding: 1rem;
+      border: 1px solid var(--dark-mid-gray);
+      border-radius: 10px;
+    }
+    .finance-cont {
+      width: 100%;
+      border-radius: 10px;
+      padding: 0 1rem 0.5rem;
+      min-height: 200px;
+    }
+    .finance-board {
+      width: clamp(200px, 100%, 1500px);
+      min-height: 200px;
+      padding: 1rem;
+      border: 1px solid var(--dark-mid-gray);
+      border-radius: 10px;
+    }
+    .cont {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+    }
+    .statement {
+      width: clamp(200px, 30%, 1500px);
+    }
+    .statements {
+      justify-content: space-between;
+      padding: 1vmax 0 2vmax;
+      width: clamp(200px, 100%, 1500px);
+      display: flex;
+      row-gap: 20px;
+      flex-direction: column;
+      backdrop-filter: invert(0.05);
+      padding-left: 10px;
+      border-radius: 20px;
+
+      .rev,
+      .exp {
+        width: (200px, 100%, 1500px);
+        min-height: 70px;
+        display: flex;
+        flex-direction: column;
+        text-align: left;
+
+        p {
+          font-size: 1.5rem;
+          font-family: var(--hind);
+          color: var(--text);
+          text-align: center;
+          letter-spacing: 1px;
+        }
+      }
+    }
+    .recent-records {
+      padding: 1vmax 0 2vmax;
+      width: clamp(200px, 30%, 1500px);
+      height: clamp(200px, 25vmax, 400px);
+      backdrop-filter: invert(0.05);
+      padding: 10px;
+      border-radius: 20px;
+      overflow: overlay;
+
+      ::-webkit-scrollbar {
+        appearance: none;
+        width: 5px;
+        height: 5px;
+      }
+      ::-webkit-scrollbar-track {
+        width: 3px;
+        height: 3px;
+        border-radius: 3px;
+      }
+      ::-webkit-scrollbar-thumb {
+        width: 3px;
+        height: 3px;
+        border-radius: 3px;
+        background: var(--secondary-color);
+      }
+
+      .records-cont {
+        display: flex;
+        flex-direction: column;
+        padding-top: 10px;
+        row-gap: 10px;
+
+        .financial_item {
+          min-height: 40px;
+          background-color: red;
+          border-radius: 10px;
+        }
+
+        .revenue {
+          background-color: var(--lime);
+          padding: 5px;
+
+          .type {
+            color: var(--lime);
+          }
+        }
+
+        .expense {
+          background-color: var(--red);
+          padding: 5px;
+
+          .type {
+            color: var(--red);
+          }
+        }
+
+        .financial_item-header {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+        }
+        .type {
+          padding: 5px 10px;
+          font-family: var(--garamond);
+          background-color: var(--white);
+          border-radius: 20px;
+          font-weight: bolder;
+          width: fit-content;
+          font-size: 0.8rem;
+        }
+        .value {
+          font-family: var(--hind);
+          color: var(--white);
+        }
+        .statement {
+          width: 100%;
+          font-family: var(--hind);
+          color: var(--white);
+          font-size: 0.8rem;
+          overflow: hidden;
+          white-space: nowrap;
+          text-overflow: ellipsis;
+          padding: 0;
+          margin-top: 3px;
+        }
+      }
+
+      .no-records {
+        width: 100%;
+        height: 100%;
+        align-self: center;
+        justify-self: center;
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+        align-items: center;
+        justify-content: center;
+
+        img {
+          width: clamp(40px, 30%, 100px);
+        }
+
+        p {
+          color: var(--text);
+          font-family: var(--hind);
+          line-height: 100%;
+          vertical-align: middle;
+        }
+      }
+    }
+    .pie-chart {
+      width: clamp(200px, 38%, 1500px);
+    }
+    .others-cont {
+      width: 100%;
+      border-radius: 10px;
+      padding: 0.5rem 1rem;
+      display: flex;
+      flex-direction: row;
+      justify-content: space-between;
+      align-items: center;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+
+    .recent-articles {
+      width: clamp(200px, calc(50% - 0.5rem), 1500px);
+      min-height: 200px;
+      background-color: yellow;
+      padding: 1rem;
+      border: 1px solid var(--dark-mid-gray);
+      border-radius: 10px;
+    }
+
+    .upcoming-schedules {
+      width: clamp(200px, calc(50% - 0.5rem), 1500px);
+      min-height: 200px;
+      background-color: rebeccapurple;
+      padding: 1rem;
+      border: 1px solid var(--dark-mid-gray);
+      border-radius: 10px;
+    }
   }
 
   .no-data {
