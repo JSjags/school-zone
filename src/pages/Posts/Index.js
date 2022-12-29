@@ -236,7 +236,7 @@ const Posts = () => {
       {isEditProfileModalOpen && <EditModal />}
       <Content>
         <main>
-          <PageHeader title="Posts" />
+          <PageHeader title="Articles" />
           {isPostsLoading && (
             <LoadingContainer>
               <Spinner />

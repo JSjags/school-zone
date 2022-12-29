@@ -20,17 +20,16 @@ export const Content = styled.div`
     top: 10px;
     scrollbar-color: var(--primary-color);
     overflow: hidden;
-    overflow-y: scroll;
+    overflow-y: overlay;
     flex-direction: column;
 
     ::-webkit-scrollbar {
       width: 5px;
       height: 5px;
-      /* border-radius: 20px; */
-      background: var(--background);
+      background: transparent;
     }
     ::-webkit-scrollbar-track {
-      background: var(--background);
+      background: transparent;
       border-radius: 0 0 10px 0;
     }
     ::-webkit-scrollbar-thumb {

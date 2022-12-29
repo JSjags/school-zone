@@ -46,11 +46,11 @@ import axios from "axios";
 import { useRef } from "react";
 import { AiOutlineFileDone } from "react-icons/ai";
 import EditModal from "../../components/EditModal/Index";
-import { useCallback } from "react";
 import Text from "../../components/Text/Index";
 import ImagePicker from "../../components/ImagePicker/Index";
 import TextArea from "../../components/TextArea/Index";
 import { BsInfoCircleFill } from "react-icons/bs";
+import { getTheme } from "../../utils";
 
 const LightTheme = React.lazy(() =>
   import("../../DEThemes/SchedulerThemes/LightTheme")
@@ -60,13 +60,18 @@ const DarkTheme = React.lazy(() =>
 );
 
 const EditorTheme = ({ children }) => {
-  const CHOSEN_THEME =
-    useSelector((state) => state.schoolData.data.settings?.theme) ?? "Light";
+  const { data: schoolData } = useSelector((state) => state.schoolData);
+
+  const THEME_VALUE = schoolData?.settings?.theme
+    ? schoolData?.settings?.theme
+    : localStorage.getItem("schoolZoneTheme")
+    ? localStorage.getItem("schoolZoneTheme").trim()
+    : " Auto";
+
   return (
     <>
       <React.Suspense fallback={<></>}>
-        {CHOSEN_THEME.trim() === "Light" && <LightTheme />}
-        {CHOSEN_THEME.trim() === "Dark" && <DarkTheme />}
+        {getTheme(THEME_VALUE) === "Light" ? <LightTheme /> : <DarkTheme />}
       </React.Suspense>
       {children}
     </>

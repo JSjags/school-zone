@@ -28,6 +28,7 @@ export const Content = styled.div`
   p {
     font-family: var(--hind);
     color: var(--deep-gray);
+    color: var(--text);
   }
   hr {
     border: none;
@@ -62,6 +63,7 @@ export const Content = styled.div`
     background: var(--translucent-white);
     margin-bottom: 5px;
     transition: all 200ms ease-in-out;
+    color: var(--text);
 
     :hover {
       box-shadow: 0 5px 8px rgba(0, 0, 0, 0.3);

@@ -1396,9 +1396,11 @@ const CreateStudentTemplate = () => {
     setIsError(false);
     setIsSuccess(true);
     setTemplateMessage("Template saved successfully.");
+    dispatch(fetchSchoolData(schoolToken));
 
     return setTimeout(() => {
       dispatch(closeEditProfileModal());
+      dispatch(fetchSchoolData());
     }, 3000);
   };
   const handleOptionsFormat = (e) => {
@@ -1673,6 +1675,7 @@ const CreateStaffTemplate = () => {
     setIsError(false);
     setIsSuccess(true);
     setTemplateMessage("Template saved successfully.");
+    dispatch(fetchSchoolData(schoolToken));
 
     return setTimeout(() => {
       dispatch(closeEditProfileModal());
@@ -2517,6 +2520,7 @@ const StudentRegistration = () => {
     });
 
     dataToMongoDB.student_id = studentId;
+    dataToMongoDB.registration_date = new Date();
 
     try {
       // get downloadURL(s) from firebase storage for uploaded images
@@ -2916,6 +2920,7 @@ const StaffRegistration = () => {
     });
 
     dataToMongoDB.staff_id = staffId;
+    dataToMongoDB.registration_date = new Date();
 
     try {
       // get downloadURL(s) from firebase storage for uploaded images

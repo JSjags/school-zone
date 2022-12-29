@@ -94,7 +94,7 @@ const SideBar = () => {
             >
               <li>
                 <FaIdCardAlt style={{ fontSize: "1.5rem" }} />
-                <span>Staffs</span>
+                <span>Staff</span>
               </li>
             </Link>
             <Link
@@ -114,7 +114,7 @@ const SideBar = () => {
             >
               <li>
                 <HiOutlineNewspaper style={{ fontSize: "1.6rem" }} />
-                <span>Posts</span>
+                <span>Articles</span>
               </li>
             </Link>
             <Link
