@@ -686,7 +686,7 @@ const SchoolDashboard = () => {
                       </div>
                       <div className="tasks-details">
                         <h5 className="task-details-header">
-                          Some Of Your Tasks
+                          Some Of Your Tasks Include
                         </h5>
                         <ul className="tasks">
                           {tasks.map(
