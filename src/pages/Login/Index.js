@@ -83,10 +83,6 @@ function Login() {
     }
   };
 
-  console.log(process.env.NODE_ENV);
-  console.log(process.env.REACT_APP_PRODUCTION_BASE_URL);
-  console.log(process.env.NODE_ENV`: ${baseUrl}/api/schools/login`);
-
   const wrapperVariants = {
     hidden: {
       y: "50vh",
