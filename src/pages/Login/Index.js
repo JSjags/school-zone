@@ -84,6 +84,7 @@ function Login() {
   };
 
   console.log(process.env.NODE_ENV);
+  console.log(process.env.REACT_APP_PRODUCTION_BASE_URL);
 
   const wrapperVariants = {
     hidden: {
