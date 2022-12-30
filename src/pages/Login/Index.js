@@ -83,6 +83,8 @@ function Login() {
     }
   };
 
+  console.log(process.env.NODE_ENV);
+
   const wrapperVariants = {
     hidden: {
       y: "50vh",
