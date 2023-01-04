@@ -89,7 +89,11 @@ function App() {
       theme={getTheme(THEME_VALUE) === "Light" ? lightTheme : darkTheme}
     >
       <GlobalStyles isLoggedIn={isLoggedIn} />
-      <Wrapper onClick={handleMenuClose} isLoggedIn={isLoggedIn}>
+      <Wrapper
+        onClick={handleMenuClose}
+        isLoggedIn={isLoggedIn}
+        showMobileMenu={showMobileMenu}
+      >
         <QueryClientProvider client={queryClient}>
           <Header />
           <AnimatePresence>

@@ -12,7 +12,8 @@ export const Wrapper = styled.div`
   transition: all 300ms cubic-bezier(0.165, 0.84, 0.44, 1);
 `;
 export const Content = styled.div`
-  width: 100%;
+  width: clamp(200px, 100%, 1560px);
+  margin: 0 auto;
   padding: 0 10px;
   display: flex;
   align-items: center;

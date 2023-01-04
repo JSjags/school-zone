@@ -25,7 +25,6 @@ const PageHeader = ({ title }) => {
     dispatch(resetSchoolData());
     dispatch(resetSchoolAuth());
     navigate("/login");
-    Location.reload();
   };
 
   const handleMessages = () => {

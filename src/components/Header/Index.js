@@ -175,7 +175,7 @@ const Header = () => {
       style={{
         padding: `${isLoggedIn ? "0" : "0 clamp(10px, 3%, 50px)"}`,
         width: `${isLoggedIn ? getDashboardMenuWidth() : "100%"}`,
-        position: `${isLoggedIn && sideBarPosition}`,
+        position: `${isLoggedIn ? sideBarPosition : "sticky"}`,
         top: 0,
         left: 0,
         zIndex: 10000,
