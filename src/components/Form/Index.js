@@ -46,6 +46,7 @@ import {
 import {
   fetchSchoolData,
   fetchSchoolPosts,
+  resetMessages,
   resetPostsToDelete,
   setMessagesAsync,
 } from "../../features/school/schoolDataSlice";
@@ -102,6 +103,7 @@ import deleteSlug from "../../assets/delete-slug.svg";
 import noMessagesSvg from "../../assets/no-messages.svg";
 import { useCallback } from "react";
 import TextArea from "../../components/TextArea/Index";
+import { useQuery } from "react-query";
 
 const baseUrl =
   process.env.NODE_ENV === "production"
@@ -112,10 +114,13 @@ const baseUrl =
 
 // Edit Profile
 const EditProfileForm = () => {
+  const dispatch = useDispatch();
+
   const { id: schoolId, token: schoolToken } = useSelector(
     (state) => state.schoolAuth
   );
   const schoolData = useSelector((state) => state.schoolData.data);
+  const authToken = useSelector((state) => state.schoolAuth.token);
   const {
     name: schoolName,
     institutionLevel,
@@ -262,6 +267,10 @@ const EditProfileForm = () => {
     }
   };
 
+  const handleEditProfileModal = () => {
+    dispatch(closeEditProfileModal());
+    dispatch(fetchSchoolData(authToken));
+  };
   const handleChange = (e) => {
     setFormData((prevState) => ({
       ...prevState,
@@ -288,12 +297,28 @@ const EditProfileForm = () => {
         },
       });
       console.log(response);
+      if (response.status === 200) {
+        setIsLoading(false);
+        handleEditProfileModal();
+      } else {
+        setIsLoading(false);
+        handleEditProfileModal();
+      }
     } catch (error) {
       setError(true);
       setIsLoading(false);
       console.log(error);
     }
   };
+
+  const fetchCountries = async () => {
+    const response = await fetch(
+      "https://gist.githubusercontent.com/anubhavshrimal/75f6183458db8c453306f93521e93d37/raw/f77e7598a8503f1f70528ae1cbf9f66755698a16/CountryCodes.json"
+    );
+    return await response.json();
+  };
+
+  const { countryData, status } = useQuery("countriesList", fetchCountries);
 
   // Variants
   const submitVariants = {
@@ -2442,6 +2467,7 @@ const StudentRegistration = () => {
   };
 
   const handleSnapshot = () => {
+    console.log(context.current);
     setShowCamera(false);
     setShowCanvas(false);
 
@@ -2449,8 +2475,8 @@ const StudentRegistration = () => {
       videoRef.current,
       0,
       0,
-      context.current.canvas.clientWidth,
-      context.current.canvas.clientHeight
+      context.current.canvas.width,
+      context.current.canvas.height
     );
 
     setFormData((prevState) => ({
@@ -2478,15 +2504,15 @@ const StudentRegistration = () => {
         context.current.clearRect(
           0,
           0,
-          context.current.canvas.clientWidth,
-          context.current.canvas.clientHeight
+          context.current.canvas.width,
+          context.current.canvas.height
         );
         context.current.drawImage(
           imageRef.current,
           0,
           0,
-          context.current.canvas.clientWidth,
-          context.current.canvas.clientHeight
+          context.current.canvas.width,
+          context.current.canvas.height
         );
         setFormData((prevState) => ({
           ...prevState,
@@ -2661,12 +2687,7 @@ const StudentRegistration = () => {
                 <label id="passport-title">Passport</label>
                 <div className="passport">
                   <img alt="" ref={imageRef} className="hidden" />
-                  <canvas
-                    width="426px"
-                    height="426px"
-                    ref={canvasRef}
-                    id="canvas"
-                  ></canvas>
+                  <canvas ref={canvasRef} id="canvas"></canvas>
                   {showCamera && <video ref={videoRef} autoPlay id="video" />}
                 </div>
                 <div className="button-group">
@@ -3064,12 +3085,7 @@ const StaffRegistration = () => {
                 <label id="passport-title">Passport</label>
                 <div className="passport">
                   <img alt="" ref={imageRef} className="hidden" />
-                  <canvas
-                    width="426px"
-                    height="426px"
-                    ref={canvasRef}
-                    id="canvas"
-                  ></canvas>
+                  <canvas ref={canvasRef} id="canvas"></canvas>
                   {showCamera && <video ref={videoRef} autoPlay id="video" />}
                 </div>
                 <div className="button-group">
@@ -4115,7 +4131,6 @@ const DeleteModal = () => {
       .map((r) => r[0]);
 
     try {
-      // eslint-disable-next-line array-callback-return
       const storageRefArr = filteredData.map((item) => {
         for (const key in item) {
           if (imagePickerFields.includes(key)) {
@@ -4130,10 +4145,13 @@ const DeleteModal = () => {
       });
 
       const firebaseResp = await Promise.all(
-        storageRefArr.map((ref) => deleteObject(ref))
+        storageRefArr.map((ref) => {
+          if (ref === undefined) return;
+          return deleteObject(ref);
+        })
       );
 
-      console.log(firebaseResp);
+      console.log("firebaseResp: ", firebaseResp);
 
       if (!firebaseResp) {
         throw new Error("Doc not deleted from firebase");
@@ -4147,6 +4165,7 @@ const DeleteModal = () => {
             Authorization: "Bearer " + schoolToken,
           },
         });
+        console.log("Delete Record: ", serverResponse);
         if (serverResponse.status !== 200) {
           throw new Error("Could not delete financial record from mongoDB");
         }
@@ -4274,54 +4293,57 @@ const DeletePosts = () => {
       storageRefArr = storageRefArr.flat();
 
       // delete resources from firebase storage
-      const firebaseResp = await Promise.all(
-        storageRefArr.map((ref) => deleteObject(ref))
-      );
-
-      console.log(firebaseResp);
-
-      if (!firebaseResp) {
-        throw new Error(
-          `${
-            postsToDelete.length > 1 ? "Article assets" : "Article asset"
-          } not deleted from firebase`
-        );
-      }
       try {
-        const serverResponse = await axios({
-          url: `${baseUrl}/api/schools/${schoolId}/articles/remove`,
-          method: "put",
-          data: { postsToDelete },
-          headers: {
-            Authorization: "Bearer " + schoolToken,
-          },
-        });
-        if (serverResponse.status !== 200) {
+        const firebaseResp = await Promise.all(
+          storageRefArr.map((ref) => deleteObject(ref))
+        );
+
+        if (!firebaseResp) {
           throw new Error(
-            `Could not delete ${
-              postsToDelete.length > 1 ? "article" : "articles"
-            } record from mongoDB`
+            `${
+              postsToDelete.length > 1 ? "Article assets" : "Article asset"
+            } not deleted from firebase`
           );
         }
+        try {
+          const serverResponse = await axios({
+            url: `${baseUrl}/api/schools/${schoolId}/articles/remove`,
+            method: "put",
+            data: { postsToDelete },
+            headers: {
+              Authorization: "Bearer " + schoolToken,
+            },
+          });
+          if (serverResponse.status !== 200) {
+            throw new Error(
+              `Could not delete ${
+                postsToDelete.length > 1 ? "article" : "articles"
+              } record from mongoDB`
+            );
+          }
 
-        setIsLoading(false);
-        setIsError(false);
-        setIsSuccess(true);
-        dispatch(
-          fetchSchoolPosts({
-            authToken: schoolToken,
-            pageNumber: 1,
-            sort: "Date(desc)",
-          })
-        );
-        setTimeout(() => dispatch(closeEditProfileModal()), 3000);
+          setIsLoading(false);
+          setIsError(false);
+          setIsSuccess(true);
+          dispatch(
+            fetchSchoolPosts({
+              authToken: schoolToken,
+              pageNumber: 1,
+              sort: "Date(desc)",
+            })
+          );
+          setTimeout(() => dispatch(closeEditProfileModal()), 3000);
+        } catch (error) {
+          setIsLoading(false);
+          setIsError(true);
+          setIsSuccess(false);
+          // console.log(error.message);
+        }
       } catch (error) {
-        setIsLoading(false);
-        setIsError(true);
-        setIsSuccess(false);
-        console.log(error);
+        // console.log(error.message);
       }
     } catch (error) {
+      console.log(error.message);
       setIsLoading(false);
       setIsError(true);
       setIsSuccess(false);

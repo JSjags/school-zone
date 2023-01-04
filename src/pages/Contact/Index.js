@@ -3,7 +3,8 @@ import Footer from "../../components/Footer/Index";
 import { motion } from "framer-motion";
 
 import ContactImg from "./images/Contact.image";
-import { MdEmail, MdLocalPhone } from "react-icons/md";
+import { MdEmail } from "react-icons/md";
+import { FaPhoneAlt } from "react-icons/fa";
 
 const Contact = () => {
   const contactVariants = {
@@ -211,7 +212,7 @@ const Contact = () => {
               <MdEmail style={{ fontSize: "2em" }} /> E-Mail
             </a>
             <a href="tel:+2347045621414">
-              <MdLocalPhone style={{ fontSize: "2em" }} /> Phone
+              <FaPhoneAlt style={{ fontSize: "2em" }} /> Phone
             </a>
           </div>
           <p className="thank-you">

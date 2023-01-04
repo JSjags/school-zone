@@ -83,7 +83,7 @@ export const Content = styled.div`
 
         a {
           text-decoration: none;
-          color: var(--text);
+          color: var(--white);
         }
       }
     }
@@ -141,15 +141,29 @@ export const Content = styled.div`
 
         a {
           text-decoration: none;
-          color: var(--text);
+          color: var(--white);
         }
       }
     }
   }
   .copyright {
     font-family: var(--garamond);
-    color: var(--text);
+    color: var(--white);
     grid-area: c;
     text-align: center;
+  }
+
+  @media screen and (max-width: 600px) {
+    width: 100%;
+    display: flex;
+    justify-content: space-around;
+    flex-wrap: wrap;
+
+    .quick-links {
+      width: clamp(150px, 100%, 250px);
+    }
+    .handles {
+      width: clamp(150px, 100%, 250px);
+    }
   }
 `;

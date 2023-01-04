@@ -17,7 +17,7 @@ export const Content = styled.div`
   display: flex;
   align-items: flex-start;
   gap: 10px;
-  padding: 10px 10px 10px 0;
+  padding: 10px;
   width: 100%;
 
   main {
@@ -30,6 +30,7 @@ export const Content = styled.div`
     display: flex;
     flex-direction: column;
     gap: 20px;
+    width: 100%;
   }
   .no-data {
     display: flex;
@@ -57,7 +58,6 @@ export const Content = styled.div`
     position: relative;
   }
   .section-header {
-    padding-left: 40px;
     font-weight: 600;
     margin-bottom: 5px;
   }
@@ -67,8 +67,9 @@ export const Content = styled.div`
     box-shadow: 0 3px 10px var(--dark-gray);
     border: 1px solid var(--dark-mid-gray);
     display: flex;
-    align-items: center;
+    align-items: flex-start;
     min-height: 100px;
+    padding: 10px 0;
   }
   .setting-icon {
     width: clamp(20px, 5%, 40px);
@@ -79,26 +80,32 @@ export const Content = styled.div`
     align-items: start;
     color: var(--primary-color);
     font-size: clamp(1.4rem, 1vw, 1.4rem);
+    margin: 15px 5px;
+
+    svg {
+      width: clamp(15px, 2%, 20px);
+      height: clamp(15px, 2%, 20px);
+    }
   }
   .setting-content {
     width: 100%;
   }
   .setting-title {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 40px 10px;
+    justify-content: space-between;
+    padding: 0 10px 0 0;
+    background: var(--background);
+    border-radius: 10px;
+
     h3 {
       font-size: clamp(1rem, 2vw, 1.2rem);
       white-space: nowrap;
       font-weight: 400;
       flex: 1;
     }
-
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    gap: 40px 10px;
-    justify-content: space-between;
-    padding: 0 10px;
-    background: var(--background);
-    border-radius: 10px;
   }
   .setting-info {
     font-size: clamp(0.6em, calc(0.8em + 0.5vw), 0.8em);

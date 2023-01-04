@@ -14,7 +14,7 @@ export const Wrapper = styled.div`
 `;
 
 export const Content = styled.div`
-  max-width: 600px;
+  width: clamp(200px, 90vw, 600px);
   padding: 40px 20px;
   background: var(--background);
   border-radius: 20px;
@@ -59,11 +59,12 @@ export const Content = styled.div`
     outline-offset: 2px;
     outline-width: 3px;
     cursor: pointer;
-    width: 500px;
+    width: clamp(200px, 100%, 600px);
     background: var(--translucent-white);
     margin-bottom: 5px;
     transition: all 200ms ease-in-out;
     color: var(--text);
+    backdrop-filter: invert(0.3);
 
     :hover {
       box-shadow: 0 5px 8px rgba(0, 0, 0, 0.3);

@@ -5,7 +5,7 @@ export const Wrapper = styled(motion.div)`
   width: 100%;
   min-height: 100vh;
   margin-bottom: 50px;
-  padding: 10px 60px;
+  padding: 10px clamp(20px, 3vw, 60px);
 `;
 
 export const Content = styled.div`
@@ -43,8 +43,10 @@ export const Content = styled.div`
     width: 100%;
     display: grid;
     grid-gap: 60px 40px;
-    place-items: center;
-    grid-template-columns: repeat(auto-fill, minmax(30%, 1fr));
+    grid-template-columns: repeat(
+      auto-fill,
+      minmax(clamp(280px, 30%, 300px), 1fr)
+    );
   }
   .service {
     font-family: var(--garamond);

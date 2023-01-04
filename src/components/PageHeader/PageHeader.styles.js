@@ -11,9 +11,10 @@ export const HeaderWrapper = styled.header`
   z-index: 1000;
   background: var(--translucent-white);
   backdrop-filter: blur(5px);
-  border-radius: 10px;
+  border-radius: 0 0 10px 10px;
 
   h1 {
+    padding-left: 2rem;
     color: var(--primary-color);
     flex: 1;
   }
@@ -167,6 +168,25 @@ export const HeaderWrapper = styled.header`
       box-shadow: -2px -2px var(--light-tint), 2px 2px var(--dark-tint);
       background: var(--primary-color);
       color: white;
+    }
+  }
+
+  @media screen and (max-width: 480px) {
+    #sign-out {
+      padding: 10px 0;
+      border: none;
+      transition: all 300ms ease-in-out;
+      cursor: pointer;
+
+      span {
+        display: none;
+      }
+
+      :hover {
+        box-shadow: none !important;
+        background: none !important;
+        color: none !important;
+      }
     }
   }
 `;

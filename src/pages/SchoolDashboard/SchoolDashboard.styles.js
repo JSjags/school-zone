@@ -4,6 +4,7 @@ export const Wrapper = styled.div`
   flex: 1;
   min-height: 100vh;
   background: var(--background);
+  margin-left: ${(props) => `${props.dynamicMarginLeft}px`};
   ${(props) =>
     props.isSuccess === false &&
     css`
@@ -17,7 +18,7 @@ export const Content = styled.div`
   display: flex;
   align-items: flex-start;
   gap: 10px;
-  padding: 10px 10px 10px 0;
+  padding: 10px;
   width: 100%;
 
   main {
@@ -42,11 +43,31 @@ export const Content = styled.div`
     .student-board {
       width: clamp(200px, calc(50% - 0.5rem), 1500px);
       min-height: 200px;
+      max-height: 431px;
       padding: 0.5rem 1rem;
       border: 1px solid var(--dark-mid-gray);
       border-radius: 10px;
       display: flex;
       flex-direction: column;
+      overflow: scroll;
+
+      ::-webkit-scrollbar {
+        width: 5px;
+        height: 5px;
+        background: transparent;
+      }
+      ::-webkit-scrollbar-track {
+        background: transparent;
+        border-radius: 0 0 10px 0;
+      }
+      ::-webkit-scrollbar-thumb {
+        border-radius: 10px;
+        height: 5px;
+        background: var(--secondary-color);
+      }
+      ::-webkit-scrollbar-corner {
+        appearance: none;
+      }
     }
     .task-board-cont {
       width: clamp(200px, calc(50% - 0.5rem), 1500px);
@@ -65,6 +86,7 @@ export const Content = styled.div`
       display: flex;
       flex-direction: column;
       justify-content: space-between;
+      max-height: 431px;
 
       .piechart-cont {
         display: flex;
@@ -81,7 +103,7 @@ export const Content = styled.div`
         width: clamp(270px, 60%, 480px);
       }
       .chart-details {
-        width: clamp(180px, 40%, 480px);
+        width: clamp(100px, 40%, 480px);
         height: 100%;
         backdrop-filter: invert(0.05);
         border-radius: 10px;
@@ -178,6 +200,25 @@ export const Content = styled.div`
       border-radius: 10px;
       display: flex;
       flex-direction: column;
+      overflow: overlay;
+
+      ::-webkit-scrollbar {
+        width: 5px;
+        height: 5px;
+        background: transparent;
+      }
+      ::-webkit-scrollbar-track {
+        background: transparent;
+        border-radius: 0 0 10px 0;
+      }
+      ::-webkit-scrollbar-thumb {
+        border-radius: 10px;
+        height: 5px;
+        background: var(--secondary-color);
+      }
+      ::-webkit-scrollbar-corner {
+        appearance: none;
+      }
     }
     .cont {
       display: flex;
@@ -185,8 +226,14 @@ export const Content = styled.div`
       justify-content: space-between;
       margin-top: 10px;
     }
+    .fin-cont {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-around;
+      margin-top: clamp(10px, 5vh, 20px);
+    }
     .statement {
-      width: clamp(200px, 30%, 1500px);
+      width: clamp(300px, 30%, 1500px);
     }
     .statements {
       justify-content: space-between;
@@ -243,6 +290,7 @@ export const Content = styled.div`
       width: clamp(200px, 100%, 1500px);
       display: flex;
       flex-wrap: wrap;
+      row-gap: 10px;
       justify-content: space-between;
     }
     .statements.students {
@@ -279,12 +327,12 @@ export const Content = styled.div`
     .students-column-box {
       display: flex;
       flex-direction: row;
-      justify-content: space-between;
+      justify-content: space-around;
       flex-wrap: wrap;
       width: 100%;
 
       .linechart {
-        width: clamp(200px, 60%, 1000px);
+        width: clamp(250px, 60%, 300px);
         padding: 10px;
         border-radius: 10px;
       }
@@ -361,7 +409,7 @@ export const Content = styled.div`
     }
     .recent-records {
       padding: 1vmax 0 2vmax;
-      width: clamp(200px, 30%, 1500px);
+      width: clamp(300px, 30%, 1500px);
       height: clamp(200px, 25vmax, 400px);
       backdrop-filter: invert(0.05);
       padding: 10px;
@@ -470,7 +518,7 @@ export const Content = styled.div`
       }
     }
     .pie-chart {
-      width: clamp(200px, 38%, 1500px);
+      width: clamp(300px, 38%, 1500px);
     }
     .more-btn {
       width: fit-content;
@@ -485,6 +533,7 @@ export const Content = styled.div`
       cursor: pointer;
       position: relative;
       transition: all 300ms ease;
+      white-space: nowrap;
 
       span {
         font-family: var(--garamond);
@@ -536,8 +585,9 @@ export const Content = styled.div`
       }
 
       .articles-slider {
-        display: grid;
-        grid-row-gap: 100%;
+        display: flex;
+        flex-direction: column;
+        row-gap: 100%;
         height: 100%;
 
         div {
@@ -565,6 +615,8 @@ export const Content = styled.div`
           }
         }
         .article-details {
+          display: flex;
+          flex-direction: column;
           width: 70%;
           padding: 5px 10px;
 
@@ -622,7 +674,9 @@ export const Content = styled.div`
         width: 100%;
         display: flex;
         align-items: center;
-        justify-content: space-between;
+        justify-content: flex-end;
+        gap: 10px;
+        flex-wrap: wrap;
 
         .more-btn:nth-child(1) {
           gap: 2px;
@@ -650,6 +704,15 @@ export const Content = styled.div`
         }
       }
     }
+
+    .recent-arts {
+      width: clamp(100px, 100%, 1000px);
+      border-left: 1px solid var(--dark-mid-gray);
+
+      h3 {
+        font-size: 0.8rem;
+      }
+    }
     .upcoming-schedules {
       width: clamp(200px, calc(50% - 0.5rem), 1500px);
       min-height: 200px;
@@ -670,8 +733,9 @@ export const Content = styled.div`
         margin: 1rem 0 0.5rem;
       }
       .schedules-slider {
-        display: grid;
-        grid-row-gap: 100px;
+        display: flex;
+        flex-direction: column;
+        row-gap: 100px;
         height: 100%;
 
         div {
@@ -699,7 +763,7 @@ export const Content = styled.div`
           white-space: nowrap;
           text-overflow: ellipsis;
 
-          p {
+          span:nth-child(1) {
             color: var(--primary-color);
             font-family: var(--garamond);
             font-weight: 500;
@@ -711,7 +775,7 @@ export const Content = styled.div`
             position: relative;
             transition: all 300ms ease;
           }
-          span {
+          span:nth-child(2) {
             color: var(--text);
             font-family: var(--hind);
             font-size: 0.9rem;
@@ -866,6 +930,96 @@ export const Content = styled.div`
         transform: translateY(-900%);
       }
     }
+
+    @media screen and (max-width: 425px) {
+      .statement {
+        width: clamp(200px, 100%, 1500px);
+      }
+      .pie-chart {
+        width: clamp(200px, 100%, 1500px);
+      }
+      .recent-records {
+        width: clamp(200px, 100%, 1500px);
+      }
+    }
+    @media screen and (max-width: 768px) {
+      .student-board {
+        width: clamp(200px, 100%, 1500px);
+      }
+      .task-board-cont {
+        width: clamp(200px, 100%, 1500px);
+      }
+      .recent-articles,
+      .upcoming-schedules {
+        width: clamp(100px, 100%, 1500px) !important;
+      }
+    }
+    @media screen and (max-width: 1100px) {
+      .linechart {
+        padding: 10px;
+        border-radius: 10px;
+      }
+
+      .statements.students {
+        width: 100%;
+
+        .val {
+          align-items: center;
+          width: 100%;
+
+          h3 {
+            font-size: 1rem;
+            text-align: center;
+          }
+          p {
+            text-align: center;
+          }
+        }
+      }
+      .recent {
+        width: 200px !important;
+        border-left: none !important;
+      }
+      .recent-records {
+        width: clamp(300px, 100%, 1500px);
+      }
+      .recent-arts {
+        border-left: none !important;
+      }
+      .students-column-box {
+        justify-content: center;
+      }
+      .cont {
+        width: clamp(200px, 100%, 670px) !important;
+        flex-wrap: nowrap;
+      }
+      .fin-cont {
+        justify-content: space-around;
+      }
+    }
+    @media screen and (max-width: 1440px) {
+      .task-board {
+        overflow: overlay;
+
+        ::-webkit-scrollbar {
+          width: 5px;
+          height: 5px;
+          background: transparent;
+        }
+        ::-webkit-scrollbar-track {
+          background: transparent;
+          border-radius: 0 0 10px 0;
+        }
+        ::-webkit-scrollbar-thumb {
+          border-radius: 10px;
+          height: 5px;
+          background: var(--secondary-color);
+        }
+        ::-webkit-scrollbar-corner {
+          appearance: none;
+        }
+      }
+    }
   }
 
   .no-data {
@@ -908,17 +1062,17 @@ export const TaskItem = styled.li`
 
   .task-title,
   .task-description {
+    display: block;
     color: var(--primary-color);
     font-family: var(--garamond);
-    padding: 5px;
     white-space: nowrap;
     font-size: 0.9rem;
   }
-  span {
+  span:nth-child(2) {
     display: block;
     color: var(--text);
     font-family: var(--hind);
-    padding: 5px;
+    padding: 0 5px;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;

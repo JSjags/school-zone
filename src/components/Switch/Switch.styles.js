@@ -1,11 +1,11 @@
 import styled, { css } from "styled-components";
 
 export const SwitchWrapper = styled.div`
-  width: 60px;
-  height: 30px;
+  width: 40px;
+  height: 20px;
   padding: 0 2px;
   border: 1px solid var(--dark-mid-gray);
-  border-radius: 35px;
+  border-radius: 25px;
   display: flex;
   ${({ isOn }) =>
     isOn
@@ -24,8 +24,8 @@ export const SwitchWrapper = styled.div`
   cursor: pointer;
 `;
 export const SwitchContent = styled.div`
-  width: 25px;
-  height: 25px;
+  width: 15px;
+  height: 15px;
   ${({ isOn }) =>
     isOn
       ? css`

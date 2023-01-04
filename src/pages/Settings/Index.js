@@ -166,7 +166,7 @@ const Settings = () => {
                 </div>
                 <div className="setting-content">
                   <div className="setting-title">
-                    <h3>Set SchoolZone Theme</h3>
+                    <h3>SchoolZone Theme</h3>
                     <Options
                       options={themeOptions.current}
                       value={settingsData.theme}
@@ -187,7 +187,7 @@ const Settings = () => {
                 </div>
                 <div className="setting-content">
                   <div className="setting-title">
-                    <h3>Set Paginated Results</h3>
+                    <h3>Paginated Results</h3>
                     <Number
                       value={settingsData.paginationResults}
                       setFormData={setSettingsData}

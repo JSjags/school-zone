@@ -1,20 +1,17 @@
+import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 
 import { Wrapper, Content } from "./Home.style";
 import HeroIcon from "./images/Hero.image";
 import TimeImage from "./images/Time.image";
-import ServerImage from "./images/Server.image";
-import VisualizeImage from "./images/Visualize.image";
-import ReliableImage from "./images/Reliable.image";
-import SecureImage from "./images/Secure.image";
 import Footer from "../../components/Footer/Index";
 import { FaDatabase, FaChartBar, FaTools } from "react-icons/fa";
 import { Link } from "react-router-dom";
-import { useEffect } from "react";
 import { motion } from "framer-motion";
 
 import featureImg1 from "../../assets/landingPage/feature-1.png";
+import featureImg2 from "../../assets/landingPage/feature-2.png";
 import featureImg3 from "../../assets/landingPage/feature-3.png";
 
 const Home = () => {
@@ -122,7 +119,7 @@ const Home = () => {
               <h1>Simplicity Made Simpler! </h1>
               <p>
                 Not good with spreadsheets or over-complicated data management
-                tools. Worry not, Schoolzone is designed to away all that
+                tools? Worry not, Schoolzone is designed to away all that
                 complexity and make your school's data easier to manage.
               </p>
             </div>
@@ -142,8 +139,8 @@ const Home = () => {
               </div>
               <img src={featureImg1} alt="manage" />
             </section>
-            {/* <section className="points-left">
-              <img src={featureImg1} alt="manage" />
+            <section className="points-left">
+              <img src={featureImg2} alt="manage" />
               <div className="points-box">
                 <h2>Intuitive Dashboard</h2>
                 <p>
@@ -152,9 +149,8 @@ const Home = () => {
                   represents your numbers.
                 </p>
               </div>
-            </section> */}
+            </section>
             <section className="points-right">
-              <img src={featureImg3} alt="manage" />
               <div className="points-box">
                 <h2>In-Built Applications</h2>
                 <p>
@@ -164,6 +160,7 @@ const Home = () => {
                   your tasks with the Kanban Board.
                 </p>
               </div>
+              <img src={featureImg3} alt="manage" />
             </section>
             <section className="cta-box">
               <div className="difficulty">

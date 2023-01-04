@@ -15,7 +15,7 @@ export const NumberWrapper = styled.input`
   outline-width: 3px;
   cursor: pointer;
   width: clamp(240px, 100%, 500px);
-  margin-top: 15px;
+  /* margin-top: 15px; */
   margin-right: 5px;
   margin-bottom: 5px;
   transition: all 200ms ease-in-out;

@@ -1,13 +1,20 @@
+import { useEffect, useState } from "react";
 import { Wrapper, Content } from "./Header.styles";
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 
 import SideBar from "../SideBar/Index";
 
 import logo from "../../school-zone-logos/school-zone-1-transparent-bg.png";
+import { IoClose } from "react-icons/io5";
+import { HiMenuAlt2 } from "react-icons/hi";
+import { setHomeMenu } from "../../features/config/configData";
 
-const Header = () => {
+const InitialHeader = () => {
+  const dispatch = useDispatch();
+  const { isHomeMenuOpen } = useSelector((state) => state.config);
+
   const headerVariants = {
     hidden: {
       y: "10vh",
@@ -53,18 +60,55 @@ const Header = () => {
     },
   };
 
-  const InitialHeader = () => {
-    return (
-      <Content
-        as={motion.div}
-        variants={headerVariants}
-        initial="hidden"
-        animate="visible"
-      >
-        <nav>
-          <Link to={"/"}>
-            <img src={logo} alt="logo" />
-          </Link>
+  const [hideNavLinks, setHideNavLinks] = useState(window.innerWidth < 768);
+
+  function handleMenu() {
+    dispatch(setHomeMenu());
+  }
+
+  useEffect(() => {
+    window.addEventListener("resize", () => {
+      window.innerWidth > 768 ? setHideNavLinks(false) : setHideNavLinks(true);
+    });
+    return () => {
+      window.removeEventListener("resize", () => {
+        window.innerWidth > 768
+          ? setHideNavLinks(false)
+          : setHideNavLinks(true);
+      });
+    };
+  }, []);
+
+  return (
+    <Content
+      as={motion.div}
+      variants={headerVariants}
+      initial="hidden"
+      animate="visible"
+    >
+      <nav>
+        <Link to={"/"}>
+          <img src={logo} alt="logo" />
+        </Link>
+        {hideNavLinks ? (
+          <div className="home-menu-btn">
+            {isHomeMenuOpen ? (
+              <div onClick={handleMenu}>
+                <IoClose
+                  style={{ color: "var(--primary-color)", fontSize: "1.4rem" }}
+                />
+                <span>Close Menu</span>
+              </div>
+            ) : (
+              <div onClick={handleMenu}>
+                <HiMenuAlt2
+                  style={{ color: "var(--primary-color)", fontSize: "1.4rem" }}
+                />
+                <span>Menu</span>
+              </div>
+            )}
+          </div>
+        ) : (
           <motion.ul variants={navVariants}>
             <motion.li variants={listVariants}>
               <Link to={"/"}>Home</Link>
@@ -82,7 +126,9 @@ const Header = () => {
               <Link to={"/about"}>About Us</Link>
             </motion.li>
           </motion.ul>
-        </nav>
+        )}
+      </nav>
+      {!hideNavLinks && (
         <div className="account">
           <Link to={"/signup"}>
             <button id="signup">Sign up</button>
@@ -91,22 +137,50 @@ const Header = () => {
             <button id="login">Log in</button>
           </Link>
         </div>
-      </Content>
-    );
-  };
+      )}
+    </Content>
+  );
+};
+
+const Header = () => {
+  const [sideBarPosition, setSideBarPosition] = useState(
+    window.innerWidth > 768 ? "relative" : "fixed"
+  );
 
   const { isLoggedIn } = useSelector((state) => state.schoolAuth);
   const { isError } = useSelector((state) => state.schoolData);
+  const { isDashboardMenuOpen } = useSelector((state) => state.config);
+
+  const getDashboardMenuWidth = () =>
+    isDashboardMenuOpen ? "clamp(200px, 20%, 300px)" : "0";
+
+  useEffect(() => {
+    window.addEventListener("resize", () => {
+      window.innerWidth > 768
+        ? setSideBarPosition("relative")
+        : setSideBarPosition("fixed");
+    });
+    return () => {
+      window.removeEventListener("resize", () => {
+        window.innerWidth > 768
+          ? setSideBarPosition("relative")
+          : setSideBarPosition("fixed");
+      });
+    };
+  }, []);
 
   return (
     <Wrapper
+      id="nav-bar"
       style={{
-        padding: `${isLoggedIn ? "0" : "0 50px"}`,
-        // flex: `${isLoggedIn ? "0.25" : "100%"}`,
-        // overflow: `${isLoggedIn && "hidden"}`,
-        width: `${isLoggedIn ? "20%" : "100%"}`,
-        position: `${isLoggedIn && "relative"}`,
-        background: `${isLoggedIn && "var(--background)"}`,
+        padding: `${isLoggedIn ? "0" : "0 clamp(10px, 3%, 50px)"}`,
+        width: `${isLoggedIn ? getDashboardMenuWidth() : "100%"}`,
+        position: `${isLoggedIn && sideBarPosition}`,
+        top: 0,
+        left: 0,
+        zIndex: 10000,
+        background: `${isLoggedIn ? "transparent" : "var(--white)"}`,
+        backdropFilter: `${isLoggedIn && "blur(0)"}`,
         display: `${isError && "none"}`,
       }}
     >

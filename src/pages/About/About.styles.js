@@ -3,7 +3,7 @@ import styled from "styled-components";
 export const Wrapper = styled.div`
   width: 100%;
   min-height: 100vh;
-  padding: 10px 60px;
+  padding: 10px clamp(20px, 3vw, 60px);
 `;
 export const Content = styled.div`
   font-family: var(--hind);
@@ -20,5 +20,10 @@ export const Content = styled.div`
   p {
     margin-top: 5vh;
     color: var(--text);
+  }
+
+  @media screen and (max-width: 768px) {
+    width: clamp(200px, 100%, 600px);
+    margin: 0 auto 5vh;
   }
 `;

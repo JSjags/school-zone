@@ -43,6 +43,7 @@ import noPosts from "../../assets/no-posts.svg";
 import noSchedule from "../../assets/no-kanban.svg";
 import noTasks from "../../assets/no-tasks.svg";
 
+import { useDynamicMarginLeft } from "../../hooks/useMarginLeft";
 import { getTheme } from "../../utils";
 
 const studentsLineChartlabels = function () {
@@ -175,19 +176,19 @@ function UpcomingSchedulesSlider({ schedules }) {
         >
           <div className="schedule-details">
             <p className="timestamp">
-              <p>Estimated Time To Schedule: </p>
+              <span>Estimated Time To Schedule: </span>
               <span>{moment(schedule["startDate"]).fromNow(true)}</span>
             </p>
             <p>
-              <p>Subject: </p>
+              <span>Subject: </span>
               <span>{schedule["text"]}</span>
             </p>
             <p className="summary">
-              <p>Description: </p>
+              <span>Description: </span>
               <span>{schedule["description"]}</span>
             </p>
             <p className="summary">
-              <p>Time: </p>
+              <span>Time: </span>
               <span>
                 {moment(schedule["startDate"]).format("LT")}
                 {" - "}
@@ -503,6 +504,8 @@ const SchoolDashboard = () => {
     return tasksData;
   }
 
+  const { dynamicMarginLeft } = useDynamicMarginLeft();
+
   useEffect(() => {
     if (message !== null && message.includes("jwt expired")) {
       localStorage.removeItem("schoolCredentials");
@@ -535,7 +538,10 @@ const SchoolDashboard = () => {
   };
 
   return (
-    <Wrapper isSuccess={isSuccess ? true : false}>
+    <Wrapper
+      isSuccess={isSuccess ? true : false}
+      dynamicMarginLeft={dynamicMarginLeft}
+    >
       {isLoading && (
         <LoadingContainer>
           <Spinner />
@@ -577,7 +583,9 @@ const SchoolDashboard = () => {
                     <div className="recent">
                       <h3>Latest Admissions</h3>
                       <div className="passport-cont">
-                        <RecentAdmissionsSlider students={[...students]} />
+                        <RecentAdmissionsSlider
+                          students={students ? [...students] : []}
+                        />
                       </div>
                     </div>
                   </div>
@@ -598,7 +606,7 @@ const SchoolDashboard = () => {
                 className="task-board-cont"
               >
                 <div className="task-board">
-                  <h2>Tasks</h2>
+                  <h2 className="tasks-board-header">Tasks</h2>
 
                   {tasks && tasks.length ? (
                     <div className="piechart-cont">
@@ -635,8 +643,11 @@ const SchoolDashboard = () => {
                                     "rgba(0, 255, 0, 0.7)",
                                   ],
                                   hoverBorderColor: [
-                                    "#00d600",
                                     "rgba(255, 0, 0, 1)",
+                                    "#f46e16",
+                                    "rgb(171,89,253)",
+                                    "#ffff00",
+                                    "#00d600",
                                   ],
                                 },
                               ],
@@ -697,13 +708,13 @@ const SchoolDashboard = () => {
                                   key={index}
                                 >
                                   <p className="subject">
-                                    <p className="task-title">Title: </p>
+                                    <span className="task-title">Title:</span>
                                     <span>{task.subject}</span>
                                   </p>
                                   <p className="description">
-                                    <p className="task-description">
-                                      Description:{" "}
-                                    </p>
+                                    <span className="task-description">
+                                      Description:
+                                    </span>
                                     <span>{task.description}</span>
                                   </p>
                                 </TaskItem>
@@ -736,7 +747,7 @@ const SchoolDashboard = () => {
             <div className="finance-cont">
               <div className="finance-board">
                 <h2>Finance</h2>
-                <div className="cont">
+                <div className="fin-cont">
                   <div className="statement">
                     <div className="statements">
                       <div className="rev">
@@ -960,7 +971,7 @@ const SchoolDashboard = () => {
                           .filter((item, i) => i < 10)
                           .map((item, i) =>
                             item.statementType.trim() === "Revenue" ? (
-                              <div className="financial_item revenue">
+                              <div className="financial_item revenue" key={i}>
                                 <div className="financial_item-header">
                                   <p className="value">
                                     + $
@@ -975,7 +986,7 @@ const SchoolDashboard = () => {
                                 </div>
                               </div>
                             ) : (
-                              <div className="financial_item expense">
+                              <div className="financial_item expense" key={i}>
                                 <div className="financial_item-header">
                                   <p className="value">
                                     - $
@@ -1010,7 +1021,7 @@ const SchoolDashboard = () => {
               <div className="recent-articles">
                 <h2>Recent Articles</h2>
                 {orderedArticles && orderedArticles.length ? (
-                  <div className="recent">
+                  <div className="recent-arts">
                     <div className="articles-cont">
                       <RecentArticlesSlider articles={[...orderedArticles]} />
                     </div>
@@ -1051,7 +1062,7 @@ const SchoolDashboard = () => {
 
                     <Link
                       className="more-btn"
-                      to={"/schooldashboard/schedular"}
+                      to={"/schooldashboard/scheduler"}
                     >
                       <span>Go to Scheduler</span>
                       <BsArrowRight />
@@ -1063,7 +1074,7 @@ const SchoolDashboard = () => {
                     <p>No upcoming schedules found.</p>
                     <Link
                       className="more-btn"
-                      to={"/schooldashboard/schedular"}
+                      to={"/schooldashboard/scheduler"}
                     >
                       <span>Go to Schedular</span>
                       <BsArrowRight />

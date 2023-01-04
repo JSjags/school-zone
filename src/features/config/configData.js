@@ -7,6 +7,8 @@ const initialState = {
   studentImageUrl: null,
   staffImageUrl: null,
   financeStatementId: null,
+  isDashboardMenuOpen: window.innerWidth > 768,
+  isHomeMenuOpen: window.innerWidth > 768,
 };
 
 export const configSlice = createSlice({
@@ -41,6 +43,12 @@ export const configSlice = createSlice({
     setSchoolSettings: (state, action) => {
       state.settings = action.payload;
     },
+    setDashboardMenu: (state, action) => {
+      state.isDashboardMenuOpen = !state.isDashboardMenuOpen;
+    },
+    setHomeMenu: (state, action) => {
+      state.isHomeMenuOpen = !state.isHomeMenuOpen;
+    },
   },
 });
 
@@ -52,6 +60,8 @@ export const {
   setStudentImgUrl,
   setStaffImgUrl,
   setFinanceStatementId,
+  setDashboardMenu,
+  setHomeMenu,
 } = configSlice.actions;
 
 export default configSlice.reducer;

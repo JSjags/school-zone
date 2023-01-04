@@ -35,6 +35,7 @@ export const SearchBarContent = styled.div`
     outline: none;
     background: var(--background);
     color: var(--text);
+    width: clamp(100px, 30%, 300px);
 
     :focus + .underline {
       height: 2px;

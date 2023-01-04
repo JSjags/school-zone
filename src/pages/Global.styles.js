@@ -1,4 +1,5 @@
-import { createGlobalStyle } from "styled-components";
+import { createGlobalStyle, css } from "styled-components";
+import schoolZoneBg from "../images/footer-bg.png";
 
 export const lightTheme = {
   body: "#FFF",
@@ -119,6 +120,32 @@ export const GlobalStyles = createGlobalStyle`
         --sidebar-heading-color: ${({ theme }) => theme.sideBarHeadingColor};
         --filter: ${({ theme }) => theme.filter};
 
+    }
+    #root {
+      background-image: ${({ isLoggedIn }) =>
+        isLoggedIn &&
+        css`
+    url(${schoolZoneBg});
+      background-size: 240px;
+      background-repeat: repeat;
+      background-attachment: fixed;
+      position: relative;
+
+      ::after {
+        content: "";
+        width: 100%;
+        height: 100%;
+        position: absolute;
+        top: 0;
+        left: 0;
+        display: block;
+        background: linear-gradient(
+              to bottom,
+              var(--transparent-primary-color),
+              var(--transparent-secondary-color)
+            );
+      }
+      `}
     }
     * {
         margin: 0;

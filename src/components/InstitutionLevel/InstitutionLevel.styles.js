@@ -8,8 +8,7 @@ export const Wrapper = styled.div`
   outline-color: var(--primary-color);
   outline-offset: 2px;
   outline-width: 3px;
-  min-width: 300px;
-  width: 500px;
+  width: clamp(200px, 100%, 800px);
   height: 40px;
   position: relative;
   margin-bottom: 20px;

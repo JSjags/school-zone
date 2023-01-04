@@ -51,7 +51,7 @@ export const Content = styled.div`
   display: flex;
   align-items: flex-start;
   gap: 10px;
-  padding: 10px 10px 10px 0;
+  padding: 10px;
   width: 100%;
 
   main {
@@ -301,6 +301,11 @@ export const Content = styled.div`
     }
 
     @media screen and (max-width: 768px) {
+      .action-buttons-box {
+        flex-direction: column;
+        align-items: flex-end;
+        row-gap: 20px;
+      }
       .article-banner-cont {
         position: absolute;
         top: 0;
@@ -517,7 +522,7 @@ export const Content = styled.div`
   .page-controls_number {
     color: var(--primary-color);
     font-family: var(--garamond);
-    font-size: clamp(1.2rem, 1vw, 1.3rem);
+    font-size: clamp(1rem, 1vw, 1.3rem);
     display: inline-flex;
     padding: 5px 10px;
     border-radius: 5px;
@@ -567,6 +572,13 @@ export const Content = styled.div`
     span {
       font-weight: bolder;
       font-size: 1.2rem;
+    }
+  }
+  @media screen and (max-width: 768px) {
+    .action-buttons-box {
+      flex-direction: column;
+      align-items: flex-end;
+      row-gap: 20px;
     }
   }
 `;

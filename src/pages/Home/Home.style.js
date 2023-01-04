@@ -42,15 +42,16 @@ export const Content = styled.div`
 
   .hero {
     width: 100%;
-    padding: 10px 50px 10px 60px;
+    padding: 10px clamp(20px, 3%, 60px) 10px clamp(20px, 3%, 60px);
     min-height: 80vh;
     display: flex;
     align-items: center;
     justify-content: space-between;
+    flex-wrap: wrap-reverse;
   }
 
   .hero-text {
-    width: 50%;
+    width: clamp(300px, 50%, 800px);
 
     .hero-text-header {
       font-family: var(--garamond);
@@ -62,19 +63,21 @@ export const Content = styled.div`
       font-family: var(--hind);
       color: var(--text);
     }
+    a {
+      text-decoration: none;
+    }
     button {
       font-size: 1rem;
       border: none;
       font-family: var(--hind);
       font-size: 1rem;
-      margin-top: 30px;
+      margin: 30px auto 0;
       padding: 10px 20px;
-      color: var(--text);
+      color: var(--white);
       border-radius: 20px;
       transition: all 300ms ease-in-out;
       background: var(--primary-color);
-
-      :hover {
+      displblock :hover {
         box-shadow: -2px -2px var(--light-tint), 2px 2px var(--dark-tint);
         background: var(--primary-color);
         color: white;
@@ -83,7 +86,7 @@ export const Content = styled.div`
   }
 
   .section-header {
-    width: clamp(240px, 100%, 500px);
+    width: clamp(240px, 100%, 1440px);
     margin: 10vh auto 0;
 
     h1,
@@ -92,7 +95,8 @@ export const Content = styled.div`
       text-shadow: -1px -1px var(--light-tint), 1px 1px var(--dark-tint);
     }
     p {
-      margin-top: 5vh;
+      width: clamp(240px, 100%, 500px);
+      margin: 5vh auto 0;
       font-family: var(--hind);
       text-align: center;
       color: var(--text);
@@ -103,7 +107,7 @@ export const Content = styled.div`
     width: clamp(240px, 80%, 2560px);
     margin: 10vh auto 0;
     display: flex;
-    justify-content: space-between;
+    justify-content: space-around;
     align-items: flex-start;
     flex-wrap: wrap;
     row-gap: 10vh;
@@ -157,11 +161,12 @@ export const Content = styled.div`
     align-items: center;
     justify-content: center;
     column-gap: 3vh;
-    flex-wrap: wrap;
+    flex-wrap: wrap-reverse;
     background-color: #f46e16;
     opacity: 1;
     background: var(--translucent-white);
     overflow: hidden;
+    backdrop-filter: invert(0.3);
 
     ::before {
       content: "";
@@ -209,7 +214,7 @@ export const Content = styled.div`
       }
     }
     svg {
-      width: 20%;
+      width: clamp(100px, 20%, 300px);
       margin: 0;
     }
   }
@@ -218,7 +223,7 @@ export const Content = styled.div`
     margin: 10vh auto 0;
   }
   svg {
-    width: 40%;
+    width: clamp(200px, 40%, 600px);
     margin: auto;
   }
   img {
@@ -239,7 +244,7 @@ export const Content = styled.div`
         var(--transparent-secondary-color)
       ),
       url(/user-mockup.png);
-    background-size: 100%;
+    background-size: cover;
     background-repeat: no-repeat;
     background-position: right center;
 
@@ -271,7 +276,7 @@ export const Content = styled.div`
           font-family: var(--hind);
           margin-top: 20px;
           text-align: center;
-          color: var(--text);
+          color: var(--white);
         }
         a {
           display: block;
@@ -280,7 +285,7 @@ export const Content = styled.div`
           font-size: 1rem;
           margin: 30px auto 0;
           padding: 10px 20px;
-          color: var(--text);
+          color: var(--white);
           border-radius: 20px;
           transition: all 300ms ease-in-out;
           background: var(--primary-color);
@@ -731,4 +736,59 @@ export const Content = styled.div`
   }
 
   /////////////////////////////////Mid banner blob animations ends here////////////////////////////////////////////////
+
+  @media screen and (max-width: 540px) {
+    .hero-text-header {
+      text-align: center;
+    }
+    .hero-text-desc {
+      text-align: center;
+    }
+    button {
+      margin: 30px auto 0;
+      display: block;
+    }
+    .difficulty {
+      margin: 0 auto;
+    }
+    .difficulty-detail {
+      width: clamp(240px, 50%, 720px);
+
+      h1 {
+        text-align: center;
+      }
+
+      p {
+        text-align: center;
+      }
+    }
+  }
+  @media screen and (max-width: 768px) {
+    .section-header {
+      padding: 5vh 0;
+      backdrop-filter: invert(0.1);
+    }
+    .home-content {
+      .points-right {
+        flex-wrap: wrap;
+      }
+      .points-left {
+        flex-wrap: wrap-reverse;
+      }
+      .points-box {
+        width: 80%;
+        text-align: center;
+        margin: 0 auto;
+      }
+
+      img {
+        display: block;
+        width: 100%;
+        margin: auto;
+      }
+    }
+    .cta-box .difficulty {
+      backdrop-filter: invert(0);
+    }
+  }
 `;

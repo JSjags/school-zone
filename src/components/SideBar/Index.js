@@ -1,14 +1,15 @@
 import React, { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 
 import { Content } from "./SideBar.styles";
 import { FaIdCardAlt, FaRegMoneyBillAlt } from "react-icons/fa";
 import { RiProfileFill } from "react-icons/ri";
-import { HiOutlineNewspaper } from "react-icons/hi";
-import { IoCreateOutline } from "react-icons/io5";
+import { HiMenuAlt2, HiOutlineNewspaper } from "react-icons/hi";
+import { IoClose, IoCreateOutline } from "react-icons/io5";
 import { BsFillCalendarWeekFill, BsKanban } from "react-icons/bs";
 import { MdSettings, MdSpaceDashboard, MdPeopleAlt } from "react-icons/md";
+import { setDashboardMenu } from "../../features/config/configData";
 
 import { Link } from "react-router-dom";
 
@@ -20,9 +21,11 @@ export const defaultAvatarUrl =
 
 const SideBar = () => {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   const { data } = useSelector((state) => state.schoolData);
   const currentPage = useSelector((state) => state.config.currentPage);
+  const { isDashboardMenuOpen } = useSelector((state) => state.config);
 
   const handleNavClick = (e) => {
     const children = [...e.currentTarget.parentElement.children];
@@ -30,15 +33,23 @@ const SideBar = () => {
     e.currentTarget.classList.add("current");
   };
 
+  const handleDashboardMenu = () => {
+    dispatch(setDashboardMenu());
+  };
+
   useEffect(() => {}, [currentPage]);
 
   return (
     <Content>
+      <div className="menu-btn" onClick={handleDashboardMenu}>
+        {isDashboardMenuOpen ? (
+          <IoClose style={{ color: "white", fontSize: "1.4rem" }} />
+        ) : (
+          <HiMenuAlt2 style={{ color: "white", fontSize: "1.4rem" }} />
+        )}
+      </div>
       <aside>
-        <div
-          className="aside-header"
-          onClick={() => navigate("/schooldashboard/profile")}
-        >
+        <div className="aside-header">
           <div className="aside-bg-cont">
             <img
               className="aside-bg"
@@ -49,7 +60,13 @@ const SideBar = () => {
             />
           </div>
           <div className="profile-name-cont">
-            <div className="profile-name">
+            <div
+              className="profile-name"
+              onClick={() => {
+                navigate("/schooldashboard/profile");
+                dispatch(setDashboardMenu());
+              }}
+            >
               <img
                 className="avatar-logo"
                 alt="avatar"
@@ -72,7 +89,7 @@ const SideBar = () => {
               className={currentPage === "schooldashboard" ? "current" : ""}
               onClick={handleNavClick}
             >
-              <li>
+              <li id="nav-link">
                 <MdSpaceDashboard style={{ fontSize: "1.5rem" }} />
                 <span>Dashboard</span>
               </li>
@@ -82,7 +99,7 @@ const SideBar = () => {
               onClick={handleNavClick}
               className={currentPage === "students" ? "current" : ""}
             >
-              <li>
+              <li id="nav-link">
                 <MdPeopleAlt style={{ fontSize: "1.5rem" }} />
                 <span>Students</span>
               </li>
@@ -92,7 +109,7 @@ const SideBar = () => {
               onClick={handleNavClick}
               className={currentPage === "staffs" ? "current" : ""}
             >
-              <li>
+              <li id="nav-link">
                 <FaIdCardAlt style={{ fontSize: "1.5rem" }} />
                 <span>Staff</span>
               </li>
@@ -102,7 +119,7 @@ const SideBar = () => {
               onClick={handleNavClick}
               className={currentPage === "finance" ? "current" : ""}
             >
-              <li>
+              <li id="nav-link">
                 <FaRegMoneyBillAlt style={{ fontSize: "1.5rem" }} />
                 <span>Finance</span>
               </li>
@@ -112,29 +129,9 @@ const SideBar = () => {
               onClick={handleNavClick}
               className={currentPage === "posts" ? "current" : ""}
             >
-              <li>
+              <li id="nav-link">
                 <HiOutlineNewspaper style={{ fontSize: "1.6rem" }} />
                 <span>Articles</span>
-              </li>
-            </Link>
-            <Link
-              to={"/schooldashboard/profile"}
-              onClick={handleNavClick}
-              className={currentPage === "profile" ? "current" : ""}
-            >
-              <li>
-                <RiProfileFill style={{ fontSize: "1.5rem" }} />
-                <span>Profile</span>
-              </li>
-            </Link>
-            <Link
-              to={"/schooldashboard/settings"}
-              onClick={handleNavClick}
-              className={currentPage === "settings" ? "current" : ""}
-            >
-              <li>
-                <MdSettings style={{ fontSize: "1.5rem" }} />
-                <span>Settings</span>
               </li>
             </Link>
 
@@ -146,7 +143,7 @@ const SideBar = () => {
               className={currentPage === "scheduler" ? "current" : ""}
               onClick={handleNavClick}
             >
-              <li>
+              <li id="nav-link">
                 <BsFillCalendarWeekFill style={{ fontSize: "1.5rem" }} />
                 <span>Scheduler</span>
               </li>
@@ -156,7 +153,7 @@ const SideBar = () => {
               className={currentPage === "editor" ? "current" : ""}
               onClick={handleNavClick}
             >
-              <li>
+              <li id="nav-link">
                 <IoCreateOutline style={{ fontSize: "1.7rem" }} />
                 <span>Editor</span>
               </li>
@@ -166,9 +163,33 @@ const SideBar = () => {
               className={currentPage === "kanban" ? "current" : ""}
               onClick={handleNavClick}
             >
-              <li>
+              <li id="nav-link">
                 <BsKanban style={{ fontSize: "1.5rem" }} />
                 <span>Kanban</span>
+              </li>
+            </Link>
+
+            {/* Account header */}
+            <li className="section-heading">ACCOUNT</li>
+
+            <Link
+              to={"/schooldashboard/profile"}
+              onClick={handleNavClick}
+              className={currentPage === "profile" ? "current" : ""}
+            >
+              <li id="nav-link">
+                <RiProfileFill style={{ fontSize: "1.5rem" }} />
+                <span>Profile</span>
+              </li>
+            </Link>
+            <Link
+              to={"/schooldashboard/settings"}
+              onClick={handleNavClick}
+              className={currentPage === "settings" ? "current" : ""}
+            >
+              <li id="nav-link">
+                <MdSettings style={{ fontSize: "1.5rem" }} />
+                <span>Settings</span>
               </li>
             </Link>
           </ul>

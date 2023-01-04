@@ -9,6 +9,7 @@ export const EditProfileWrapper = styled.div`
   justify-content: center;
 `;
 export const EditProfileContent = styled.div`
+  width: clamp(200px, 90%, 800px);
   display: flex;
   flex-direction: column;
   gap: 10px;
@@ -115,10 +116,11 @@ export const EditProfileContent = styled.div`
 `;
 
 export const ChangeAvatarWrapper = styled.div`
-  width: 100%;
+  width: clamp(200px, 90%, 800px);
   display: flex;
   align-items: center;
   justify-content: center;
+  margin: 0 auto;
 `;
 export const ChangeAvatarContent = styled.div`
   display: flex;
@@ -240,8 +242,8 @@ export const ChangeAvatarContent = styled.div`
       position: relative;
     }
     .cover-photo-cont {
-      width: 320px;
-      height: 180px;
+      width: clamp(180px, 90%, 320px);
+      height: clamp(100px, 30vmin, 180px);
       box-shadow: 0 5px 12px var(--dark-gray);
       border-radius: 10px;
       overflow: hidden;
@@ -277,7 +279,7 @@ export const ChangeAvatarContent = styled.div`
   }
   .avatar-file-name {
     text-align: left;
-    color: var(--dark-gray);
+    color: var(--text);
     font-size: 0.8em;
     width: 100%;
   }
@@ -357,10 +359,11 @@ export const ChangeAvatarContent = styled.div`
 `;
 
 export const ChangePasswordWrapper = styled.div`
-  width: 100%;
+  width: clamp(200px, 90%, 800px);
   display: flex;
   align-items: center;
   justify-content: center;
+  margin: 0 auto;
 `;
 export const ChangePasswordContent = styled.div`
   display: flex;
@@ -370,6 +373,7 @@ export const ChangePasswordContent = styled.div`
   background: var(--background);
   padding: 20px;
   border-radius: 10px;
+  width: 100%;
 
   h2 {
     position: relative;
@@ -710,7 +714,7 @@ export const CreateTemplateContent = styled.div`
   padding: 20px;
   border-radius: 10px;
   margin: 10px;
-  width: 80vw;
+  width: clamp(200px, 90vw, 800px);
 
   h2 {
     position: relative;
@@ -740,7 +744,7 @@ export const CreateTemplateContent = styled.div`
   .add-template-field-cont {
     display: grid;
     height: fit-content;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
     grid-template-rows: max-content;
     gap: 40px;
 
@@ -1159,7 +1163,7 @@ export const StudentRegistrationContent = styled.div`
 
   .reg-form {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
     justify-content: space-between;
     grid-auto-flow: dense;
     direction: rtl;
@@ -1174,7 +1178,7 @@ export const StudentRegistrationContent = styled.div`
     }
 
     label {
-      font-size: clamp(1.2rem, 2vw, 1.4rem);
+      font-size: clamp(1rem, 2vw, 1.4rem);
       font-weight: 500;
     }
     .field-container {
@@ -1198,7 +1202,7 @@ export const StudentRegistrationContent = styled.div`
 
       .passport {
         width: 90%;
-        min-height: 300px;
+        min-height: 200px;
         border-radius: 0 0 10px 10px;
         position: relative;
         z-index: 10;
@@ -1238,8 +1242,8 @@ export const StudentRegistrationContent = styled.div`
     }
   }
   #video {
-    width: 100%;
-    height: 100%;
+    width: clamp(180px, 100%, 500%);
+    height: clamp(180px, 100%, 500%);
     object-fit: cover;
     position: absolute;
     top: 0;
@@ -1247,8 +1251,8 @@ export const StudentRegistrationContent = styled.div`
     z-index: 10;
   }
   #canvas {
-    width: 100%;
-    height: 100%;
+    width: clamp(180px, 100%, 500%);
+    height: clamp(180px, 100%, 500%);
     ${(props) =>
       props.image === null
         ? css`
@@ -1418,7 +1422,7 @@ export const RecordFinanceContent = styled.div`
 
   .reg-form {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
     justify-content: space-between;
     grid-auto-flow: dense;
     direction: rtl;
@@ -1563,11 +1567,12 @@ export const StudentProfileWrapper = styled.div`
   justify-content: center;
 `;
 export const StudentProfileContent = styled.div`
-  width: clamp(200px, 40%, 600px);
+  width: clamp(200px, 100%, 600px);
   border-radius: 10px;
   background: var(--background);
   padding: 10px 10px 80px;
   position: relative;
+  margin: 0 10px;
 
   h2 {
     font-size: clamp(1.5rem, 2vw, 2.5rem);
@@ -1644,11 +1649,12 @@ export const StaffProfileWrapper = styled.div`
   justify-content: center;
 `;
 export const StaffProfileContent = styled.div`
-  width: clamp(200px, 40%, 600px);
+  width: clamp(200px, 100%, 600px);
   border-radius: 10px;
   background: var(--background);
   padding: 10px 10px 80px;
   position: relative;
+  margin: 0 10px;
 
   h2 {
     font-size: clamp(1.5rem, 2vw, 2.5rem);
@@ -1726,7 +1732,7 @@ export const DeleteModalWrapper = styled.div`
   overflow: scroll;
 `;
 export const DeleteModalContent = styled.div`
-  width: clamp(240px, 90%, 500px);
+  width: clamp(200px, 90%, 500px);
   max-height: 400px;
   background: var(--background);
   border-radius: 10px;
@@ -1824,7 +1830,7 @@ export const CreateSlugWrapper = styled.div`
   justify-content: center;
 `;
 export const CreateSlugContent = styled.div`
-  width: clamp(240px, calc(100% - 10px), 500px);
+  width: clamp(200px, calc(100% - 10px), 500px);
   height: fit-content;
   background: var(--background);
   border-radius: 10px;
@@ -1907,6 +1913,7 @@ export const CreateSlugContent = styled.div`
     border-radius: 5px;
   }
 `;
+
 export const MessagesWrapper = styled.div`
   width: 100%;
   min-height: 80vh;
@@ -1942,7 +1949,7 @@ export const MessagesWrapper = styled.div`
   }
 `;
 export const MessagesContent = styled.div`
-  width: clamp(240px, calc(100% - 10px), 500px);
+  width: clamp(200px, calc(100% - 10px), 500px);
   background: var(--background);
   border-radius: 10px;
   box-shadow: 0 3px 10px var(--dark-gray);

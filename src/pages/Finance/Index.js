@@ -259,7 +259,7 @@ const Finance = () => {
         <Content>
           <main>
             <PageHeader title="Finance" />
-            {finance === undefined && (
+            {(finance === undefined || finance.length < 1) && (
               <div className="create-finance">
                 <img alt="add-student" src={noFinanceSvg}></img>
                 <p>No financial data found.</p>
@@ -275,7 +275,7 @@ const Finance = () => {
                 </div>
               </div>
             )}
-            {!isLoading && finance && finance.length && (
+            {!isLoading && finance && finance.length > 0 && (
               <>
                 <div className="available-finance">
                   <Button callback={handleNewFinanceRecord}>

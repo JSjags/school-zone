@@ -5,13 +5,12 @@ export const Wrapper = styled.div`
   border: none;
   border-radius: 5px;
   caret-color: var(--primary-color);
-  min-width: 300px;
-  width: 500px;
+  width: clamp(200px, 100%, 800px); ;
 `;
 
 export const Content = styled.div`
   font-size: 1rem;
-  gap: 20px;
+  gap: clamp(10px, 3vw, 20px);
   display: flex;
   position: relative;
   z-index: 10;
@@ -21,14 +20,14 @@ export const Content = styled.div`
     align-items: center;
     height: 40px;
     gap: 5px;
-    flex: 25%;
     border-radius: 5px;
-    /* backdrop-filter: invert(0.3); */
+    backdrop-filter: invert(0.3);
     padding: 0 8px 0 10px;
     position: relative;
     background: var(--translucent-white);
     cursor: pointer;
     color: var(--text);
+    width: clamp(150px, 25%, 150px);
 
     :hover {
       box-shadow: 0 5px 8px rgba(0, 0, 0, 0.3);
@@ -41,13 +40,12 @@ export const Content = styled.div`
     #country-code {
       width: 60%;
       margin-bottom: 0;
-      padding: 0;
+      padding: 0 0 0 10px;
       cursor: pointer;
       outline: none;
-      background: transparent;
-      /* backdrop-filter: invert(0.5); */
+      background: inherit;
       color: var(--text);
-      border: 1px solid transparent;
+      border: none;
 
       :hover {
         box-shadow: none;
@@ -55,7 +53,7 @@ export const Content = styled.div`
     }
   }
   .input-box {
-    width: 75%;
+    width: clamp(100px, 80%, 650px);
 
     #phone {
       width: 100%;
@@ -77,13 +75,12 @@ export const Content = styled.div`
     bottom: -210px;
     z-index: 100000;
     left: 0;
-    width: fit-content;
+    width: clamp(200px, 100%, 500px);
     height: 200px;
     border-radius: 5px;
-    overflow-y: scroll;
     background-color: var(--background);
     box-shadow: 0 7px 10px rgba(0, 0, 0, 0.4);
-    overflow-y: overlay;
+    overflow-y: scroll;
 
     ::-webkit-scrollbar {
       width: 6px;
@@ -96,6 +93,9 @@ export const Content = styled.div`
     ::-webkit-scrollbar-thumb {
       border-radius: 5px;
       background: var(--secondary-color);
+    }
+    ::-webkit-scrollbar-corner {
+      border-radius: 5px;
     }
 
     .country-flag {
@@ -119,8 +119,10 @@ export const Content = styled.div`
 
       :hover {
         background-color: var(--primary-color);
-        color: white;
         cursor: pointer;
+      }
+      :hover p {
+        color: white;
       }
     }
   }

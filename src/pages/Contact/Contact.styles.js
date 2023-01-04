@@ -3,7 +3,7 @@ import styled from "styled-components";
 export const Wrapper = styled.div`
   width: 100%;
   min-height: 100vh;
-  padding: 10px 60px;
+  padding: 10px clamp(10px, 3vw, 60px);
 `;
 export const Content = styled.div`
   font-family: var(--hind);
@@ -267,6 +267,8 @@ export const Content = styled.div`
       caret-color: var(--primary-color);
       font-size: 1.1em;
       width: 100%;
+      color: var(--text);
+      backdrop-filter: brightness(0.8);
 
       :focus {
         background: var(--background);
@@ -284,7 +286,8 @@ export const Content = styled.div`
       outline-offset: 2px;
       caret-color: var(--primary-color);
       font-size: 1.1em;
-      color: var(--deep-gray);
+      color: var(--text);
+      backdrop-filter: brightness(0.8);
 
       :focus {
         background: var(--background);
@@ -298,12 +301,12 @@ export const Content = styled.div`
       display: block;
       margin-top: 20px;
       margin-bottom: 50px;
-      font-family: var(--garamond);
+      font-family: var(--hind);
       border: none;
       padding: 10px 20px;
       font-size: 1.1em;
       background: var(--primary-color);
-      color: var(--text);
+      color: var(--white);
       border-radius: 10px;
       cursor: pointer;
       outline-color: var(--primary-color);
@@ -353,7 +356,7 @@ export const Content = styled.div`
     a {
       font-size: 1.1em;
       text-decoration: none;
-      color: var(--text);
+      color: var(--white);
       display: flex;
       justify-content: center;
       flex-direction: column;
@@ -381,5 +384,27 @@ export const Content = styled.div`
     font-family: var(--hind);
     color: var(--text);
     margin-top: 10px;
+  }
+  @media screen and (max-width: 720px) {
+    h1,
+    h2,
+    h3 {
+      width: clamp(200px, 80%, 800px);
+      text-align: center;
+      margin: 5vh auto;
+    }
+    .form-container {
+      width: clamp(200px, 100%, 800px);
+      flex-wrap: wrap-reverse;
+
+      svg {
+        flex: none;
+        width: clamp(200px, 100%, 800px);
+      }
+    }
+    form {
+      width: 100%;
+      flex: none;
+    }
   }
 `;

@@ -15,7 +15,7 @@ export const Wrapper = styled.div`
 `;
 
 export const Content = styled.div`
-  max-width: 400px;
+  width: clamp(200px, 90vw, 400px);
   padding: 40px 20px;
   background: var(--background);
   border-radius: 20px;
@@ -57,8 +57,7 @@ export const Content = styled.div`
     outline-color: var(--primary-color);
     outline-offset: 2px;
     outline-width: 3px;
-    min-width: 300px;
-    width: 300px;
+    width: clamp(200px, 100%, 400px);
     background: var(--translucent-white);
     backdrop-filter: invert(0.3);
     color: var(--text);
@@ -92,7 +91,7 @@ export const Content = styled.div`
   }
 
   .error-message {
-    width: 300px;
+    width: clamp(100px, 100%, 300px);
     padding: 5px;
     border: 2px solid red;
     border-radius: 5px;

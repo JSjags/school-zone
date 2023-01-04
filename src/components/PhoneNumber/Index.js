@@ -4,6 +4,7 @@ import { Wrapper, Content } from "./PhoneNumber.styles";
 import { FaChevronLeft } from "react-icons/fa";
 import { BiErrorCircle } from "react-icons/bi";
 import { AnimatePresence, motion } from "framer-motion";
+import { useCallback } from "react";
 
 function PhoneNumber({
   country,
@@ -53,6 +54,15 @@ function PhoneNumber({
     },
   };
 
+  const getDefaultCountry = useCallback(() => {
+    const countryFilter = data.filter(
+      (country) =>
+        country.name.toLowerCase() === countryCode.toLowerCase() ||
+        country.code.toLowerCase() === countryCode.toLowerCase()
+    );
+    return countryFilter[0].code;
+  }, [countryCode, data]);
+
   return (
     status === "success" && (
       <>
@@ -61,9 +71,9 @@ function PhoneNumber({
           <Content>
             <div id="code-box" onClick={() => setIsOpen(!isOpen)}>
               <img
-                alt="country-flag"
+                alt="flag"
                 width={"25px"}
-                src={`https://countryflagsapi.com/svg/${countryCode}`}
+                src={`https://flagsapi.com/${getDefaultCountry()}/flat/32.png`}
               />
               <input
                 value={countryCodePrefix}
@@ -119,7 +129,7 @@ function PhoneNumber({
                         <img
                           alt="country-flag"
                           width={"25px"}
-                          src={`https://countryflagsapi.com/svg/${c.code}`}
+                          src={`https://flagsapi.com/${c.code.toUpperCase()}/flat/32.png`}
                         />
                         <p ref={dialCodeRef} id="country-dial-code">
                           {c.dial_code}

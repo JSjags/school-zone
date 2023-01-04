@@ -1,10 +1,11 @@
 import "devextreme/dist/css/dx.common.css";
 import "devextreme/dist/css/dx.light.css";
+import { useState, useEffect } from "react";
 import { Routes, Route, useLocation } from "react-router-dom";
 import { QueryClient, QueryClientProvider } from "react-query";
 import { ReactQueryDevtools } from "react-query/devtools";
 import { AnimatePresence } from "framer-motion";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 
 import { Wrapper } from "./App.styles";
 import Header from "./components/Header/Index";
@@ -24,7 +25,9 @@ import Scheduler from "./pages/Scheduler/Index";
 import Kanban from "./pages/Kanban/Index";
 import Editor from "./pages/Editor/Index";
 import Posts from "./pages/Posts/Index";
+import MobileMenu from "./components/MobileMenu/Index";
 
+import { setDashboardMenu } from "./features/config/configData";
 import { GlobalStyles } from "./pages/Global.styles";
 
 import { ThemeProvider } from "styled-components";
@@ -36,23 +39,62 @@ import { getTheme } from "./utils";
 const queryClient = new QueryClient();
 
 function App() {
+  const dispatch = useDispatch();
+
   const location = useLocation();
   const isLoggedIn = useSelector((state) => state.schoolAuth.isLoggedIn);
   const { data: schoolData } = useSelector((state) => state.schoolData);
+  const { isDashboardMenuOpen } = useSelector((state) => state.config);
   const THEME_VALUE = schoolData?.settings?.theme
     ? schoolData?.settings?.theme
     : localStorage.getItem("schoolZoneTheme")
     ? localStorage.getItem("schoolZoneTheme").trim()
     : " Auto";
 
+  const { isHomeMenuOpen } = useSelector((state) => state.config);
+
+  const [showMobileMenu, setShowMobileMenu] = useState(window.innerWidth < 769);
+
+  function handleMenuClose(e) {
+    // get event path and check if any element's id matches navbar's id
+    if (
+      (e.nativeEvent.composedPath().every((elem) => elem.id !== "nav-bar") ||
+        e.nativeEvent.composedPath().some((elem) => elem.id === "nav-link")) &&
+      window.innerWidth < 768 &&
+      isDashboardMenuOpen
+    ) {
+      dispatch(setDashboardMenu());
+    }
+    // else cancel out of process
+    return;
+  }
+
+  useEffect(() => {
+    window.addEventListener("resize", () => {
+      window.innerWidth > 768
+        ? setShowMobileMenu(false)
+        : setShowMobileMenu(true);
+    });
+    return () => {
+      window.removeEventListener("resize", () => {
+        window.innerWidth > 768
+          ? setShowMobileMenu(false)
+          : setShowMobileMenu(true);
+      });
+    };
+  }, []);
+
   return (
     <ThemeProvider
       theme={getTheme(THEME_VALUE) === "Light" ? lightTheme : darkTheme}
     >
-      <GlobalStyles />
-      <Wrapper isLoggedIn={isLoggedIn}>
+      <GlobalStyles isLoggedIn={isLoggedIn} />
+      <Wrapper onClick={handleMenuClose} isLoggedIn={isLoggedIn}>
         <QueryClientProvider client={queryClient}>
           <Header />
+          <AnimatePresence>
+            {showMobileMenu && isHomeMenuOpen && !isLoggedIn && <MobileMenu />}
+          </AnimatePresence>
           <AnimatePresence exitBeforeEnter>
             <Routes location={location} key={location.pathname}>
               <Route path="/" element={<Home />}>

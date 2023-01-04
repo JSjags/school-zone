@@ -267,7 +267,7 @@ const Staffs = () => {
       {isSuccess && (
         <Content>
           <main>
-            <PageHeader title="Staffs" />
+            <PageHeader title="Staff" />
             {(!staffs || staffs.length <= 0) && (
               <div className="create-staff">
                 <img alt="add-staff" src={noStaffsSvg}></img>

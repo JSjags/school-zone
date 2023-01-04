@@ -116,7 +116,11 @@ const Profile = () => {
         </LoadingContainer>
       )}
       {isSuccess && (
-        <Content>
+        <Content
+          coverPhoto={
+            data.backdrop_image ? data.backdrop_image : defaultCoverPicUrl
+          }
+        >
           {isEditProfileModalOpen && <EditModal />}
           <main>
             <PageHeader title="Profile" />

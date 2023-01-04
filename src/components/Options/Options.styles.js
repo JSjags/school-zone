@@ -12,11 +12,9 @@ export const OptionsWrapper = styled.div`
     name === "view" || name === "filter" || name === "theme" || name === "posts"
       ? css`
           width: calc(${value.length}ch + 55px);
-          /* padding-top: 10px; */
         `
       : css`
-          min-width: 300px;
-          width: clamp(240px, 100%, 500px);
+          width: clamp(200px, 100%, 500px);
         `}
   height: 40px;
   position: relative;
@@ -35,10 +33,9 @@ export const OptionsWrapper = styled.div`
             top: 70px;
           `
         : css`
-            min-width: 300px;
             margin-bottom: 20px;
             top: 70px;
-            width: 100%;
+            width: clamp(200px, 100%, 500px); ;
           `}
     background: var(--background);
     border-radius: 5px;

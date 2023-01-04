@@ -1,37 +1,29 @@
-import styled, { css } from "styled-components";
+import styled from "styled-components";
 
-export const Wrapper = styled.div`
-  position: sticky;
-  top: 0;
-  padding: 0px clamp(10px, 3%, 50px);
-  z-index: 10;
-  background: var(--translucent-white);
-  -webkit-backdrop-filter: blur(3px);
-  backdrop-filter: blur(3px);
-  width: 100%;
-  transition: all 300ms cubic-bezier(0.165, 0.84, 0.44, 1);
-`;
 export const Content = styled.div`
+  position: fixed;
+  top: 0;
+  left: 0;
   width: 100%;
-  padding: 0 10px;
+  height: 100%;
+  background: var(--background);
+  z-index: 1;
+  padding: 15vh 0 0 0;
   display: flex;
-  align-items: center;
-  justify-content: space-between;
+  flex-direction: column;
+  justify-content: space-around;
 
   nav {
     display: flex;
+    flex-direction: column;
     align-items: center;
     font-size: 1.1em;
-    ${() =>
-      window.innerWidth < 769 &&
-      css`
-        flex: 1;
-      `}
+    height: 60%;
 
     .home-menu-btn {
       flex: 1;
       display: flex;
-      justify-content: flex-end;
+      justify-content: center;
       align-items: center;
       gap: 5px;
 
@@ -54,13 +46,17 @@ export const Content = styled.div`
     }
     ul {
       display: flex;
+      flex-direction: column;
       justify-content: space-between;
-      margin-left: 50px;
+      margin-left: 0;
       gap: 20px;
+      justify-content: space-around;
+      height: 100%;
 
       li {
         list-style-type: none;
         position: relative;
+        text-align: center;
 
         a {
           text-decoration: none;
@@ -93,7 +89,7 @@ export const Content = styled.div`
     display: flex;
     gap: 20px;
     align-items: center;
-    justify-content: space-between;
+    justify-content: space-around;
 
     button {
       border: none;
@@ -147,13 +143,5 @@ export const Content = styled.div`
         color: white;
       }
     }
-  }
-
-  @media screen and (max-width: 375px) {
-    padding: 0;
-
-    /* .home-menu-btn div span {
-      display: none;
-    } */
   }
 `;

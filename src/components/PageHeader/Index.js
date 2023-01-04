@@ -25,6 +25,7 @@ const PageHeader = ({ title }) => {
     dispatch(resetSchoolData());
     dispatch(resetSchoolAuth());
     navigate("/login");
+    Location.reload();
   };
 
   const handleMessages = () => {
@@ -36,14 +37,6 @@ const PageHeader = ({ title }) => {
     <HeaderWrapper>
       <h1>{title}</h1>
       <ul>
-        <li onClick={handleMessages}>
-          <MdMessage style={{ fontSize: "1.4rem" }} />
-          <span>Messages</span>
-        </li>
-        <li>
-          <MdNotifications style={{ fontSize: "1.4rem" }} />
-          <span>Notifications</span>
-        </li>
         <li onClick={() => navigate("/schooldashboard/settings")}>
           <MdSettings style={{ fontSize: "1.4rem" }} />
           <span>Settings</span>
