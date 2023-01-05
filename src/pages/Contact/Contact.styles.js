@@ -362,7 +362,7 @@ export const Content = styled.div`
       flex-direction: column;
       align-items: center;
       background: var(--primary-color);
-      font-family: var(--garamond);
+      font-family: var(--hind);
       border-radius: 20px;
       padding: 10px;
       cursor: pointer;
