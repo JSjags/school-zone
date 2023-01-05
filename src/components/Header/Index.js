@@ -179,7 +179,7 @@ const Header = () => {
         top: 0,
         left: 0,
         zIndex: 10000,
-        background: `${isLoggedIn ? "transparent" : "var(--white)"}`,
+        background: `${isLoggedIn ? "transparent" : "var(--background)"}`,
         backdropFilter: `${isLoggedIn && "blur(0)"}`,
         display: `${isError && "none"}`,
       }}
