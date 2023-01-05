@@ -223,7 +223,7 @@ export const Content = styled.div`
     margin: 10vh auto 0;
   }
   svg {
-    width: clamp(200px, 40%, 600px);
+    width: clamp(50px, 40%, 600px);
     margin: auto;
   }
   img {
@@ -253,6 +253,7 @@ export const Content = styled.div`
       background: transparent;
       overflow: hidden;
       height: 100%;
+      backdrop-filter: invert(0);
 
       ::before {
         content: "";
